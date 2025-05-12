@@ -1,0 +1,193 @@
+import os
+
+# Example usage:
+class Panel:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.panel_x = x 
+        self.panel_y = y 
+        self.column_spacing = 0.03
+        self.row_spacing = 0.03
+        
+    def panel_position(self):
+        return [-self.panel_x / 2 + self.panel_x / 2, self.panel_y / 2 - self.panel_y / 2]
+        
+    def generate_panel_layout(self, config):
+        """
+        Generates panel regions based on input config list.
+        :param config: list of 4 integers, each 0 or 1
+                       1 = single full-height panel in the column
+                       0 = two half-height panels in the column
+        :param win: object with win.x and win.y for screen width and height
+        :return: list of panel region dictionaries with x, y, width, height
+        """
+        assert len(config) == 4, "Config must have exactly 4 elements (one per column)"
+        assert all(c in (0, 1) for c in config), "Each config entry must be 0 or 1"
+        
+        window_origin_x = -self.x / 2 
+        window_origin_y = self.y / 2
+        
+        panel_width = self.panel_x
+        panel_height = self.panel_y
+
+        col_spacing_ratio = self.column_spacing 
+        row_spacing_ratio = self.row_spacing
+
+        num_col_spacings = 5  # 3 between + 2 sides
+        
+        col_spacing = panel_width * col_spacing_ratio
+        row_spacing = panel_height * row_spacing_ratio
+
+        region_width = (panel_width - (col_spacing * num_col_spacings)) / 4
+
+        regions = []
+
+        for col in range(4):
+            x = window_origin_x + col_spacing * (col + 1) + region_width * col + region_width / 2
+
+            if config[col] == 1:
+                # Single full-height panel (minus top & bottom spacing)
+                height = panel_height - 2*row_spacing
+                y = window_origin_y - row_spacing - height / 2
+                regions.append({
+                    "x": int(x),
+                    "y": int(y),
+                    "width": int(region_width),
+                    "height": int(height)
+                })
+            else:
+                # Two half-height panels
+                height = (panel_height - 3 * row_spacing) / 2
+                for row in range(2):
+                    y = window_origin_y - (row_spacing * (row + 1) + height * row) - height / 2 
+                    regions.append({
+                        "x": int(x),
+                        "y": int(y),
+                        "width": int(region_width),
+                        "height": int(height)
+                    })
+
+        return regions
+
+    def roi_separator(self, panel, separation_count, separation_direction):
+        """ This function is used for separating individual panels into regions.
+        Purpose is to add clutter based on these regions. 
+
+        :param panel: (dict) enter the panel's dictionary (e.g. r[0] or r[target_panel])
+        :param separation_count: (int) how many panels you want it to be separated into 
+        :param separation_direction: (str) direction of separation "vertical" or "horizontal"
+
+        :return: a list of dictionaries of the separated region values (x, y, width, height)
+        """
+
+        assert isinstance(separation_direction, str), 'separation_direction must be a string.'
+
+        if separation_direction == "vertical":
+            separation_axis = 'y'
+            separation_size = 'height'
+        elif separation_direction == "horizontal":
+            separation_axis = 'x'
+            separation_size = 'width'
+        else:
+            ValueError('f{separation_direction} is not a valid separation direction')    
+
+        clutter_regions = []
+
+        
+
+        for i in range(0, separation_count):
+            dummy_region = []
+            dummy_region = dict(panel)
+
+            panel_size = panel[separation_size]/separation_count
+
+            start_border = round(i*panel_size)
+            end_border = round((i+1)*panel_size)
+            
+
+            # reverse sign of border if its Y axis (subtract border to move downward in coordinate system)
+            if panel[separation_axis] >= 0:
+                start_border = -start_border
+                end_border = -end_border
+                section_origin = panel[separation_axis] + (panel[separation_size] / 2)              
+            else: 
+                section_origin = panel[separation_axis] - (panel[separation_size] / 2)
+                
+
+            section_start = round(section_origin + start_border) # find region's start
+            section_end = round(section_origin + end_border)
+            section_mid = round((section_start + section_end) / 2) # find midpoint between region's start and end                        
+            section_size = abs(end_border - start_border) 
+
+            dummy_region[separation_axis] = section_start
+            dummy_region[separation_size] = section_size
+
+
+            clutter_regions.append(dummy_region)
+
+            
+
+        return clutter_regions
+    
+    def get_region_coordinate(self, clutter, direction, placement_index, section_description=None):
+        """ This function is used for obtaining axis coordinates for clutter placement
+
+        :param clutter: (dict) enter the clutter's dictionary (e.g. clutter[0] or clutter[target_clutter])
+
+        :param placement_index: (int) List of 2 integers indicating the placement:
+                - [place_index, place_range] > [1, 4] > [0, 1, 2, 3] > second element (1) is the coordinate
+        :param section_description: "top" or "mid" part of the segmented region
+        :return: point in coordinate system (x, y)
+        """
+        if direction == "vertical":
+            placement_axis = 'y'
+            placement_size = 'height'
+        elif direction == "horizontal":
+            placement_axis = 'x'
+            placement_size = 'width'
+        else:
+            ValueError('f{separation_direction} is not a valid separation direction') 
+
+        if section_description == None:
+            section_description = "mid"
+
+        section_count = placement_index[1]
+        for i in range(0, section_count):
+
+            section_size = clutter[placement_size] / section_count
+            start_border = round(i*section_size)
+            end_border = round((i+1)*section_size)
+            if clutter[placement_axis] >= 0:
+                start_border = -start_border
+                end_border = -end_border
+                section_origin = clutter[placement_axis] + (clutter[placement_size] / 2)
+            else:
+                section_origin = clutter[placement_axis] - (clutter[placement_size] / 2)
+    #   "x": 698,
+    #   "y": 508,
+    #   "width": 408,
+    #   "height": 508
+            
+            section_start = section_origin + start_border
+            section_end = section_origin + end_border
+            section_mid = round((section_start + section_end) / 2)
+            print('start border, end border', [start_border, end_border])            
+            print('section start,mid,end', [section_start, section_mid, section_end])
+            # print(f'section origin: {section_origin}, section start :{section_start}, section mid: {section_mid}')
+            if i == placement_index[0]:
+                if section_description == "mid":
+                    return section_mid 
+                elif section_description == "top":
+                    return section_start
+                elif section_description == "bottom":
+                    return section_end
+
+
+    def getImageWithKeyword(self, directory, keyword):
+        image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp'}
+
+        for root, _, files in os.walk(directory):
+            for file in files:
+                if any(file.lower().endswith(ext) for ext in image_extensions) and keyword.lower() in file.lower():
+                    return "/".join([root, file])
