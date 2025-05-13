@@ -5,13 +5,32 @@ class Panel:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.panel_x = x 
-        self.panel_y = y 
         self.column_spacing = 0.03
         self.row_spacing = 0.03
-        
-    def panel_position(self):
-        return [-self.panel_x / 2 + self.panel_x / 2, self.panel_y / 2 - self.panel_y / 2]
+        self.scale_ratios = [1, 2/3]
+        self.scale_empty_part = "top"
+        self.panel_x_size = round(x * self.scale_ratios[0])
+        self.panel_y_size = round(y * self.scale_ratios[1])
+        self.panel_position = self.estimate_panel_position()
+
+    def estimate_panel_position(self):
+
+        if self.scale_empty_part == "top":
+            y_axis_shift = -1
+        elif self.scale_empty_part == "bottom":
+            y_axis_shift = 1
+        else:
+            y_axis_shift = 0
+
+        if self.scale_empty_part == "left":
+            x_axis_shift = 1
+        elif self.scale_empty_part == "right":
+            x_axis_shift = -1
+        else:
+            x_axis_shift = 0
+
+        return [round(0.5 * x_axis_shift * (self.x * (1 - self.scale_ratios[0]))), 
+                    round(0.5 * y_axis_shift * (self.y * (1 - self.scale_ratios[1])))]
         
     def generate_panel_layout(self, config):
         """
@@ -24,12 +43,15 @@ class Panel:
         """
         assert len(config) == 4, "Config must have exactly 4 elements (one per column)"
         assert all(c in (0, 1) for c in config), "Each config entry must be 0 or 1"
-        
+
         window_origin_x = -self.x / 2 
-        window_origin_y = self.y / 2
+        window_origin_y = self.y / 2 
+
+        if self.scale_empty_part == "top":
+            window_origin_y = window_origin_y - self.panel_y_size / 2
         
-        panel_width = self.panel_x
-        panel_height = self.panel_y
+        panel_width = self.panel_x_size
+        panel_height = self.panel_y_size
 
         col_spacing_ratio = self.column_spacing 
         row_spacing_ratio = self.row_spacing
@@ -94,42 +116,31 @@ class Panel:
 
         clutter_regions = []
 
-        
-
         for i in range(0, separation_count):
             dummy_region = []
             dummy_region = dict(panel)
 
-            panel_size = panel[separation_size]/separation_count
+            panel_size = panel[separation_size] / separation_count
 
-            start_border = round(i*panel_size)
-            end_border = round((i+1)*panel_size)
-            
-
-            # reverse sign of border if its Y axis (subtract border to move downward in coordinate system)
-            if panel[separation_axis] >= 0:
-                start_border = -start_border
-                end_border = -end_border
-                section_origin = panel[separation_axis] + (panel[separation_size] / 2)              
-            else: 
-                section_origin = panel[separation_axis] - (panel[separation_size] / 2)
+            start_border = -round(i*panel_size)
+            end_border = -round((i+1)*panel_size)           
+      
+            section_origin = panel[separation_axis] + (panel[separation_size] / 2)
                 
 
             section_start = round(section_origin + start_border) # find region's start
             section_end = round(section_origin + end_border)
             section_mid = round((section_start + section_end) / 2) # find midpoint between region's start and end                        
-            section_size = abs(end_border - start_border) 
+            section_size = abs(end_border - start_border)
 
             dummy_region[separation_axis] = section_start
             dummy_region[separation_size] = section_size
-
-
+            
             clutter_regions.append(dummy_region)
-
             
 
         return clutter_regions
-    
+
     def get_region_coordinate(self, clutter, direction, placement_index, section_description=None):
         """ This function is used for obtaining axis coordinates for clutter placement
 
@@ -164,17 +175,13 @@ class Panel:
                 section_origin = clutter[placement_axis] + (clutter[placement_size] / 2)
             else:
                 section_origin = clutter[placement_axis] - (clutter[placement_size] / 2)
-    #   "x": 698,
-    #   "y": 508,
-    #   "width": 408,
-    #   "height": 508
-            
+
             section_start = section_origin + start_border
             section_end = section_origin + end_border
             section_mid = round((section_start + section_end) / 2)
-            print('start border, end border', [start_border, end_border])            
+            print('start border, end border', [start_border, end_border])
             print('section start,mid,end', [section_start, section_mid, section_end])
-            # print(f'section origin: {section_origin}, section start :{section_start}, section mid: {section_mid}')
+
             if i == placement_index[0]:
                 if section_description == "mid":
                     return section_mid 
@@ -182,7 +189,6 @@ class Panel:
                     return section_start
                 elif section_description == "bottom":
                     return section_end
-
 
     def getImageWithKeyword(self, directory, keyword):
         image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp'}
