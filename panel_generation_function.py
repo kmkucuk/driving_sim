@@ -48,26 +48,20 @@ class Panel:
         window_origin_y = self.y / 2 
 
         if self.scale_empty_part == "top":
-            window_origin_y = window_origin_y - self.panel_y_size / 2
-        
+            window_origin_y = window_origin_y - self.panel_y_size / 2        
+
         panel_width = self.panel_x_size
         panel_height = self.panel_y_size
-
         col_spacing_ratio = self.column_spacing 
         row_spacing_ratio = self.row_spacing
-
-        num_col_spacings = 5  # 3 between + 2 sides
-        
+        num_col_spacings = 5  # 3 between + 2 sides        
         col_spacing = panel_width * col_spacing_ratio
         row_spacing = panel_height * row_spacing_ratio
-
         region_width = (panel_width - (col_spacing * num_col_spacings)) / 4
-
         regions = []
 
         for col in range(4):
             x = window_origin_x + col_spacing * (col + 1) + region_width * col + region_width / 2
-
             if config[col] == 1:
                 # Single full-height panel (minus top & bottom spacing)
                 height = panel_height - 2*row_spacing
@@ -102,7 +96,6 @@ class Panel:
 
         :return: a list of dictionaries of the separated region values (x, y, width, height)
         """
-
         assert isinstance(separation_direction, str), 'separation_direction must be a string.'
 
         if separation_direction == "vertical":
@@ -115,18 +108,14 @@ class Panel:
             ValueError('f{separation_direction} is not a valid separation direction')    
 
         clutter_regions = []
-
         for i in range(0, separation_count):
             dummy_region = []
             dummy_region = dict(panel)
 
             panel_size = panel[separation_size] / separation_count
-
             start_border = -round(i*panel_size)
-            end_border = -round((i+1)*panel_size)           
-      
-            section_origin = panel[separation_axis] + (panel[separation_size] / 2)
-                
+            end_border = -round((i+1)*panel_size)
+            section_origin = panel[separation_axis] + (panel[separation_size] / 2)                
 
             section_start = round(section_origin + start_border) # find region's start
             section_end = round(section_origin + end_border)
@@ -134,10 +123,8 @@ class Panel:
             section_size = abs(end_border - start_border)
 
             dummy_region[separation_axis] = section_start
-            dummy_region[separation_size] = section_size
-            
-            clutter_regions.append(dummy_region)
-            
+            dummy_region[separation_size] = section_size            
+            clutter_regions.append(dummy_region)           
 
         return clutter_regions
 
@@ -165,7 +152,6 @@ class Panel:
 
         section_count = placement_index[1]
         for i in range(0, section_count):
-
             section_size = clutter[placement_size] / section_count
             start_border = round(i*section_size)
             end_border = round((i+1)*section_size)
@@ -179,8 +165,6 @@ class Panel:
             section_start = section_origin + start_border
             section_end = section_origin + end_border
             section_mid = round((section_start + section_end) / 2)
-            print('start border, end border', [start_border, end_border])
-            print('section start,mid,end', [section_start, section_mid, section_end])
 
             if i == placement_index[0]:
                 if section_description == "mid":
