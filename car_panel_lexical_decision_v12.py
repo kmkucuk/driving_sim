@@ -11,6 +11,7 @@ If you publish work using this script the most relevant publication is:
 
 """
 
+
 # --- Import packages ---
 from psychopy import locale_setup
 from psychopy import prefs
@@ -707,8 +708,6 @@ else:
     panel_layout = Panel(win.size[0], win.size[1])
 
 widget_regions = panel_layout.generate_panel_layout([1, 0, 0, 1]) 
-
-
 
 # parse manual: panel is sliced based on the second element.  
 # [1,3] > segments the panel into three and retrieves the second segment's midpoint.
