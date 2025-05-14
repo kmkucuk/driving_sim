@@ -171,6 +171,6 @@ text_size = trip_widget["component_regions"][0]["width"]/12
 target_panel = 3
 
 # letter size is dependent on the large panel's height
-letter_size = temperature_widget["component_regions"][0]["height"]/5
-day_size = day_widget["component_regions"][0]["width"]/7
-header_size = trip_widget["component_regions"][0]["width"]/10
+letter_size = temperature_widget["component_regions"][0]["height"] * 0.2
+day_size = day_widget["component_regions"][0]["width"] * 0.125
+header_size = trip_widget["component_regions"][0]["width"] * 0.1

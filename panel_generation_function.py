@@ -8,7 +8,7 @@ class Panel:
         self.column_spacing = 0.03
         self.row_spacing = 0.03
         self.scale_ratios = [1, 2/3]
-        self.scale_empty_part = "top"
+        self.scale_empty_part = "bottom"
         self.panel_x_size = round(x * self.scale_ratios[0])
         self.panel_y_size = round(y * self.scale_ratios[1])
         self.panel_position = self.estimate_panel_position()
