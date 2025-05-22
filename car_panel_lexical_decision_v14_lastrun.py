@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on May 14, 2025, at 15:16
+    on May 22, 2025, at 19:17
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -54,7 +54,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
-    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\car_panel_lexical_decision_v13_lastrun.py',
+    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\car_panel_lexical_decision_v14_lastrun.py',
     savePickle=True, saveWideText=True,
     dataFileName=filename)
 # save a log file for detail verbose info
@@ -97,8 +97,7 @@ defaultKeyboard = keyboard.Keyboard(backend='iohub')
 
 # --- Initialize components for Routine "initialization" ---
 # Run 'Begin Experiment' code from function_definitions
-import os
-import math
+from pprint import pprint
 
 def getImageWithKeyword(directory, keyword):
     image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp'}
@@ -109,19 +108,21 @@ def getImageWithKeyword(directory, keyword):
                 return "/".join([root, file])
                 
 def correctTextPosition(text_stim, text_position):
-    bounding_box = [100, 100]
-    return [text_position[0] + bounding_box[1]/2,
-    text_position[1]]
-
+    if hasattr(text_stim, 'boundingBox'):
+        print('HERE IS THE BOUNDING BOX ', text_stim.boundingBox)
+        return [text_position[0] + text_stim.boundingBox[0]/2, text_position[1]]
+    else:
+        return text_position
 
 def correctPosition(icon_size, icon_position):    
-    
-    return [icon_position[0] - icon_size[0]/2,
-    icon_position[1] - icon_size[1]/2] # math.copysign(icon_size[0], icon_position[0])/2, math.copysign(icon_size[1], icon_position[1])/2]
-    
+    return icon_position
+#    return [icon_position[0] - icon_size[0]/2,
+#    icon_position[1] - icon_size[1]/2] # math.copysign(icon_size[0], icon_position[0])/2, math.copysign(icon_size[1], icon_position[1])/2]
+#    
     
 def correctPositionSmall(icon_size, icon_position):    
-    return [icon_position[0] + icon_size[0]/2, icon_position[1]]
+    return icon_position
+#    return [icon_position[0] + icon_size[0]/2, icon_position[1]]
 # Run 'Begin Experiment' code from panel_initialization
 import os
 
@@ -211,7 +212,7 @@ class Panel:
 
         return regions
 
-    def roi_separator(self, panel, separation_count, separation_direction):
+    def panel_separator(self, panel, separation_count, separation_direction):
         """ This function is used for separating individual panels into regions.
         Purpose is to add clutter based on these regions. 
 
@@ -226,77 +227,84 @@ class Panel:
         if separation_direction == "vertical":
             separation_axis = 'y'
             separation_size = 'height'
+            isHorizontal = -1
         elif separation_direction == "horizontal":
             separation_axis = 'x'
             separation_size = 'width'
+            isHorizontal = 1
         else:
             ValueError('f{separation_direction} is not a valid separation direction')    
+        
+        section_size = panel[separation_size] / separation_count
+        section_origin = panel[separation_axis] + (panel[separation_size] / 2)      
 
         clutter_regions = []
-        for i in range(0, separation_count):
-            dummy_region = []
+        dummy_region = {}
+        for i in range(0, separation_count):            
             dummy_region = dict(panel)
 
-            panel_size = panel[separation_size] / separation_count
-            start_border = -round(i*panel_size)
-            end_border = -round((i+1)*panel_size)
-            section_origin = panel[separation_axis] + (panel[separation_size] / 2)                
+            
+            start_border = isHorizontal * round(i*section_size)
+            end_border = isHorizontal * round((i+1)*section_size)
+                      
 
             section_start = round(section_origin + start_border) # find region's start
             section_end = round(section_origin + end_border)
             section_mid = round((section_start + section_end) / 2) # find midpoint between region's start and end                        
-            section_size = abs(end_border - start_border)
 
             dummy_region[separation_axis] = section_start
-            dummy_region[separation_size] = section_size            
+            dummy_region[separation_size] = section_size
             clutter_regions.append(dummy_region)           
 
         return clutter_regions
 
-    def get_region_coordinate(self, clutter, direction, placement_index, section_description=None):
+    def get_clutter_coordinate(self, clutter_region, direction, placement_index, placement_description=None):
         """ This function is used for obtaining axis coordinates for clutter placement
 
-        :param clutter: (dict) enter the clutter's dictionary (e.g. clutter[0] or clutter[target_clutter])
+        :param clutter_region: (dict) enter the clutter's region dictionary obtained by clutter_separator (e.g. clutter[0] or clutter[target_clutter])
 
         :param placement_index: (int) List of 2 integers indicating the placement:
                 - [place_index, place_range] > [1, 4] > [0, 1, 2, 3] > second element (1) is the coordinate
-        :param section_description: "top" or "mid" part of the segmented region
+        :param placement_description: "top" or "mid" part of the segmented region
         :return: point in coordinate system (x, y)
         """
         if direction == "vertical":
             placement_axis = 'y'
             placement_size = 'height'
+            isHorizontal = -1
+            section_origin =  clutter_region[placement_axis]
         elif direction == "horizontal":
             placement_axis = 'x'
             placement_size = 'width'
+            isHorizontal = 1
+            section_origin =  clutter_region[placement_axis] - (clutter_region[placement_size] / 2)
         else:
             ValueError('f{separation_direction} is not a valid separation direction') 
 
-        if section_description == None:
-            section_description = "mid"
-
+        if placement_description == None:
+            placement_description = "mid"
+        
         section_count = placement_index[1]
-        for i in range(0, section_count):
-            section_size = clutter[placement_size] / section_count
-            start_border = round(i*section_size)
-            end_border = round((i+1)*section_size)
-            if clutter[placement_axis] >= 0:
-                start_border = -start_border
-                end_border = -end_border
-                section_origin = clutter[placement_axis] + (clutter[placement_size] / 2)
-            else:
-                section_origin = clutter[placement_axis] - (clutter[placement_size] / 2)
+        
+        section_size = clutter_region[placement_size] / section_count
+
+        for i in range(0, section_count):            
+            start_border = isHorizontal * round(i*section_size)
+            end_border = isHorizontal * round((i+1)*section_size)
 
             section_start = section_origin + start_border
             section_end = section_origin + end_border
             section_mid = round((section_start + section_end) / 2)
 
             if i == placement_index[0]:
-                if section_description == "mid":
-                    return section_mid 
-                elif section_description == "top":
+                if placement_description == "mid":
+                    return section_mid
+                elif placement_description == "top":
+                    if placement_axis == 'y':
+                        print('selected top - section start', section_start)
+                        print('selected top - section origin', section_origin)
                     return section_start
-                elif section_description == "bottom":
+                elif placement_description == "bottom":
                     return section_end
 
     def getImageWithKeyword(self, directory, keyword):
@@ -307,6 +315,186 @@ class Panel:
                 if any(file.lower().endswith(ext) for ext in image_extensions) and keyword.lower() in file.lower():
                     return "/".join([root, file])
 
+# Run 'Begin Experiment' code from exp_init
+import calendar
+import json
+import math
+import random
+from datetime import date
+from datetime import datetime
+
+# select a panel for the large clutter 1 (duration, fuel, distance)
+# select from 0 to 6.
+clutter_panel = 0
+
+if 'win' not in locals():
+    from panel_generation_function import Panel
+    class win:
+        def __init__(self):
+            self.size = [1920, 1080]
+    window = win()
+    panel_layout = Panel(window.size[0], window.size[1])
+
+else:
+    panel_layout = Panel(win.size[0], win.size[1])
+
+widget_regions = panel_layout.generate_panel_layout([1, 0, 0, 1]) 
+
+# parse manual: panel is sliced based on the second element.  
+# [1,3] > segments the panel into three and retrieves the second segment's midpoint.
+# [0,5] > segments the panel into five and retrieves the first segment's midpoint.  
+
+left_symbol_x = [2, 10]
+symbol_y_parse = [0, 3]
+
+centered_symbol_x = [1, 3]
+centered_symbol_y = [1, 3]
+
+
+
+# trip widget (duration, fuel, distance)
+text_x_parse = [3, 10]
+text_y_parse = [0, 3]
+
+trip_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], "parse_text": [text_x_parse, text_y_parse], "widget_index": 0},                
+               "components": {"header": "Current Trip",
+                            "duration": "1 hr 53 min", 
+                            "fuel": "34 mpg", 
+                            "distance": "78 mi"},
+                "img_files": {},
+                "sym_component_positions": {},
+                "txt_component_positions": {}
+                            } # todo: add variable parameters to these text
+
+
+garage_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], "parse_text": [text_x_parse, text_y_parse], "widget_index": 1}, 
+                 "components": {"header": "My Home",
+                                "garage": "Garage Door\nOpen"},
+                "img_files": {},
+                "sym_component_positions": {},
+                "txt_component_positions": {}
+                }
+
+temperature_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [text_x_parse, text_y_parse], "widget_index": 3}, 
+              "components": {"temperature": None},
+                "img_files": {},
+                "sym_component_positions": {},
+                "txt_component_positions": {}
+               }
+
+battery_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [text_x_parse, text_y_parse], "widget_index": 4}, 
+                 "components": {"battery": None},
+                "img_files": {},
+                "sym_component_positions": {},
+                "txt_component_positions": {}
+                }
+
+day_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [text_x_parse, text_y_parse], "widget_index": 5}, 
+                 "components": {"header": "day",
+                                "calendar": None},
+                "img_files": {},
+                "sym_component_positions": {},
+                "txt_component_positions": {}
+                }
+
+
+all_widgets = [trip_widget, garage_widget, temperature_widget, battery_widget, day_widget]
+
+placement_desc = "mid"
+
+
+
+# first assume header to be the same size in terms of roi
+# then we can adjust it to become something else (smaller then etc.)
+def segment_roi(panel, roi, widget_dict):
+    
+    # garage widget (duration, fuel, distance)
+
+    component_count = len(widget_dict["components"].keys())
+    component_regions = panel.panel_separator(roi[widget_dict["info"]["widget_index"]], component_count, "vertical")
+    iteration = 0
+    widget_dict["component_regions"] = component_regions
+    # garage widget (duration, fuel, distance)
+
+    for key, comp_val in widget_dict["components"].items():         
+
+        if key != "header":
+            # get symbol positions             
+            widget_dict["sym_component_positions"][key] = [panel.get_clutter_coordinate(component_regions[iteration], "horizontal", widget_dict["info"]["parse_symbol"][0]), 
+            panel.get_clutter_coordinate(component_regions[iteration], "vertical", widget_dict["info"]["parse_symbol"][1])]
+            widget_dict["img_files"][key] = panel.getImageWithKeyword("./stimuli/clutter", key)
+           
+        if key == "header":
+            text_x_header = [1, 10]
+            text_y_header = [2, 7]     
+            
+            if comp_val == "day":
+                # get current day for text display on calemdar widget
+                my_date = date.today()
+                today = datetime.now()
+                text_x_header = [2, 10]
+                text_y_header = [3, 7]
+                numeric_day = today.day # this is a integer
+                widget_dict["components"]["header"] = calendar.day_name[my_date.weekday()] +"\n" +str(numeric_day) # e.g. 'Wednesday'\nNumber         
+            # headers are more leftward than regular text, hence specific text parsing
+            widget_dict["txt_component_positions"][key] = [panel.get_clutter_coordinate(component_regions[iteration], 
+                                                                                        "horizontal", text_x_header), 
+                                                           panel.get_clutter_coordinate(component_regions[iteration], 
+                                                                                        "vertical", text_y_header)]
+            
+        elif key != "header" and isinstance(comp_val, str):
+            placement_desc = 'bottom'
+            widget_dict["txt_component_positions"][key] = [panel.get_clutter_coordinate(component_regions[iteration], "horizontal", widget_dict["info"]["parse_text"][0], placement_desc), 
+            panel.get_clutter_coordinate(component_regions[iteration], "vertical", widget_dict["info"]["parse_text"][1])]
+
+        iteration = iteration + 1
+
+    return widget_dict
+
+
+trip_widget = segment_roi(panel_layout, widget_regions, trip_widget)
+garage_widget = segment_roi(panel_layout, widget_regions, garage_widget)
+day_widget = segment_roi(panel_layout, widget_regions, day_widget)
+temperature_widget = segment_roi(panel_layout, widget_regions, temperature_widget)
+battery_widget = segment_roi(panel_layout, widget_regions, battery_widget)
+
+trip_widget["sym_component_positions"]["duration"]
+trip_widget["sym_component_positions"]["fuel"]
+trip_widget["sym_component_positions"]["distance"]
+
+
+print(widget_regions)
+print('trip_widget\n', json.dumps(trip_widget, indent=2))
+# print('\n\ngarage_widget\n',json.dumps(garage_widget, indent=2))
+# print('\n\ntemperature_widget\n',json.dumps(temperature_widget, indent=2))
+# print('\n\nbattery_widget',json.dumps(battery_widget, indent=2))
+print('\n\nday_widget\n',json.dumps(day_widget, indent=2))
+
+
+
+
+
+garage_icon_size = [garage_widget["component_regions"][1]["width"] * 0.35, garage_widget["component_regions"][1]["width"] * 0.35]
+onethird_icon_size = [trip_widget["component_regions"][0]["width"] * 0.3125, trip_widget["component_regions"][0]["width"] * 0.3125]
+half_icon_size = [day_widget["component_regions"][1]["width"] * 0.8, day_widget["component_regions"][1]["width"] * 0.8]
+full_icon_size = [temperature_widget["component_regions"][0]["width"] * 0.8, temperature_widget["component_regions"][0]["width"] * 0.8]
+
+
+textFont = "./stimuli/font/robotoflex.ttf"
+
+text_size = trip_widget["component_regions"][0]["width"]/12
+# choose a targel panel (1 to 10)
+# Panel Numbers: [1, [2/3], [4/5], 6]
+target_panel = 3
+
+# letter size is dependent on the large panel's height
+letter_size = temperature_widget["component_regions"][0]["height"] * 0.2
+day_size = day_widget["component_regions"][0]["width"] * 0.125
+header_size = trip_widget["component_regions"][0]["width"] * 0.1
+
+
+
+header_wrap_width = 500
 
 # --- Initialize components for Routine "screen_display_images" ---
 # Run 'Begin Experiment' code from estimate_frame_durations_2
@@ -429,7 +617,7 @@ widget1_text3 = visual.TextStim(win=win, name='widget1_text3',
 widget1_text4 = visual.TextStim(win=win, name='widget1_text4',
     text='',
     font='Arial',
-    pos=[0,0], height=1.0, wrapWidth=None, ori=0.0, 
+    pos=[0,0], height=1.0, wrapWidth=header_wrap_width, ori=0.0, 
     color='black', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
     depth=-15.0);
@@ -444,7 +632,7 @@ widget2_symbol1 = visual.ImageStim(
 widget2_text1 = visual.TextStim(win=win, name='widget2_text1',
     text='',
     font='Arial',
-    pos=[0,0], height=1.0, wrapWidth=None, ori=0.0, 
+    pos=[0,0], height=1.0, wrapWidth=header_wrap_width, ori=0.0, 
     color='black', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
     depth=-17.0);
@@ -474,7 +662,7 @@ widget4_symbol1 = visual.ImageStim(
 widget5_text1 = visual.TextStim(win=win, name='widget5_text1',
     text='',
     font='Arial',
-    pos=[0,0], height=1.0, wrapWidth=200.0, ori=1.0, 
+    pos=[0,0], height=1.0, wrapWidth=header_wrap_width, ori=1.0, 
     color='black', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
     depth=-21.0);
@@ -487,6 +675,18 @@ widget5_symbol1 = visual.ImageStim(
     flipHoriz=False, flipVert=False,
     texRes=128.0, interpolate=True, depth=-22.0)
 keybaord_input_2 = keyboard.Keyboard()
+polygon = visual.ShapeStim(
+    win=win, name='polygon', vertices='cross',
+    size=(5, 5),
+    ori=0.0, pos=(698, 518), anchor='center',
+    lineWidth=1.0,     colorSpace='rgb',  lineColor='black', fillColor='black',
+    opacity=None, depth=-25.0, interpolate=True)
+polygon_2 = visual.ShapeStim(
+    win=win, name='polygon_2', vertices='cross',
+    size=(5, 5),
+    ori=0.0, pos=(698, 180), anchor='center',
+    lineWidth=1.0,     colorSpace='rgb',  lineColor='black', fillColor='black',
+    opacity=None, depth=-26.0, interpolate=True)
 
 # --- Initialize components for Routine "inter_trial_interval" ---
 background_panel_2 = visual.ImageStim(
@@ -659,182 +859,6 @@ routineTimer = core.Clock()  # to track time remaining of each (possibly non-sli
 continueRoutine = True
 routineForceEnded = False
 # update component parameters for each repeat
-# Run 'Begin Routine' code from exp_init
-import calendar
-import json
-import math
-import random
-from datetime import date
-from datetime import datetime
-# select a panel for the large clutter 1 (duration, fuel, distance)
-# select from 0 to 6.
-clutter_panel = 0
-
-
-if 'win' not in locals():
-    class win:
-        def __init__(self):
-            self.size = [1920, 1080]
-    window = win()
-    panel_layout = Panel(window.size[0], window.size[1])
-
-else:
-    panel_layout = Panel(win.size[0], win.size[1])
-
-widget_regions = panel_layout.generate_panel_layout([1, 0, 0, 1]) 
-
-
-
-# parse manual: panel is sliced based on the second element.  
-# [1,3] > segments the panel into three and retrieves the second segment's midpoint.
-# [0,5] > segments the panel into five and retrieves the first segment's midpoint.  
-
-symbol_x_parse = [0, 10]
-symbol_y_parse = [1, 3]
-
-# trip widget (duration, fuel, distance)
-text_x_parse = [7, 8]
-text_y_parse = [1, 3]
-
-trip_widget = {"info": {"parse": {"symbol": [symbol_x_parse, symbol_y_parse], "text": [text_x_parse, text_y_parse]}, "widget_index": 0},                
-               "components": {"header": "Current Trip",
-                            "duration": "1 hr 53 min", 
-                            "fuel": "34 mpg", 
-                            "distance": "78 mi"},
-                "img_files": {},
-                "sym_component_positions": {},
-                "txt_component_positions": {}
-                            } # todo: add variable parameters to these text
-
-
-garage_widget = {"info": {"parse": {"symbol": [symbol_x_parse, symbol_y_parse], "text": [text_x_parse, text_y_parse]}, "widget_index": 1}, 
-                 "components": {"header": "My Home",
-                                "garage": "Garage Door\nOpen"},
-                "img_files": {},
-                "sym_component_positions": {},
-                "txt_component_positions": {}
-                }
-
-temperature_widget = {"info": {"parse": {"symbol": [symbol_x_parse, symbol_y_parse], "text": [text_x_parse, text_y_parse]}, "widget_index": 3}, 
-               "components": {"temperature": None},
-                "img_files": {},
-                "sym_component_positions": {},
-                "txt_component_positions": {}
-               }
-
-
-
-battery_widget = {"info": {"parse": {"symbol": [symbol_x_parse, symbol_y_parse], "text": [text_x_parse, text_y_parse]}, "widget_index": 4}, 
-                 "components": {"battery": None},
-                "img_files": {},
-                "sym_component_positions": {},
-                "txt_component_positions": {}
-                }
-
-day_widget = {"info": {"parse": {"symbol": [symbol_x_parse, symbol_y_parse], "text": [text_x_parse, text_y_parse]} , "widget_index": 5}, 
-                 "components": {"header": "day",
-                                "calendar": None},
-                "img_files": {},
-                "sym_component_positions": {},
-                "txt_component_positions": {}
-                }
-
-
-section_desc = "mid"
-# first assume header to be the same size in terms of roi
-# then we can adjust it to become something else (smaller then etc.)
-def segment_roi(panel, roi, widget_dict):
-    section_desc = "bottom"
-    # garage widget (duration, fuel, distance)
-    text_x_header = [4, 7]
-    text_y_header = [2, 3]
-
-    component_count = len(widget_dict["components"].keys())
-    component_regions = panel.roi_separator(roi[widget_dict["info"]["widget_index"]], component_count, "vertical")
-    iteration = 0
-    widget_dict["component_regions"] = component_regions
-    for key, comp_val in widget_dict["components"].items():
-        
-        if key != "header":
-            # get symbol positions 
-            section_desc = "bottom"
-            widget_dict["sym_component_positions"][key] = [panel.get_region_coordinate(component_regions[iteration], "horizontal", widget_dict["info"]["parse"]["symbol"][0], section_desc), 
-            panel.get_region_coordinate(component_regions[iteration], "vertical", widget_dict["info"]["parse"]["symbol"][1])]
-
-        # get current day for text display on widget
-        if comp_val == "day":
-            my_date = date.today()
-            
-            today = datetime.now()
-            numeric_day = today.day # this is a integer
-            widget_dict["components"]["header"] = calendar.day_name[my_date.weekday()] +"\n" +str(numeric_day) # e.g. 'Wednesday'\nNumber         
-            section_desc = "mid"   
-        
-        if comp_val == None:
-            pass
-
-        elif key == "header":
-            # headers are more leftward than regular text, hence specific text parsing
-            widget_dict["txt_component_positions"][key] = [panel.get_region_coordinate(component_regions[iteration], "horizontal", text_x_header), 
-            panel.get_region_coordinate(component_regions[iteration], "vertical", text_y_header, section_desc)]
-
-        else:
-            widget_dict["txt_component_positions"][key] = [panel.get_region_coordinate(component_regions[iteration], "horizontal", widget_dict["info"]["parse"]["text"][0]), 
-            panel.get_region_coordinate(component_regions[iteration], "vertical", widget_dict["info"]["parse"]["text"][1])]
-
-        # load in image
-        if key == "header" or key == "text":
-            pass
-        else:
-            widget_dict["img_files"][key] = panel.getImageWithKeyword("./stimuli/clutter", key)
-            print("added img file: ", panel.getImageWithKeyword("./stimuli/clutter", key))
-
-        iteration = iteration + 1
-
-    return widget_dict
-
-
-
-
-trip_widget = segment_roi(panel_layout, widget_regions, trip_widget)
-garage_widget = segment_roi(panel_layout, widget_regions, garage_widget)
-day_widget = segment_roi(panel_layout, widget_regions, day_widget)
-temperature_widget = segment_roi(panel_layout, widget_regions, temperature_widget)
-battery_widget = segment_roi(panel_layout, widget_regions, battery_widget)
-
-trip_widget["sym_component_positions"]["duration"]
-trip_widget["sym_component_positions"]["fuel"]
-trip_widget["sym_component_positions"]["distance"]
-
-
-print(widget_regions)
-print('trip_widget\n', json.dumps(trip_widget, indent=2))
-# print('\n\ngarage_widget\n',json.dumps(garage_widget, indent=2))
-# print('\n\ntemperature_widget\n',json.dumps(temperature_widget, indent=2))
-# print('\n\nbattery_widget',json.dumps(battery_widget, indent=2))
-print('\n\nday_widget\n',json.dumps(day_widget, indent=2))
-
-
-
-
-
-garage_icon_size = [garage_widget["component_regions"][1]["width"] * 0.35, garage_widget["component_regions"][1]["width"] * 0.35]
-onethird_icon_size = [trip_widget["component_regions"][0]["width"] * 0.3125, trip_widget["component_regions"][0]["width"] * 0.3125]
-half_icon_size = [day_widget["component_regions"][1]["width"] * 0.8, day_widget["component_regions"][1]["width"] * 0.8]
-full_icon_size = [temperature_widget["component_regions"][0]["width"] * 0.8, temperature_widget["component_regions"][0]["width"] * 0.8]
-
-
-textFont = "./stimuli/font/robotoflex.ttf"
-
-text_size = trip_widget["component_regions"][0]["width"]/12
-# choose a targel panel (1 to 10)
-# Panel Numbers: [1, [2/3], [4/5], 6]
-target_panel = 3
-
-# letter size is dependent on the large panel's height
-letter_size = temperature_widget["component_regions"][0]["height"] * 0.2
-day_size = day_widget["component_regions"][0]["width"] * 0.115
-header_size = trip_widget["component_regions"][0]["width"] * 0.1
 # keep track of which components have finished
 initializationComponents = []
 for thisComponent in initializationComponents:
@@ -976,7 +1000,7 @@ for thisTrial in trials:
     widget5_text1.setFont(textFont)
     widget5_text1.setHeight(day_size)
     widget5_text1.setFlip('None')
-    widget5_symbol1.setPos([correctPosition(half_icon_size, day_widget["sym_component_positions"]["calendar"])])
+    widget5_symbol1.setPos([day_widget["sym_component_positions"]["calendar"]])
     widget5_symbol1.setSize(half_icon_size)
     widget5_symbol1.setImage(day_widget["img_files"]["calendar"])
     keybaord_input_2.keys = []
@@ -985,16 +1009,16 @@ for thisTrial in trials:
     # Run 'Begin Routine' code from align_text
     alignment_var = "left"
     
-    
-    widget1_text1.alignText = alignment_var
-    widget1_text2.alignText = alignment_var
-    widget1_text3.alignText = alignment_var
-    widget1_text4.alignText = alignment_var
-    
-    widget2_text1.alignText = alignment_var
-    widget2_text2.alignText = alignment_var
-    
-    widget5_text1.alignText = alignment_var
+    #
+    #widget1_text1.alignText = alignment_var
+    #widget1_text2.alignText = alignment_var
+    #widget1_text3.alignText = alignment_var
+    #widget1_text4.alignText = alignment_var
+    #
+    #widget2_text1.alignText = alignment_var
+    #widget2_text2.alignText = alignment_var
+    #
+    #widget5_text1.alignText = alignment_var
     
     widget1_text4.bold = True
     widget2_text1.bold = True
@@ -1002,7 +1026,7 @@ for thisTrial in trials:
     
     
     # keep track of which components have finished
-    screen_display_imagesComponents = [background_panel, panel1, panel2, panel3, panel4, panel5, panel6, lexical_text_2, widget1_symbol1, widget1_symbol2, widget1_symbol3, widget1_text1, widget1_text2, widget1_text3, widget1_text4, widget2_symbol1, widget2_text1, widget2_text2, widget3_symbol1, widget4_symbol1, widget5_text1, widget5_symbol1, keybaord_input_2]
+    screen_display_imagesComponents = [background_panel, panel1, panel2, panel3, panel4, panel5, panel6, lexical_text_2, widget1_symbol1, widget1_symbol2, widget1_symbol3, widget1_text1, widget1_text2, widget1_text3, widget1_text4, widget2_symbol1, widget2_text1, widget2_text2, widget3_symbol1, widget4_symbol1, widget5_text1, widget5_symbol1, keybaord_input_2, polygon, polygon_2]
     for thisComponent in screen_display_imagesComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
@@ -1298,6 +1322,28 @@ for thisTrial in trials:
                     keybaord_input_2.corr = 0
                 # a response ends the routine
                 continueRoutine = False
+        
+        # *polygon* updates
+        if polygon.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            # keep track of start time/frame for later
+            polygon.frameNStart = frameN  # exact frame index
+            polygon.tStart = t  # local t and not account for scr refresh
+            polygon.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(polygon, 'tStartRefresh')  # time at next scr refresh
+            # add timestamp to datafile
+            thisExp.timestampOnFlip(win, 'polygon.started')
+            polygon.setAutoDraw(True)
+        
+        # *polygon_2* updates
+        if polygon_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            # keep track of start time/frame for later
+            polygon_2.frameNStart = frameN  # exact frame index
+            polygon_2.tStart = t  # local t and not account for scr refresh
+            polygon_2.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(polygon_2, 'tStartRefresh')  # time at next scr refresh
+            # add timestamp to datafile
+            thisExp.timestampOnFlip(win, 'polygon_2.started')
+            polygon_2.setAutoDraw(True)
         
         # check for quit (typically the Esc key)
         if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):

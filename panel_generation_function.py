@@ -86,7 +86,7 @@ class Panel:
 
         return regions
 
-    def roi_separator(self, panel, separation_count, separation_direction):
+    def panel_separator(self, panel, separation_count, separation_direction):
         """ This function is used for separating individual panels into regions.
         Purpose is to add clutter based on these regions. 
 
@@ -101,77 +101,84 @@ class Panel:
         if separation_direction == "vertical":
             separation_axis = 'y'
             separation_size = 'height'
+            isHorizontal = -1
         elif separation_direction == "horizontal":
             separation_axis = 'x'
             separation_size = 'width'
+            isHorizontal = 1
         else:
             ValueError('f{separation_direction} is not a valid separation direction')    
+        
+        section_size = panel[separation_size] / separation_count
+        section_origin = panel[separation_axis] + (panel[separation_size] / 2)      
 
         clutter_regions = []
-        for i in range(0, separation_count):
-            dummy_region = []
+        dummy_region = {}
+        for i in range(0, separation_count):            
             dummy_region = dict(panel)
 
-            panel_size = panel[separation_size] / separation_count
-            start_border = -round(i*panel_size)
-            end_border = -round((i+1)*panel_size)
-            section_origin = panel[separation_axis] + (panel[separation_size] / 2)                
+            
+            start_border = isHorizontal * round(i*section_size)
+            end_border = isHorizontal * round((i+1)*section_size)
+                      
 
             section_start = round(section_origin + start_border) # find region's start
             section_end = round(section_origin + end_border)
             section_mid = round((section_start + section_end) / 2) # find midpoint between region's start and end                        
-            section_size = abs(end_border - start_border)
 
             dummy_region[separation_axis] = section_start
-            dummy_region[separation_size] = section_size            
+            dummy_region[separation_size] = section_size
             clutter_regions.append(dummy_region)           
 
         return clutter_regions
 
-    def get_region_coordinate(self, clutter, direction, placement_index, section_description=None):
+    def get_clutter_coordinate(self, clutter_region, direction, placement_index, placement_description=None):
         """ This function is used for obtaining axis coordinates for clutter placement
 
-        :param clutter: (dict) enter the clutter's dictionary (e.g. clutter[0] or clutter[target_clutter])
+        :param clutter_region: (dict) enter the clutter's region dictionary obtained by clutter_separator (e.g. clutter[0] or clutter[target_clutter])
 
         :param placement_index: (int) List of 2 integers indicating the placement:
                 - [place_index, place_range] > [1, 4] > [0, 1, 2, 3] > second element (1) is the coordinate
-        :param section_description: "top" or "mid" part of the segmented region
+        :param placement_description: "top" or "mid" part of the segmented region
         :return: point in coordinate system (x, y)
         """
         if direction == "vertical":
             placement_axis = 'y'
             placement_size = 'height'
+            isHorizontal = -1
+            section_origin =  clutter_region[placement_axis]
         elif direction == "horizontal":
             placement_axis = 'x'
             placement_size = 'width'
+            isHorizontal = 1
+            section_origin =  clutter_region[placement_axis] - (clutter_region[placement_size] / 2)
         else:
             ValueError('f{separation_direction} is not a valid separation direction') 
 
-        if section_description == None:
-            section_description = "mid"
-
+        if placement_description == None:
+            placement_description = "mid"
+        
         section_count = placement_index[1]
-        for i in range(0, section_count):
-            section_size = clutter[placement_size] / section_count
-            start_border = round(i*section_size)
-            end_border = round((i+1)*section_size)
-            if clutter[placement_axis] >= 0:
-                start_border = -start_border
-                end_border = -end_border
-                section_origin = clutter[placement_axis] + (clutter[placement_size] / 2)
-            else:
-                section_origin = clutter[placement_axis] - (clutter[placement_size] / 2)
+        
+        section_size = clutter_region[placement_size] / section_count
+
+        for i in range(0, section_count):            
+            start_border = isHorizontal * round(i*section_size)
+            end_border = isHorizontal * round((i+1)*section_size)
 
             section_start = section_origin + start_border
             section_end = section_origin + end_border
             section_mid = round((section_start + section_end) / 2)
 
             if i == placement_index[0]:
-                if section_description == "mid":
-                    return section_mid 
-                elif section_description == "top":
+                if placement_description == "mid":
+                    return section_mid
+                elif placement_description == "top":
+                    if placement_axis == 'y':
+                        print('selected top - section start', section_start)
+                        print('selected top - section origin', section_origin)
                     return section_start
-                elif section_description == "bottom":
+                elif placement_description == "bottom":
                     return section_end
 
     def getImageWithKeyword(self, directory, keyword):
