@@ -181,10 +181,4 @@ class Panel:
                 elif placement_description == "bottom":
                     return section_end
 
-    def getImageWithKeyword(self, directory, keyword):
-        image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp'}
 
-        for root, _, files in os.walk(directory):
-            for file in files:
-                if any(file.lower().endswith(ext) for ext in image_extensions) and keyword.lower() in file.lower():
-                    return "/".join([root, file])

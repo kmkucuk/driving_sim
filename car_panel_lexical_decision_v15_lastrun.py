@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on May 22, 2025, at 19:17
+    on May 28, 2025, at 19:57
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -54,7 +54,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
-    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\car_panel_lexical_decision_v14_lastrun.py',
+    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\car_panel_lexical_decision_v15_lastrun.py',
     savePickle=True, saveWideText=True,
     dataFileName=filename)
 # save a log file for detail verbose info
@@ -98,6 +98,33 @@ defaultKeyboard = keyboard.Keyboard(backend='iohub')
 # --- Initialize components for Routine "initialization" ---
 # Run 'Begin Experiment' code from function_definitions
 from pprint import pprint
+import calendar
+import json
+import math
+import random
+from datetime import date
+from datetime import datetime
+import os
+
+def getDateTimeText():
+    # get current day for text display on calemdar widget
+    my_date = date.today()
+    today = datetime.now()
+    month_index = datetime.now().month
+    month = calendar.month_name[month_index]
+    numeric_day = today.day # this is a integer
+    str_num_day = str(numeric_day)
+    if str_num_day[-1] == '1':
+        day_suffix = 'st'
+    elif str_num_day[-1] == '2':
+        day_suffix = 'nd'
+    elif str_num_day[-1] == '3':
+        day_suffix = 'rd'
+    elif int(str_num_day[-1]) >= 4:
+        day_suffix = 'th'                
+    
+    return str_num_day + day_suffix + " " + month +"\n" + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber   
+
 
 def getImageWithKeyword(directory, keyword):
     image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp'}
@@ -124,7 +151,6 @@ def correctPositionSmall(icon_size, icon_position):
     return icon_position
 #    return [icon_position[0] + icon_size[0]/2, icon_position[1]]
 # Run 'Begin Experiment' code from panel_initialization
-import os
 
 # Example usage:
 class Panel:
@@ -316,13 +342,6 @@ class Panel:
                     return "/".join([root, file])
 
 # Run 'Begin Experiment' code from exp_init
-import calendar
-import json
-import math
-import random
-from datetime import date
-from datetime import datetime
-
 # select a panel for the large clutter 1 (duration, fuel, distance)
 # select from 0 to 6.
 clutter_panel = 0
@@ -350,13 +369,28 @@ symbol_y_parse = [0, 3]
 centered_symbol_x = [1, 3]
 centered_symbol_y = [1, 3]
 
-
-
-# trip widget (duration, fuel, distance)
+# 
 text_x_parse = [3, 10]
 text_y_parse = [0, 3]
 
-trip_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], "parse_text": [text_x_parse, text_y_parse], "widget_index": 0},                
+
+temp_text_x = [5, 20]
+temp_text_y = [8, 20]
+
+battery_text_x = [2, 20]
+battery_text_y = [8, 20]
+
+miles_text_x = [6, 20]
+miles_text_y = [15, 20]
+
+temperature_int = 96
+battery_int = 24
+miles_int = 78
+temperature_text = ('').join([str(temperature_int), "F"])
+battery_text = ('').join(["%", str(battery_int)])
+miles_text = ('').join([str(miles_int), "mi"])
+
+trip_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], "parse_text": [text_x_parse, text_y_parse], "widget_index": 0, "section_count": 4},                
                "components": {"header": "Current Trip",
                             "duration": "1 hr 53 min", 
                             "fuel": "34 mpg", 
@@ -367,7 +401,7 @@ trip_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], "parse_
                             } # todo: add variable parameters to these text
 
 
-garage_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], "parse_text": [text_x_parse, text_y_parse], "widget_index": 1}, 
+garage_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], "parse_text": [text_x_parse, text_y_parse], "widget_index": 1, "section_count": 2}, 
                  "components": {"header": "My Home",
                                 "garage": "Garage Door\nOpen"},
                 "img_files": {},
@@ -375,21 +409,23 @@ garage_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], "pars
                 "txt_component_positions": {}
                 }
 
-temperature_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [text_x_parse, text_y_parse], "widget_index": 3}, 
-              "components": {"temperature": None},
+
+temperature_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [temp_text_x, temp_text_y], "widget_index": 3, "section_count": 1}, 
+              "components": {"temperature": temperature_text},
                 "img_files": {},
                 "sym_component_positions": {},
                 "txt_component_positions": {}
                }
 
-battery_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [text_x_parse, text_y_parse], "widget_index": 4}, 
-                 "components": {"battery": None},
+battery_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [text_x_parse, text_y_parse], "widget_index": 4, "section_count": 1}, 
+                 "components": {"battery": battery_text,
+                                "miles": miles_text},
                 "img_files": {},
                 "sym_component_positions": {},
                 "txt_component_positions": {}
                 }
 
-day_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [text_x_parse, text_y_parse], "widget_index": 5}, 
+day_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [text_x_parse, text_y_parse], "widget_index": 5, "section_count": 2}, 
                  "components": {"header": "day",
                                 "calendar": None},
                 "img_files": {},
@@ -397,12 +433,7 @@ day_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "
                 "txt_component_positions": {}
                 }
 
-
 all_widgets = [trip_widget, garage_widget, temperature_widget, battery_widget, day_widget]
-
-placement_desc = "mid"
-
-
 
 # first assume header to be the same size in terms of roi
 # then we can adjust it to become something else (smaller then etc.)
@@ -410,14 +441,14 @@ def segment_roi(panel, roi, widget_dict):
     
     # garage widget (duration, fuel, distance)
 
-    component_count = len(widget_dict["components"].keys())
+    component_count = widget_dict["info"]["section_count"]
     component_regions = panel.panel_separator(roi[widget_dict["info"]["widget_index"]], component_count, "vertical")
     iteration = 0
     widget_dict["component_regions"] = component_regions
     # garage widget (duration, fuel, distance)
 
     for key, comp_val in widget_dict["components"].items():         
-
+        placement_desc = None
         if key != "header":
             # get symbol positions             
             widget_dict["sym_component_positions"][key] = [panel.get_clutter_coordinate(component_regions[iteration], "horizontal", widget_dict["info"]["parse_symbol"][0]), 
@@ -432,10 +463,21 @@ def segment_roi(panel, roi, widget_dict):
                 # get current day for text display on calemdar widget
                 my_date = date.today()
                 today = datetime.now()
-                text_x_header = [2, 10]
-                text_y_header = [3, 7]
+                month = calendar.month_name[3]
+                text_x_header = [1, 10]
+                text_y_header = [2, 7]
                 numeric_day = today.day # this is a integer
-                widget_dict["components"]["header"] = calendar.day_name[my_date.weekday()] +"\n" +str(numeric_day) # e.g. 'Wednesday'\nNumber         
+                str_num_day = str(numeric_day)
+                if str_num_day[-1] == '1':
+                    day_suffix = 'st'
+                elif str_num_day[-1] == '2':
+                    day_suffix = 'nd'
+                elif str_num_day[-1] == '3':
+                    day_suffix = 'rd'
+                elif int(str_num_day[-1]) >= 4:
+                    day_suffix = 'th'                
+                widget_dict["components"]["header"] =  str_num_day + day_suffix + " " + month +"\n" + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber         
+                
             # headers are more leftward than regular text, hence specific text parsing
             widget_dict["txt_component_positions"][key] = [panel.get_clutter_coordinate(component_regions[iteration], 
                                                                                         "horizontal", text_x_header), 
@@ -444,13 +486,22 @@ def segment_roi(panel, roi, widget_dict):
             
         elif key != "header" and isinstance(comp_val, str):
             placement_desc = 'bottom'
-            widget_dict["txt_component_positions"][key] = [panel.get_clutter_coordinate(component_regions[iteration], "horizontal", widget_dict["info"]["parse_text"][0], placement_desc), 
-            panel.get_clutter_coordinate(component_regions[iteration], "vertical", widget_dict["info"]["parse_text"][1])]
-
-        iteration = iteration + 1
+            if comp_val == "battery":
+                text_x_parse = battery_text_x
+                text_y_parse = battery_text_y
+            elif comp_val == "miles":
+                text_x_parse = miles_text_x
+                text_y_parse = miles_text_y
+            else:
+                text_x_parse = widget_dict["info"]["parse_text"][0]
+                text_y_parse = widget_dict["info"]["parse_text"][1]
+            widget_dict["txt_component_positions"][key] = [panel.get_clutter_coordinate(component_regions[iteration], "horizontal", text_x_parse, placement_desc), 
+            panel.get_clutter_coordinate(component_regions[iteration], "vertical", text_y_parse)]
+        
+        if component_count == len(widget_dict["components"].items()):
+            iteration = iteration + 1
 
     return widget_dict
-
 
 trip_widget = segment_roi(panel_layout, widget_regions, trip_widget)
 garage_widget = segment_roi(panel_layout, widget_regions, garage_widget)
@@ -462,7 +513,6 @@ trip_widget["sym_component_positions"]["duration"]
 trip_widget["sym_component_positions"]["fuel"]
 trip_widget["sym_component_positions"]["distance"]
 
-
 print(widget_regions)
 print('trip_widget\n', json.dumps(trip_widget, indent=2))
 # print('\n\ngarage_widget\n',json.dumps(garage_widget, indent=2))
@@ -470,15 +520,10 @@ print('trip_widget\n', json.dumps(trip_widget, indent=2))
 # print('\n\nbattery_widget',json.dumps(battery_widget, indent=2))
 print('\n\nday_widget\n',json.dumps(day_widget, indent=2))
 
-
-
-
-
 garage_icon_size = [garage_widget["component_regions"][1]["width"] * 0.35, garage_widget["component_regions"][1]["width"] * 0.35]
 onethird_icon_size = [trip_widget["component_regions"][0]["width"] * 0.3125, trip_widget["component_regions"][0]["width"] * 0.3125]
 half_icon_size = [day_widget["component_regions"][1]["width"] * 0.8, day_widget["component_regions"][1]["width"] * 0.8]
 full_icon_size = [temperature_widget["component_regions"][0]["width"] * 0.8, temperature_widget["component_regions"][0]["width"] * 0.8]
-
 
 textFont = "./stimuli/font/robotoflex.ttf"
 
@@ -491,7 +536,8 @@ target_panel = 3
 letter_size = temperature_widget["component_regions"][0]["height"] * 0.2
 day_size = day_widget["component_regions"][0]["width"] * 0.125
 header_size = trip_widget["component_regions"][0]["width"] * 0.1
-
+temperature_size = temperature_widget["component_regions"][0]["width"] * 0.14
+battery_size = battery_widget["component_regions"][0]["width"] * 0.12
 
 
 header_wrap_width = 500
@@ -499,13 +545,8 @@ header_wrap_width = 500
 # --- Initialize components for Routine "screen_display_images" ---
 # Run 'Begin Experiment' code from estimate_frame_durations_2
 exp_clock = core.Clock()
-class placeholder:
-    def __init__(self):
-        self.boundingBox = [200, 200]
-        
-        
-placeholder_boundingbox = placeholder()
 
+        
 background_panel = visual.ImageStim(
     win=win,
     name='background_panel', 
@@ -651,6 +692,13 @@ widget3_symbol1 = visual.ImageStim(
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
     texRes=128.0, interpolate=True, depth=-19.0)
+widget3_text1 = visual.TextStim(win=win, name='widget3_text1',
+    text='',
+    font='Arial',
+    pos=[0,0], height=1.0, wrapWidth=None, ori=0.0, 
+    color='black', colorSpace='rgb', opacity=None, 
+    languageStyle='LTR',
+    depth=-20.0);
 widget4_symbol1 = visual.ImageStim(
     win=win,
     name='widget4_symbol1', 
@@ -658,14 +706,14 @@ widget4_symbol1 = visual.ImageStim(
     ori=0.0, pos=[0,0], size=1.0,
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-20.0)
+    texRes=128.0, interpolate=True, depth=-21.0)
 widget5_text1 = visual.TextStim(win=win, name='widget5_text1',
     text='',
     font='Arial',
     pos=[0,0], height=1.0, wrapWidth=header_wrap_width, ori=1.0, 
     color='black', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
-    depth=-21.0);
+    depth=-22.0);
 widget5_symbol1 = visual.ImageStim(
     win=win,
     name='widget5_symbol1', 
@@ -673,20 +721,16 @@ widget5_symbol1 = visual.ImageStim(
     ori=0.0, pos=[0,0], size=1.0,
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-22.0)
+    texRes=128.0, interpolate=True, depth=-23.0)
 keybaord_input_2 = keyboard.Keyboard()
-polygon = visual.ShapeStim(
-    win=win, name='polygon', vertices='cross',
-    size=(5, 5),
-    ori=0.0, pos=(698, 518), anchor='center',
-    lineWidth=1.0,     colorSpace='rgb',  lineColor='black', fillColor='black',
-    opacity=None, depth=-25.0, interpolate=True)
-polygon_2 = visual.ShapeStim(
-    win=win, name='polygon_2', vertices='cross',
-    size=(5, 5),
-    ori=0.0, pos=(698, 180), anchor='center',
-    lineWidth=1.0,     colorSpace='rgb',  lineColor='black', fillColor='black',
-    opacity=None, depth=-26.0, interpolate=True)
+background_panel_3 = visual.ImageStim(
+    win=win,
+    name='background_panel_3', 
+    image='stimuli/panels/background_panel.png', mask=None, anchor='center',
+    ori=0.0, pos=[0,0], size=1.0,
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-26.0)
 
 # --- Initialize components for Routine "inter_trial_interval" ---
 background_panel_2 = visual.ImageStim(
@@ -793,7 +837,7 @@ widget1_text3_2 = visual.TextStim(win=win, name='widget1_text3_2',
 widget1_text4_2 = visual.TextStim(win=win, name='widget1_text4_2',
     text='',
     font='Arial',
-    pos=[0,0], height=1.0, wrapWidth=None, ori=0.0, 
+    pos=[0,0], height=1.0, wrapWidth=header_wrap_width, ori=0.0, 
     color='black', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
     depth=-14.0);
@@ -808,7 +852,7 @@ widget2_symbol1_2 = visual.ImageStim(
 widget2_text1_2 = visual.TextStim(win=win, name='widget2_text1_2',
     text='',
     font='Arial',
-    pos=[0,0], height=1.0, wrapWidth=None, ori=0.0, 
+    pos=[0,0], height=1.0, wrapWidth=header_wrap_width, ori=0.0, 
     color='black', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
     depth=-16.0);
@@ -827,6 +871,13 @@ widget3_symbol1_2 = visual.ImageStim(
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
     texRes=128.0, interpolate=True, depth=-18.0)
+widget3_text1_2 = visual.TextStim(win=win, name='widget3_text1_2',
+    text='',
+    font='Arial',
+    pos=[0,0], height=1.0, wrapWidth=None, ori=0.0, 
+    color='black', colorSpace='rgb', opacity=None, 
+    languageStyle='LTR',
+    depth=-19.0);
 widget4_symbol1_2 = visual.ImageStim(
     win=win,
     name='widget4_symbol1_2', 
@@ -834,14 +885,14 @@ widget4_symbol1_2 = visual.ImageStim(
     ori=0.0, pos=[0,0], size=1.0,
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-19.0)
+    texRes=128.0, interpolate=True, depth=-20.0)
 widget5_text1_2 = visual.TextStim(win=win, name='widget5_text1_2',
     text='',
     font='Arial',
-    pos=[0,0], height=1.0, wrapWidth=200.0, ori=0.0, 
+    pos=[0,0], height=1.0, wrapWidth=header_wrap_width, ori=0.0, 
     color='black', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
-    depth=-20.0);
+    depth=-21.0);
 widget5_symbol1_2 = visual.ImageStim(
     win=win,
     name='widget5_symbol1_2', 
@@ -849,7 +900,15 @@ widget5_symbol1_2 = visual.ImageStim(
     ori=0.0, pos=[0,0], size=1.0,
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-21.0)
+    texRes=128.0, interpolate=True, depth=-22.0)
+background_panel_4 = visual.ImageStim(
+    win=win,
+    name='background_panel_4', 
+    image='stimuli/panels/background_panel.png', mask=None, anchor='center',
+    ori=0.0, pos=[0,0], size=1.0,
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-24.0)
 
 # Create some handy timers
 globalClock = core.Clock()  # to track the time since experiment started
@@ -933,7 +992,13 @@ for thisTrial in trials:
     # Run 'Begin Routine' code from estimate_frame_durations_2
     t_start_time = exp_clock.getTime()
     t_frame_time = []
-    
+    if trials.thisN == 0:
+        stim_duration = 0.1
+        dummy_panel_size = [panel_layout.panel_x_size, panel_layout.panel_y_size]
+    else:
+        stim_duration = 99
+        dummy_panel_size = [1, 1]
+    print('is it working first')
     background_panel.setPos([panel_layout.panel_position])
     background_panel.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
     panel1.setPos((widget_regions[0]['x'], widget_regions[0]['y']))
@@ -991,6 +1056,10 @@ for thisTrial in trials:
     widget3_symbol1.setPos([correctPosition(full_icon_size, temperature_widget["sym_component_positions"]["temperature"])])
     widget3_symbol1.setSize(full_icon_size)
     widget3_symbol1.setImage(temperature_widget["img_files"]["temperature"])
+    widget3_text1.setPos([correctTextPosition(widget3_text1, temperature_widget["txt_component_positions"]["temperature"])])
+    widget3_text1.setText(temperature_widget["components"]["temperature"])
+    widget3_text1.setFont(textFont)
+    widget3_text1.setHeight(temperature_size)
     widget4_symbol1.setPos([correctPosition(full_icon_size, battery_widget["sym_component_positions"]["battery"])])
     widget4_symbol1.setSize(full_icon_size)
     widget4_symbol1.setImage(battery_widget["img_files"]["battery"])
@@ -1020,13 +1089,19 @@ for thisTrial in trials:
     #
     #widget5_text1.alignText = alignment_var
     
+    
     widget1_text4.bold = True
     widget2_text1.bold = True
+    widget3_text1.bold = True
+    #widget4_text1.bold = True
+    #widget4_text2.bold = True
     widget5_text1.bold = True
     
     
+    background_panel_3.setPos([panel_layout.panel_position])
+    background_panel_3.setSize(dummy_panel_size)
     # keep track of which components have finished
-    screen_display_imagesComponents = [background_panel, panel1, panel2, panel3, panel4, panel5, panel6, lexical_text_2, widget1_symbol1, widget1_symbol2, widget1_symbol3, widget1_text1, widget1_text2, widget1_text3, widget1_text4, widget2_symbol1, widget2_text1, widget2_text2, widget3_symbol1, widget4_symbol1, widget5_text1, widget5_symbol1, keybaord_input_2, polygon, polygon_2]
+    screen_display_imagesComponents = [background_panel, panel1, panel2, panel3, panel4, panel5, panel6, lexical_text_2, widget1_symbol1, widget1_symbol2, widget1_symbol3, widget1_text1, widget1_text2, widget1_text3, widget1_text4, widget2_symbol1, widget2_text1, widget2_text2, widget3_symbol1, widget3_text1, widget4_symbol1, widget5_text1, widget5_symbol1, keybaord_input_2, background_panel_3]
     for thisComponent in screen_display_imagesComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
@@ -1062,6 +1137,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'background_panel.started')
             background_panel.setAutoDraw(True)
+        if background_panel.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > background_panel.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                background_panel.tStop = t  # not accounting for scr refresh
+                background_panel.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'background_panel.stopped')
+                background_panel.setAutoDraw(False)
         
         # *panel1* updates
         if panel1.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1073,6 +1157,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'panel1.started')
             panel1.setAutoDraw(True)
+        if panel1.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > panel1.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                panel1.tStop = t  # not accounting for scr refresh
+                panel1.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'panel1.stopped')
+                panel1.setAutoDraw(False)
         
         # *panel2* updates
         if panel2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1084,6 +1177,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'panel2.started')
             panel2.setAutoDraw(True)
+        if panel2.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > panel2.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                panel2.tStop = t  # not accounting for scr refresh
+                panel2.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'panel2.stopped')
+                panel2.setAutoDraw(False)
         
         # *panel3* updates
         if panel3.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1095,6 +1197,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'panel3.started')
             panel3.setAutoDraw(True)
+        if panel3.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > panel3.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                panel3.tStop = t  # not accounting for scr refresh
+                panel3.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'panel3.stopped')
+                panel3.setAutoDraw(False)
         
         # *panel4* updates
         if panel4.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1106,6 +1217,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'panel4.started')
             panel4.setAutoDraw(True)
+        if panel4.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > panel4.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                panel4.tStop = t  # not accounting for scr refresh
+                panel4.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'panel4.stopped')
+                panel4.setAutoDraw(False)
         
         # *panel5* updates
         if panel5.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1117,6 +1237,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'panel5.started')
             panel5.setAutoDraw(True)
+        if panel5.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > panel5.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                panel5.tStop = t  # not accounting for scr refresh
+                panel5.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'panel5.stopped')
+                panel5.setAutoDraw(False)
         
         # *panel6* updates
         if panel6.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1128,6 +1257,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'panel6.started')
             panel6.setAutoDraw(True)
+        if panel6.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > panel6.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                panel6.tStop = t  # not accounting for scr refresh
+                panel6.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'panel6.stopped')
+                panel6.setAutoDraw(False)
         
         # *lexical_text_2* updates
         if lexical_text_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1139,6 +1277,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'lexical_text_2.started')
             lexical_text_2.setAutoDraw(True)
+        if lexical_text_2.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > lexical_text_2.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                lexical_text_2.tStop = t  # not accounting for scr refresh
+                lexical_text_2.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'lexical_text_2.stopped')
+                lexical_text_2.setAutoDraw(False)
         
         # *widget1_symbol1* updates
         if widget1_symbol1.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1150,6 +1297,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget1_symbol1.started')
             widget1_symbol1.setAutoDraw(True)
+        if widget1_symbol1.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget1_symbol1.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget1_symbol1.tStop = t  # not accounting for scr refresh
+                widget1_symbol1.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget1_symbol1.stopped')
+                widget1_symbol1.setAutoDraw(False)
         
         # *widget1_symbol2* updates
         if widget1_symbol2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1161,6 +1317,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget1_symbol2.started')
             widget1_symbol2.setAutoDraw(True)
+        if widget1_symbol2.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget1_symbol2.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget1_symbol2.tStop = t  # not accounting for scr refresh
+                widget1_symbol2.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget1_symbol2.stopped')
+                widget1_symbol2.setAutoDraw(False)
         
         # *widget1_symbol3* updates
         if widget1_symbol3.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1172,6 +1337,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget1_symbol3.started')
             widget1_symbol3.setAutoDraw(True)
+        if widget1_symbol3.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget1_symbol3.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget1_symbol3.tStop = t  # not accounting for scr refresh
+                widget1_symbol3.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget1_symbol3.stopped')
+                widget1_symbol3.setAutoDraw(False)
         
         # *widget1_text1* updates
         if widget1_text1.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1183,6 +1357,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget1_text1.started')
             widget1_text1.setAutoDraw(True)
+        if widget1_text1.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget1_text1.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget1_text1.tStop = t  # not accounting for scr refresh
+                widget1_text1.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget1_text1.stopped')
+                widget1_text1.setAutoDraw(False)
         
         # *widget1_text2* updates
         if widget1_text2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1194,6 +1377,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget1_text2.started')
             widget1_text2.setAutoDraw(True)
+        if widget1_text2.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget1_text2.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget1_text2.tStop = t  # not accounting for scr refresh
+                widget1_text2.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget1_text2.stopped')
+                widget1_text2.setAutoDraw(False)
         
         # *widget1_text3* updates
         if widget1_text3.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1205,6 +1397,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget1_text3.started')
             widget1_text3.setAutoDraw(True)
+        if widget1_text3.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget1_text3.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget1_text3.tStop = t  # not accounting for scr refresh
+                widget1_text3.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget1_text3.stopped')
+                widget1_text3.setAutoDraw(False)
         
         # *widget1_text4* updates
         if widget1_text4.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1216,6 +1417,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget1_text4.started')
             widget1_text4.setAutoDraw(True)
+        if widget1_text4.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget1_text4.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget1_text4.tStop = t  # not accounting for scr refresh
+                widget1_text4.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget1_text4.stopped')
+                widget1_text4.setAutoDraw(False)
         
         # *widget2_symbol1* updates
         if widget2_symbol1.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1227,6 +1437,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget2_symbol1.started')
             widget2_symbol1.setAutoDraw(True)
+        if widget2_symbol1.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget2_symbol1.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget2_symbol1.tStop = t  # not accounting for scr refresh
+                widget2_symbol1.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget2_symbol1.stopped')
+                widget2_symbol1.setAutoDraw(False)
         
         # *widget2_text1* updates
         if widget2_text1.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1238,6 +1457,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget2_text1.started')
             widget2_text1.setAutoDraw(True)
+        if widget2_text1.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget2_text1.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget2_text1.tStop = t  # not accounting for scr refresh
+                widget2_text1.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget2_text1.stopped')
+                widget2_text1.setAutoDraw(False)
         
         # *widget2_text2* updates
         if widget2_text2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1249,6 +1477,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget2_text2.started')
             widget2_text2.setAutoDraw(True)
+        if widget2_text2.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget2_text2.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget2_text2.tStop = t  # not accounting for scr refresh
+                widget2_text2.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget2_text2.stopped')
+                widget2_text2.setAutoDraw(False)
         
         # *widget3_symbol1* updates
         if widget3_symbol1.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1260,6 +1497,35 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget3_symbol1.started')
             widget3_symbol1.setAutoDraw(True)
+        if widget3_symbol1.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget3_symbol1.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget3_symbol1.tStop = t  # not accounting for scr refresh
+                widget3_symbol1.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget3_symbol1.stopped')
+                widget3_symbol1.setAutoDraw(False)
+        
+        # *widget3_text1* updates
+        if widget3_text1.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            # keep track of start time/frame for later
+            widget3_text1.frameNStart = frameN  # exact frame index
+            widget3_text1.tStart = t  # local t and not account for scr refresh
+            widget3_text1.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(widget3_text1, 'tStartRefresh')  # time at next scr refresh
+            # add timestamp to datafile
+            thisExp.timestampOnFlip(win, 'widget3_text1.started')
+            widget3_text1.setAutoDraw(True)
+        if widget3_text1.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget3_text1.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget3_text1.tStop = t  # not accounting for scr refresh
+                widget3_text1.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget3_text1.stopped')
+                widget3_text1.setAutoDraw(False)
         
         # *widget4_symbol1* updates
         if widget4_symbol1.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1271,6 +1537,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget4_symbol1.started')
             widget4_symbol1.setAutoDraw(True)
+        if widget4_symbol1.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget4_symbol1.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget4_symbol1.tStop = t  # not accounting for scr refresh
+                widget4_symbol1.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget4_symbol1.stopped')
+                widget4_symbol1.setAutoDraw(False)
         
         # *widget5_text1* updates
         if widget5_text1.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1282,6 +1557,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget5_text1.started')
             widget5_text1.setAutoDraw(True)
+        if widget5_text1.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget5_text1.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget5_text1.tStop = t  # not accounting for scr refresh
+                widget5_text1.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget5_text1.stopped')
+                widget5_text1.setAutoDraw(False)
         
         # *widget5_symbol1* updates
         if widget5_symbol1.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -1293,6 +1577,15 @@ for thisTrial in trials:
             # add timestamp to datafile
             thisExp.timestampOnFlip(win, 'widget5_symbol1.started')
             widget5_symbol1.setAutoDraw(True)
+        if widget5_symbol1.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget5_symbol1.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget5_symbol1.tStop = t  # not accounting for scr refresh
+                widget5_symbol1.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget5_symbol1.stopped')
+                widget5_symbol1.setAutoDraw(False)
         
         # *keybaord_input_2* updates
         waitOnFlip = False
@@ -1309,6 +1602,15 @@ for thisTrial in trials:
             waitOnFlip = True
             win.callOnFlip(keybaord_input_2.clock.reset)  # t=0 on next screen flip
             win.callOnFlip(keybaord_input_2.clearEvents, eventType='keyboard')  # clear events on next screen flip
+        if keybaord_input_2.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > keybaord_input_2.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                keybaord_input_2.tStop = t  # not accounting for scr refresh
+                keybaord_input_2.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'keybaord_input_2.stopped')
+                keybaord_input_2.status = FINISHED
         if keybaord_input_2.status == STARTED and not waitOnFlip:
             theseKeys = keybaord_input_2.getKeys(keyList=['y','n'], waitRelease=False)
             _keybaord_input_2_allKeys.extend(theseKeys)
@@ -1323,27 +1625,25 @@ for thisTrial in trials:
                 # a response ends the routine
                 continueRoutine = False
         
-        # *polygon* updates
-        if polygon.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # *background_panel_3* updates
+        if background_panel_3.status == NOT_STARTED and tThisFlip >= 0-frameTolerance:
             # keep track of start time/frame for later
-            polygon.frameNStart = frameN  # exact frame index
-            polygon.tStart = t  # local t and not account for scr refresh
-            polygon.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(polygon, 'tStartRefresh')  # time at next scr refresh
+            background_panel_3.frameNStart = frameN  # exact frame index
+            background_panel_3.tStart = t  # local t and not account for scr refresh
+            background_panel_3.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(background_panel_3, 'tStartRefresh')  # time at next scr refresh
             # add timestamp to datafile
-            thisExp.timestampOnFlip(win, 'polygon.started')
-            polygon.setAutoDraw(True)
-        
-        # *polygon_2* updates
-        if polygon_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-            # keep track of start time/frame for later
-            polygon_2.frameNStart = frameN  # exact frame index
-            polygon_2.tStart = t  # local t and not account for scr refresh
-            polygon_2.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(polygon_2, 'tStartRefresh')  # time at next scr refresh
-            # add timestamp to datafile
-            thisExp.timestampOnFlip(win, 'polygon_2.started')
-            polygon_2.setAutoDraw(True)
+            thisExp.timestampOnFlip(win, 'background_panel_3.started')
+            background_panel_3.setAutoDraw(True)
+        if background_panel_3.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > background_panel_3.tStartRefresh + stim_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                background_panel_3.tStop = t  # not accounting for scr refresh
+                background_panel_3.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'background_panel_3.stopped')
+                background_panel_3.setAutoDraw(False)
         
         # check for quit (typically the Esc key)
         if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
@@ -1393,10 +1693,15 @@ for thisTrial in trials:
     t_start_time = exp_clock.getTime()
     t_frame_time = []
     
-    iti_duration = random.randint(1000,3000)/1000 # duration in msec units
     
-    print(iti_duration)
-    print('printed boundingbox', widget5_text1.boundingBox)
+    if trials.thisN == 0:
+        iti_duration = 0.1
+    else:
+        iti_duration = random.randint(1000,3000)/1000 # duration in msec units
+        print(iti_duration)
+        
+    print('is it working second')
+        
     
     background_panel_2.setPos([panel_layout.panel_position])
     background_panel_2.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
@@ -1451,6 +1756,10 @@ for thisTrial in trials:
     widget3_symbol1_2.setPos([correctPosition(full_icon_size, temperature_widget["sym_component_positions"]["temperature"])])
     widget3_symbol1_2.setSize(full_icon_size)
     widget3_symbol1_2.setImage(temperature_widget["img_files"]["temperature"])
+    widget3_text1_2.setPos([correctTextPosition(widget3_text1_2, temperature_widget["txt_component_positions"]["temperature"])])
+    widget3_text1_2.setText(temperature_widget["components"]["temperature"])
+    widget3_text1_2.setFont(textFont)
+    widget3_text1_2.setHeight(temperature_size)
     widget4_symbol1_2.setPos([correctPosition(full_icon_size, battery_widget["sym_component_positions"]["battery"])])
     widget4_symbol1_2.setSize(full_icon_size)
     widget4_symbol1_2.setImage(battery_widget["img_files"]["battery"])
@@ -1464,24 +1773,27 @@ for thisTrial in trials:
     # Run 'Begin Routine' code from align_text_2
     alignment_var = "left"
     
-    
-    widget1_text1_2.alignText = alignment_var
-    widget1_text2_2.alignText = alignment_var
-    widget1_text3_2.alignText = alignment_var
-    widget1_text4_2.alignText = alignment_var
-    
-    widget2_text1_2.alignText = alignment_var
-    widget2_text2_2.alignText = alignment_var
-    
-    widget5_text1_2.alignText = alignment_var
+    #
+    #widget1_text1_2.alignText = alignment_var
+    #widget1_text2_2.alignText = alignment_var
+    #widget1_text3_2.alignText = alignment_var
+    #widget1_text4_2.alignText = alignment_var
+    #
+    #widget2_text1_2.alignText = alignment_var
+    #widget2_text2_2.alignText = alignment_var
+    #
+    #widget5_text1_2.alignText = alignment_var
     
     widget1_text4_2.bold = True
     widget2_text1_2.bold = True
+    widget3_text1_2.bold = True
     widget5_text1_2.bold = True
     
     
+    background_panel_4.setPos([panel_layout.panel_position])
+    background_panel_4.setSize(dummy_panel_size)
     # keep track of which components have finished
-    inter_trial_intervalComponents = [background_panel_2, panel1_2, panel2_2, panel3_2, panel4_2, panel5_2, panel6_2, widget1_symbol1_2, widget1_symbol2_2, widget1_symbol3_2, widget1_text1_2, widget1_text2_2, widget1_text3_2, widget1_text4_2, widget2_symbol1_2, widget2_text1_2, widget2_text2_2, widget3_symbol1_2, widget4_symbol1_2, widget5_text1_2, widget5_symbol1_2]
+    inter_trial_intervalComponents = [background_panel_2, panel1_2, panel2_2, panel3_2, panel4_2, panel5_2, panel6_2, widget1_symbol1_2, widget1_symbol2_2, widget1_symbol3_2, widget1_text1_2, widget1_text2_2, widget1_text3_2, widget1_text4_2, widget2_symbol1_2, widget2_text1_2, widget2_text2_2, widget3_symbol1_2, widget3_text1_2, widget4_symbol1_2, widget5_text1_2, widget5_symbol1_2, background_panel_4]
     for thisComponent in inter_trial_intervalComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
@@ -1867,6 +2179,26 @@ for thisTrial in trials:
                 thisExp.timestampOnFlip(win, 'widget3_symbol1_2.stopped')
                 widget3_symbol1_2.setAutoDraw(False)
         
+        # *widget3_text1_2* updates
+        if widget3_text1_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            # keep track of start time/frame for later
+            widget3_text1_2.frameNStart = frameN  # exact frame index
+            widget3_text1_2.tStart = t  # local t and not account for scr refresh
+            widget3_text1_2.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(widget3_text1_2, 'tStartRefresh')  # time at next scr refresh
+            # add timestamp to datafile
+            thisExp.timestampOnFlip(win, 'widget3_text1_2.started')
+            widget3_text1_2.setAutoDraw(True)
+        if widget3_text1_2.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > widget3_text1_2.tStartRefresh + iti_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                widget3_text1_2.tStop = t  # not accounting for scr refresh
+                widget3_text1_2.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'widget3_text1_2.stopped')
+                widget3_text1_2.setAutoDraw(False)
+        
         # *widget4_symbol1_2* updates
         if widget4_symbol1_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
             # keep track of start time/frame for later
@@ -1927,6 +2259,26 @@ for thisTrial in trials:
                 thisExp.timestampOnFlip(win, 'widget5_symbol1_2.stopped')
                 widget5_symbol1_2.setAutoDraw(False)
         
+        # *background_panel_4* updates
+        if background_panel_4.status == NOT_STARTED and tThisFlip >= 0-frameTolerance:
+            # keep track of start time/frame for later
+            background_panel_4.frameNStart = frameN  # exact frame index
+            background_panel_4.tStart = t  # local t and not account for scr refresh
+            background_panel_4.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(background_panel_4, 'tStartRefresh')  # time at next scr refresh
+            # add timestamp to datafile
+            thisExp.timestampOnFlip(win, 'background_panel_4.started')
+            background_panel_4.setAutoDraw(True)
+        if background_panel_4.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > background_panel_4.tStartRefresh + iti_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                background_panel_4.tStop = t  # not accounting for scr refresh
+                background_panel_4.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'background_panel_4.stopped')
+                background_panel_4.setAutoDraw(False)
+        
         # check for quit (typically the Esc key)
         if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
             core.quit()
@@ -1951,6 +2303,8 @@ for thisTrial in trials:
             thisComponent.setAutoDraw(False)
     # Run 'End Routine' code from randomize_iti
     thisExp.addData('trial_frame_durations', t_frame_time);
+    
+    print('is it working second end routine')
     # the Routine "inter_trial_interval" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset()
     thisExp.nextEntry()

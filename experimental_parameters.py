@@ -4,7 +4,35 @@ import math
 import random
 from datetime import date
 from datetime import datetime
+import os
 
+
+def getImageWithKeyword(directory, keyword):
+    image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp'}
+
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if any(file.lower().endswith(ext) for ext in image_extensions) and keyword.lower() in file.lower():
+                return "/".join([root, file])
+            
+def getDateTimeText():
+        # get current day for text display on calemdar widget
+    my_date = date.today()
+    today = datetime.now()
+    month_index = datetime.now().month
+    month = calendar.month_name[month_index]
+    numeric_day = today.day # this is a integer
+    str_num_day = str(numeric_day)
+    if str_num_day[-1] == '1':
+        day_suffix = 'st'
+    elif str_num_day[-1] == '2':
+        day_suffix = 'nd'
+    elif str_num_day[-1] == '3':
+        day_suffix = 'rd'
+    elif int(str_num_day[-1]) >= 4:
+        day_suffix = 'th'                
+    
+    return str_num_day + day_suffix + " " + month +"\n" + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber         
 # select a panel for the large clutter 1 (duration, fuel, distance)
 # select from 0 to 6.
 clutter_panel = 0
@@ -22,6 +50,92 @@ else:
 
 widget_regions = panel_layout.generate_panel_layout([1, 0, 0, 1]) 
 
+minute_elapsed_int = 28
+fuel_consumption_int = 34
+distance_traveled_int = 78
+
+temperature_int = 96
+battery_int = 24
+miles_int = 78
+
+duration_text = ('').join(["1 hr", str(minute_elapsed_int), " min"])
+fuel_text = ('').join([str(fuel_consumption_int) , " mpg"])
+distance_text = ('').join([str(distance_traveled_int) , " mi"])
+
+temperature_text = ('').join([str(temperature_int), "F"])
+battery_text = ('').join(["%", str(battery_int)])
+miles_text = ('').join([str(miles_int), "mi"])
+
+dynamic_clutter = {"trip_widget": "duration"}
+
+print('trip_widget\n', json.dumps(widget_regions, indent=2))
+
+# todo: add "possible_regions" to widget dict to indicate which of the regions that widget can appear
+# todo: pop 'target_region' from these regions to prevent word display and widget overlaps
+# todo: parse position based on percentages, not sections.
+# todo: make a dict of dicts to wrap all widgets OR array of dicts
+# todo: change data structure to accommodate all relevant parameters within the widget dict (no if statements for specific widgets etc.)
+
+target_panel = 3
+
+large_region_indices = [0, 5]
+small_region_indices = [1, 2, 3, 4]
+if target_panel in large_region_indices:
+    large_region_indices.remove(target_panel)
+elif target_panel in small_region_indices:
+    small_region_indices.remove(target_panel)
+
+all = {"trip_widget": {"possible_regions": large_region_indices, 
+                 "region_index": 0, 
+                 "text_components": 
+                    {"trip_header": {"text": "Current Trip", "position_percentage": [], "position_pixel": []},
+                    "duration": {"dynamic_clutter": 28, "text": None, "position_percentage": [], "position_pixel": []},  
+                    "fuel": {"text": fuel_text, "position_percentage": [], "position_pixel": []}, 
+                    "distance": {"text": distance_text, "position_percentage": [], "position_pixel": []}
+                    },
+                 "image_components": 
+                 {"duration": {"file":  getImageWithKeyword("./stimuli/clutter", "duration"), "position_percentage": [], "position_pixel": []}, 
+                  "fuel": {"file":  getImageWithKeyword("./stimuli/clutter", "fuel"), "position_percentage": [], "position_pixel": []}, 
+                  "distance": {"file":  getImageWithKeyword("./stimuli/clutter", "distance"), "position_percentage": [], "position_pixel": []}
+                  },
+                },
+
+"calendar_widget": {"possible_regions": large_region_indices, 
+                 "region_index": 5, 
+                 "text_components": 
+                    {"date": {"text": getDateTimeText(), "position_percentage": [], "position_pixel": []}
+                     },
+                 "image_components": 
+                 {"calendar": {"file":  getImageWithKeyword("./stimuli/clutter", "calendar"), "position_ percentage": [], "position_pixel": []}
+                  },
+                },
+
+"garage_widget": {"possible_regions": small_region_indices, 
+                 "region_index": 1, 
+                 "text_components": 
+                    {"garage_header": {"text": "My Home", "position_percentage": [], "position_pixel": []},
+                     "garage_door": {"text": "Garage Door\nOpen", "position_percentage": [], "position_pixel": []}
+                     },
+                 "image_components": 
+                 {"garage": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [], "position_pixel": []}
+                  },
+                },
+
+"temperature_widget": {"possible_regions": small_region_indices, 
+                 "region_index": 5, 
+                 "text_components": 
+                    {"temperature": {"text": "My Home", "position_percentage": [], "position_pixel": []},
+                     "garage_door": {"text": "Garage Door\nOpen", "position_percentage": [], "position_pixel": []}
+                     },
+                 "image_components": 
+                 {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [], "position_pixel": []}
+                  },
+                }
+
+}
+
+print(('').join(["1 hr", str(all["trip_widget"]["text_components"]["duration"]["dynamic_clutter"]), " min"]))
+[]
 # parse manual: panel is sliced based on the second element.  
 # [1,3] > segments the panel into three and retrieves the second segment's midpoint.
 # [0,5] > segments the panel into five and retrieves the first segment's midpoint.  
@@ -32,13 +146,28 @@ symbol_y_parse = [0, 3]
 centered_symbol_x = [1, 3]
 centered_symbol_y = [1, 3]
 
-
-
-# trip widget (duration, fuel, distance)
+# 
 text_x_parse = [3, 10]
 text_y_parse = [0, 3]
 
-trip_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], "parse_text": [text_x_parse, text_y_parse], "widget_index": 0},                
+
+temp_text_x = [5, 20]
+temp_text_y = [8, 20]
+
+battery_text_x = [2, 20]
+battery_text_y = [8, 20]
+
+miles_text_x = [6, 20]
+miles_text_y = [15, 20]
+
+temperature_int = 96
+battery_int = 24
+miles_int = 78
+temperature_text = ('').join([str(temperature_int), "F"])
+battery_text = ('').join(["%", str(battery_int)])
+miles_text = ('').join([str(miles_int), "mi"])
+
+trip_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], "parse_text": [text_x_parse, text_y_parse], "widget_index": 0, "section_count": 4},                
                "components": {"header": "Current Trip",
                             "duration": "1 hr 53 min", 
                             "fuel": "34 mpg", 
@@ -49,7 +178,9 @@ trip_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], "parse_
                             } # todo: add variable parameters to these text
 
 
-garage_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], "parse_text": [text_x_parse, text_y_parse], "widget_index": 1}, 
+garage_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], 
+                          "parse_text": [text_x_parse, text_y_parse], 
+                          "widget_index": 1, "section_count": 2}, 
                  "components": {"header": "My Home",
                                 "garage": "Garage Door\nOpen"},
                 "img_files": {},
@@ -57,21 +188,23 @@ garage_widget = {"info": {"parse_symbol": [left_symbol_x, symbol_y_parse], "pars
                 "txt_component_positions": {}
                 }
 
-temperature_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [text_x_parse, text_y_parse], "widget_index": 3}, 
-              "components": {"temperature": None},
+
+temperature_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [temp_text_x, temp_text_y], "widget_index": 3, "section_count": 1}, 
+              "components": {"temperature": temperature_text},
                 "img_files": {},
                 "sym_component_positions": {},
                 "txt_component_positions": {}
                }
 
-battery_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [text_x_parse, text_y_parse], "widget_index": 4}, 
-                 "components": {"battery": None},
+battery_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [text_x_parse, text_y_parse], "widget_index": 4, "section_count": 1}, 
+                 "components": {"battery": battery_text,
+                                "miles": miles_text},
                 "img_files": {},
                 "sym_component_positions": {},
                 "txt_component_positions": {}
                 }
 
-day_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [text_x_parse, text_y_parse], "widget_index": 5}, 
+day_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "parse_text": [text_x_parse, text_y_parse], "widget_index": 5, "section_count": 2}, 
                  "components": {"header": "day",
                                 "calendar": None},
                 "img_files": {},
@@ -79,12 +212,7 @@ day_widget = {"info": {"parse_symbol": [centered_symbol_x, centered_symbol_y], "
                 "txt_component_positions": {}
                 }
 
-
 all_widgets = [trip_widget, garage_widget, temperature_widget, battery_widget, day_widget]
-
-placement_desc = "mid"
-
-
 
 # first assume header to be the same size in terms of roi
 # then we can adjust it to become something else (smaller then etc.)
@@ -92,14 +220,14 @@ def segment_roi(panel, roi, widget_dict):
     
     # garage widget (duration, fuel, distance)
 
-    component_count = len(widget_dict["components"].keys())
+    component_count = widget_dict["info"]["section_count"]
     component_regions = panel.panel_separator(roi[widget_dict["info"]["widget_index"]], component_count, "vertical")
     iteration = 0
     widget_dict["component_regions"] = component_regions
     # garage widget (duration, fuel, distance)
 
     for key, comp_val in widget_dict["components"].items():         
-
+        placement_desc = None
         if key != "header":
             # get symbol positions             
             widget_dict["sym_component_positions"][key] = [panel.get_clutter_coordinate(component_regions[iteration], "horizontal", widget_dict["info"]["parse_symbol"][0]), 
@@ -114,10 +242,24 @@ def segment_roi(panel, roi, widget_dict):
                 # get current day for text display on calemdar widget
                 my_date = date.today()
                 today = datetime.now()
-                text_x_header = [2, 10]
-                text_y_header = [3, 7]
+                month_index = datetime.now().month
+                month = calendar.month_name[month_index]
+                text_x_header = [1, 10]
+                text_y_header = [2, 7]
                 numeric_day = today.day # this is a integer
-                widget_dict["components"]["header"] = calendar.day_name[my_date.weekday()] +"\n" +str(numeric_day) # e.g. 'Wednesday'\nNumber         
+                str_num_day = str(numeric_day)
+                if str_num_day[-1] == '1':
+                    day_suffix = 'st'
+                elif str_num_day[-1] == '2':
+                    day_suffix = 'nd'
+                elif str_num_day[-1] == '3':
+                    day_suffix = 'rd'
+                elif int(str_num_day[-1]) >= 4:
+                    day_suffix = 'th'                
+                
+                date_text =  str_num_day + day_suffix + " " + month +"\n" + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber         
+                widget_dict["components"]["header"] =  str_num_day + day_suffix + " " + month +"\n" + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber         
+                
             # headers are more leftward than regular text, hence specific text parsing
             widget_dict["txt_component_positions"][key] = [panel.get_clutter_coordinate(component_regions[iteration], 
                                                                                         "horizontal", text_x_header), 
@@ -126,13 +268,22 @@ def segment_roi(panel, roi, widget_dict):
             
         elif key != "header" and isinstance(comp_val, str):
             placement_desc = 'bottom'
-            widget_dict["txt_component_positions"][key] = [panel.get_clutter_coordinate(component_regions[iteration], "horizontal", widget_dict["info"]["parse_text"][0], placement_desc), 
-            panel.get_clutter_coordinate(component_regions[iteration], "vertical", widget_dict["info"]["parse_text"][1])]
-
-        iteration = iteration + 1
+            if comp_val == "battery":
+                text_x_parse = battery_text_x
+                text_y_parse = battery_text_y
+            elif comp_val == "miles":
+                text_x_parse = miles_text_x
+                text_y_parse = miles_text_y
+            else:
+                text_x_parse = widget_dict["info"]["parse_text"][0]
+                text_y_parse = widget_dict["info"]["parse_text"][1]
+            widget_dict["txt_component_positions"][key] = [panel.get_clutter_coordinate(component_regions[iteration], "horizontal", text_x_parse, placement_desc), 
+            panel.get_clutter_coordinate(component_regions[iteration], "vertical", text_y_parse)]
+        
+        if component_count == len(widget_dict["components"].items()):
+            iteration = iteration + 1
 
     return widget_dict
-
 
 trip_widget = segment_roi(panel_layout, widget_regions, trip_widget)
 garage_widget = segment_roi(panel_layout, widget_regions, garage_widget)
@@ -144,36 +295,31 @@ trip_widget["sym_component_positions"]["duration"]
 trip_widget["sym_component_positions"]["fuel"]
 trip_widget["sym_component_positions"]["distance"]
 
-
 print(widget_regions)
+
 print('trip_widget\n', json.dumps(trip_widget, indent=2))
 # print('\n\ngarage_widget\n',json.dumps(garage_widget, indent=2))
 # print('\n\ntemperature_widget\n',json.dumps(temperature_widget, indent=2))
 # print('\n\nbattery_widget',json.dumps(battery_widget, indent=2))
 print('\n\nday_widget\n',json.dumps(day_widget, indent=2))
 
-
-
-
-
 garage_icon_size = [garage_widget["component_regions"][1]["width"] * 0.35, garage_widget["component_regions"][1]["width"] * 0.35]
 onethird_icon_size = [trip_widget["component_regions"][0]["width"] * 0.3125, trip_widget["component_regions"][0]["width"] * 0.3125]
 half_icon_size = [day_widget["component_regions"][1]["width"] * 0.8, day_widget["component_regions"][1]["width"] * 0.8]
 full_icon_size = [temperature_widget["component_regions"][0]["width"] * 0.8, temperature_widget["component_regions"][0]["width"] * 0.8]
-
 
 textFont = "./stimuli/font/robotoflex.ttf"
 
 text_size = trip_widget["component_regions"][0]["width"]/12
 # choose a targel panel (1 to 10)
 # Panel Numbers: [1, [2/3], [4/5], 6]
-target_panel = 3
 
 # letter size is dependent on the large panel's height
 letter_size = temperature_widget["component_regions"][0]["height"] * 0.2
 day_size = day_widget["component_regions"][0]["width"] * 0.125
 header_size = trip_widget["component_regions"][0]["width"] * 0.1
-
+temperature_size = temperature_widget["component_regions"][0]["width"] * 0.14
+battery_size = battery_widget["component_regions"][0]["width"] * 0.12
 
 
 header_wrap_width = 500
