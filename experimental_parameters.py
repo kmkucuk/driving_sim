@@ -71,6 +71,23 @@ def getImageWithKeyword(directory, keyword):
                 return "/".join([root, file])
 
 
+
+def getPositions(widget_regions, position_percentage):
+    """ This function is used for obtaining axis coordinates for clutter placement
+
+    :param clutter_region: (dict) enter the clutter's region dictionary obtained by clutter_separator (e.g. clutter[0] or clutter[target_clutter])
+
+    :param position_percentages: (int) List of 2 integers indicating the placement in percentage of the clutter region size:
+             [25, 50] => [width * 25/100, height * 50/100]
+    :return: point in coordinate system (x, y)
+    """
+
+    y_origin = widget_regions['y'] + (widget_regions['height']/2)
+    x_origin = widget_regions['x'] - (widget_regions['width']/2)
+
+    return [round(x_origin + widget_regions['width']*(position_percentage[0]/100)), 
+            round(y_origin - widget_regions['height']*(position_percentage[1]/100))]
+    
 if 'win' not in locals():
     from panel_generation_function import Panel
     class win:
@@ -83,10 +100,6 @@ else:
     panel_layout = Panel(win.size[0], win.size[1])
 
 widget_regions = panel_layout.generate_panel_layout([1, 0, 0, 1]) 
-
-
-# TODO: parse position based on percentages, not sections.
-
 
 target_panel = 2
 large_region_indices = [0, 5]
@@ -101,15 +114,15 @@ all_widgets = [
                 "possible_regions": large_region_indices, 
                 "region_index": 0,
                 "text_components": 
-                    {"trip_header": {"text": "Current Trip", "position_percentage": [], "position_pixel": []},
-                    "duration": {"text": "", "position_percentage": [], "position_pixel": []},  
-                    "fuel": {"text": "", "position_percentage": [], "position_pixel": []}, 
-                    "distance": {"text": "", "position_percentage": [], "position_pixel": []}
+                    {"trip_header": {"text": "Current Trip", "position_percentage": [15, 10], "position_pixel": []},
+                    "duration": {"text": "", "position_percentage": [12, 25], "position_pixel": []},  
+                    "fuel": {"text": "", "position_percentage": [12, 50], "position_pixel": []}, 
+                    "distance": {"text": "", "position_percentage": [12, 75], "position_pixel": []}
                     },
                  "image_components": 
-                 {"duration": {"file":  getImageWithKeyword("./stimuli/clutter", "duration"), "position_percentage": [], "position_pixel": []}, 
-                  "fuel": {"file":  getImageWithKeyword("./stimuli/clutter", "fuel"), "position_percentage": [], "position_pixel": []}, 
-                  "distance": {"file":  getImageWithKeyword("./stimuli/clutter", "distance"), "position_percentage": [], "position_pixel": []}
+                 {"duration": {"file":  getImageWithKeyword("./stimuli/clutter", "duration"), "position_percentage": [10, 25], "position_pixel": []}, 
+                  "fuel": {"file":  getImageWithKeyword("./stimuli/clutter", "fuel"), "position_percentage": [10, 50], "position_pixel": []}, 
+                  "distance": {"file":  getImageWithKeyword("./stimuli/clutter", "distance"), "position_percentage": [10, 75], "position_pixel": []}
                   },
                 },
 
@@ -117,10 +130,10 @@ all_widgets = [
                  "possible_regions": large_region_indices,
                  "region_index": 5,
                  "text_components": 
-                    {"date": {"text": "", "position_percentage": [], "position_pixel": []}
+                    {"date": {"text": "", "position_percentage": [15, 15], "position_pixel": []}
                      },
                  "image_components": 
-                 {"calendar": {"file":  getImageWithKeyword("./stimuli/clutter", "calendar"), "position_ percentage": [], "position_pixel": []}
+                 {"calendar": {"file":  getImageWithKeyword("./stimuli/clutter", "calendar"), "position_percentage": [10 , 60], "position_pixel": []}
                   },
                 },
                 
@@ -128,11 +141,11 @@ all_widgets = [
                  "possible_regions": small_region_indices, 
                  "region_index": 1, 
                  "text_components": 
-                    {"garage_header": {"text": "My Home", "position_percentage": [], "position_pixel": []},
-                     "garage_door": {"text": "", "position_percentage": [], "position_pixel": []}
+                    {"garage_header": {"text": "My Home", "position_percentage": [10, 10], "position_pixel": []},
+                     "garage_door": {"text": "", "position_percentage": [15, 50], "position_pixel": []}
                      },
                  "image_components": 
-                 {"garage": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [], "position_pixel": []}
+                 {"garage": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [10, 50], "position_pixel": []}
                   },
                 },
 
@@ -140,10 +153,10 @@ all_widgets = [
                 "possible_regions": small_region_indices, 
                  "region_index": 3, 
                  "text_components": 
-                    {"temperature": {"text": "", "position_percentage": [], "position_pixel": []}                   
+                    {"temperature": {"text": "", "position_percentage": [40, 50], "position_pixel": []}                   
                      },
                  "image_components": 
-                 {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [], "position_pixel": []}
+                 {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [50, 50], "position_pixel": []}
                   },
                 },
 
@@ -151,11 +164,11 @@ all_widgets = [
                  "possible_regions": small_region_indices, 
                  "region_index": 4, 
                  "text_components": 
-                    {"battery": {"text": "", "position_percentage": [], "position_pixel": []},
-                     "miles": {"text": "", "position_percentage": [], "position_pixel": []}
+                    {"battery": {"text": "", "position_percentage": [30, 30], "position_pixel": []},
+                     "miles": {"text": "", "position_percentage": [60, 60], "position_pixel": []}
                      },
                  "image_components": 
-                 {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [], "position_pixel": []}
+                 {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [50, 50], "position_pixel": []}
                   },
                 }
         ] 
@@ -170,6 +183,18 @@ for index in range(0, len(all_widgets)):
     curr_dyn_clutter = dynamic_clutter_values[index]
     for key, val in curr_dyn_clutter.items():
         all_widgets[index]["text_components"][key]["text"] = updateText(val, key)
+
+
+for index in range(0, len(all_widgets)):
+    curr_text_comps = all_widgets[index]["text_components"]
+    widget_index = all_widgets[index]["region_index"]
+    for key, val in curr_text_comps.items():
+        all_widgets[index]["text_components"][key]["position_pixel"] = getPositions(widget_regions[widget_index], val["position_percentage"])
+
+    curr_img_comps = all_widgets[index]["image_components"]
+    for key, val in curr_img_comps.items():
+        all_widgets[index]["image_components"][key]["position_pixel"] = getPositions(widget_regions[widget_index], val["position_percentage"])    
+
 
 
 a=0
