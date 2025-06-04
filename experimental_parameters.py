@@ -87,6 +87,18 @@ def getPositions(widget_regions, position_percentage):
 
     return [round(x_origin + widget_regions['width']*(position_percentage[0]/100)), 
             round(y_origin - widget_regions['height']*(position_percentage[1]/100))]
+
+
+def getIconSize(widget_regions, size_ratio):
+    """ This function is used for obtaining axis coordinates for clutter placement
+
+    :param widget_regions: (dict) enter the clutter's region dictionary obtained by clutter_separator (e.g. clutter[0] or clutter[target_clutter])
+
+    :param size_ratio: (int) List of 2 integers indicating the ratio of icon size relative to the widget region's width
+    :return: size in pixels (w, h)
+    """
+    return [round(widget_regions['width']*(size_ratio[0])), 
+            round(widget_regions['width']*(size_ratio[1]))]
     
 if 'win' not in locals():
     from panel_generation_function import Panel
@@ -120,9 +132,15 @@ all_widgets = [
                     "distance": {"text": "", "position_percentage": [12, 75], "position_pixel": []}
                     },
                  "image_components": 
-                 {"duration": {"file":  getImageWithKeyword("./stimuli/clutter", "duration"), "position_percentage": [10, 25], "position_pixel": []}, 
-                  "fuel": {"file":  getImageWithKeyword("./stimuli/clutter", "fuel"), "position_percentage": [10, 50], "position_pixel": []}, 
-                  "distance": {"file":  getImageWithKeyword("./stimuli/clutter", "distance"), "position_percentage": [10, 75], "position_pixel": []}
+                 {"duration": {"file":  getImageWithKeyword("./stimuli/clutter", "duration"), 
+                               "position_percentage": [10, 25], "position_pixel": [],
+                               "size_ratio": [0.3125, 0.3125], "size_pixel": []}, 
+                  "fuel": {"file":  getImageWithKeyword("./stimuli/clutter", "fuel"), 
+                           "position_percentage": [10, 50], "position_pixel": [],
+                               "size_ratio": [0.3125, 0.3125], "size_pixel": []}, 
+                  "distance": {"file":  getImageWithKeyword("./stimuli/clutter", "distance"), 
+                               "position_percentage": [10, 75], "position_pixel": [],
+                               "size_ratio": [0.3125, 0.3125], "size_pixel": []}
                   },
                 },
 
@@ -133,7 +151,9 @@ all_widgets = [
                     {"date": {"text": "", "position_percentage": [15, 15], "position_pixel": []}
                      },
                  "image_components": 
-                 {"calendar": {"file":  getImageWithKeyword("./stimuli/clutter", "calendar"), "position_percentage": [10 , 60], "position_pixel": []}
+                 {"calendar": {"file":  getImageWithKeyword("./stimuli/clutter", "calendar"), 
+                               "position_percentage": [10 , 60], "position_pixel": [],
+                               "size_ratio": [0.8, 0.8], "size_pixel": []}
                   },
                 },
                 
@@ -145,7 +165,9 @@ all_widgets = [
                      "garage_door": {"text": "", "position_percentage": [15, 50], "position_pixel": []}
                      },
                  "image_components": 
-                 {"garage": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [10, 50], "position_pixel": []}
+                 {"garage": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), 
+                             "position_percentage": [10, 50], "position_pixel": [],
+                               "size_ratio": [0.35, 0.35], "size_pixel": []}
                   },
                 },
 
@@ -156,7 +178,9 @@ all_widgets = [
                     {"temperature": {"text": "", "position_percentage": [40, 50], "position_pixel": []}                   
                      },
                  "image_components": 
-                 {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [50, 50], "position_pixel": []}
+                 {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), 
+                                  "position_percentage": [50, 50], "position_pixel": [],
+                               "size_ratio": [0.8, 0.8], "size_pixel": []}
                   },
                 },
 
@@ -168,10 +192,15 @@ all_widgets = [
                      "miles": {"text": "", "position_percentage": [60, 60], "position_pixel": []}
                      },
                  "image_components": 
-                 {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [50, 50], "position_pixel": []}
+                 {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), 
+                                  "position_percentage": [50, 50], "position_pixel": [],
+                               "size_ratio": [0.8, 0.8], "size_pixel": []}
                   },
                 }
         ] 
+
+
+
 
 dynamic_clutter_values = [{"duration": 28, "fuel": 34, "distance": 78}, 
                           {"date": 0}, 
@@ -179,11 +208,13 @@ dynamic_clutter_values = [{"duration": 28, "fuel": 34, "distance": 78},
                           {"temperature": 96},
                           {"battery": 24, "miles": 76}]
 
+# TODO: function to change order of elements in each data strct. to create interchangeable widget positions
+all_data_structures = [all_widgets, dynamic_clutter_values]
+
 for index in range(0, len(all_widgets)):
     curr_dyn_clutter = dynamic_clutter_values[index]
     for key, val in curr_dyn_clutter.items():
         all_widgets[index]["text_components"][key]["text"] = updateText(val, key)
-
 
 for index in range(0, len(all_widgets)):
     curr_text_comps = all_widgets[index]["text_components"]
@@ -193,7 +224,8 @@ for index in range(0, len(all_widgets)):
 
     curr_img_comps = all_widgets[index]["image_components"]
     for key, val in curr_img_comps.items():
-        all_widgets[index]["image_components"][key]["position_pixel"] = getPositions(widget_regions[widget_index], val["position_percentage"])    
+        all_widgets[index]["image_components"][key]["position_pixel"] = getPositions(widget_regions[widget_index], val["position_percentage"])   
+        all_widgets[index]["image_components"][key]["size_pixel"] = getIconSize(widget_regions[widget_index], val["size_ratio"])
 
 
 
