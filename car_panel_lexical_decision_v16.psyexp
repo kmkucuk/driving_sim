@@ -353,7 +353,7 @@
         <Param val="lexical_text_2" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="(widget_regions[target_panel-1]['x'], widget_regions[target_panel-1]['y'])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="(widget_regions[target_panel]['x'], widget_regions[target_panel]['y'])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>

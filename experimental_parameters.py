@@ -7,6 +7,61 @@ from datetime import datetime
 import os
 
 
+def getGarageText(boolean):
+    if boolean == 0:
+        return "Garage Door\nClosed"
+    elif boolean == 1:
+        return "Garage Door\nOpen"
+    else:
+        ValueError("Garage door clutter value is not valid.")
+
+def getDateTimeText(value):
+    """
+    param day_shift: used for changing the day display on the panel for changing clutter
+    condition. adding or subtracting int value from day of the month (13 +- day_shift ) 
+    """
+    
+    # get current day for text display on calemdar widget
+    my_date = date.today()
+    today = datetime.now()
+    month_index = datetime.now().month
+    month = calendar.month_name[month_index]
+    numeric_day = today.day # this is a integer
+    if numeric_day + value <= 0 or numeric_day + value > 31:
+        ValueError("Unacceptable day of the month after subtracting the clutter change value.")
+    else:
+        str_num_day = str(numeric_day + value)
+        if str_num_day[-1] == '1':
+            day_suffix = 'st'
+        elif str_num_day[-1] == '2':
+            day_suffix = 'nd'
+        elif str_num_day[-1] == '3':
+            day_suffix = 'rd'
+        elif int(str_num_day[-1]) >= 4:
+            day_suffix = 'th'    
+
+        return str_num_day + day_suffix + " " + month +"\n" + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber   
+
+def updateText(value, key):
+
+    if key == "duration":
+        return ('').join(["1 hr ", str(value), " min"])
+    elif key == "fuel":
+        return ('').join([str(value) , " mpg"])
+    elif key == "distance":
+        return ('').join([str(value) , " mi"])
+    elif key == "date":
+        return getDateTimeText(value)
+    elif key == "garage_door":
+        return getGarageText(value)
+    elif key == "battery":
+        return ('').join(["%", str(value)])
+    elif key == "miles":
+        return ('').join([str(value), "mi"])
+    else:
+        KeyError('Widget was not found [', key,']')
+
+
 def getImageWithKeyword(directory, keyword):
     image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp'}
 
@@ -14,28 +69,7 @@ def getImageWithKeyword(directory, keyword):
         for file in files:
             if any(file.lower().endswith(ext) for ext in image_extensions) and keyword.lower() in file.lower():
                 return "/".join([root, file])
-            
-def getDateTimeText():
-        # get current day for text display on calemdar widget
-    my_date = date.today()
-    today = datetime.now()
-    month_index = datetime.now().month
-    month = calendar.month_name[month_index]
-    numeric_day = today.day # this is a integer
-    str_num_day = str(numeric_day)
-    if str_num_day[-1] == '1':
-        day_suffix = 'st'
-    elif str_num_day[-1] == '2':
-        day_suffix = 'nd'
-    elif str_num_day[-1] == '3':
-        day_suffix = 'rd'
-    elif int(str_num_day[-1]) >= 4:
-        day_suffix = 'th'                
-    
-    return str_num_day + day_suffix + " " + month +"\n" + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber         
-# select a panel for the large clutter 1 (duration, fuel, distance)
-# select from 0 to 6.
-clutter_panel = 0
+
 
 if 'win' not in locals():
     from panel_generation_function import Panel
@@ -50,48 +84,27 @@ else:
 
 widget_regions = panel_layout.generate_panel_layout([1, 0, 0, 1]) 
 
-minute_elapsed_int = 28
-fuel_consumption_int = 34
-distance_traveled_int = 78
 
-temperature_int = 96
-battery_int = 24
-miles_int = 78
+# TODO: parse position based on percentages, not sections.
 
-duration_text = ('').join(["1 hr", str(minute_elapsed_int), " min"])
-fuel_text = ('').join([str(fuel_consumption_int) , " mpg"])
-distance_text = ('').join([str(distance_traveled_int) , " mi"])
 
-temperature_text = ('').join([str(temperature_int), "F"])
-battery_text = ('').join(["%", str(battery_int)])
-miles_text = ('').join([str(miles_int), "mi"])
-
-dynamic_clutter = {"trip_widget": "duration"}
-
-print('trip_widget\n', json.dumps(widget_regions, indent=2))
-
-# todo: add "possible_regions" to widget dict to indicate which of the regions that widget can appear
-# todo: pop 'target_region' from these regions to prevent word display and widget overlaps
-# todo: parse position based on percentages, not sections.
-# todo: make a dict of dicts to wrap all widgets OR array of dicts
-# todo: change data structure to accommodate all relevant parameters within the widget dict (no if statements for specific widgets etc.)
-
-target_panel = 3
-
+target_panel = 2
 large_region_indices = [0, 5]
 small_region_indices = [1, 2, 3, 4]
 if target_panel in large_region_indices:
     large_region_indices.remove(target_panel)
 elif target_panel in small_region_indices:
     small_region_indices.remove(target_panel)
-
-all = {"trip_widget": {"possible_regions": large_region_indices, 
-                 "region_index": 0, 
-                 "text_components": 
+ 
+all_widgets = [
+                {"name": "trip_widget",
+                "possible_regions": large_region_indices, 
+                "region_index": 0,
+                "text_components": 
                     {"trip_header": {"text": "Current Trip", "position_percentage": [], "position_pixel": []},
-                    "duration": {"dynamic_clutter": 28, "text": None, "position_percentage": [], "position_pixel": []},  
-                    "fuel": {"text": fuel_text, "position_percentage": [], "position_pixel": []}, 
-                    "distance": {"text": distance_text, "position_percentage": [], "position_pixel": []}
+                    "duration": {"text": "", "position_percentage": [], "position_pixel": []},  
+                    "fuel": {"text": "", "position_percentage": [], "position_pixel": []}, 
+                    "distance": {"text": "", "position_percentage": [], "position_pixel": []}
                     },
                  "image_components": 
                  {"duration": {"file":  getImageWithKeyword("./stimuli/clutter", "duration"), "position_percentage": [], "position_pixel": []}, 
@@ -100,45 +113,66 @@ all = {"trip_widget": {"possible_regions": large_region_indices,
                   },
                 },
 
-"calendar_widget": {"possible_regions": large_region_indices, 
-                 "region_index": 5, 
+                {"name": "calendar_widget",
+                 "possible_regions": large_region_indices,
+                 "region_index": 5,
                  "text_components": 
-                    {"date": {"text": getDateTimeText(), "position_percentage": [], "position_pixel": []}
+                    {"date": {"text": "", "position_percentage": [], "position_pixel": []}
                      },
                  "image_components": 
                  {"calendar": {"file":  getImageWithKeyword("./stimuli/clutter", "calendar"), "position_ percentage": [], "position_pixel": []}
                   },
                 },
-
-"garage_widget": {"possible_regions": small_region_indices, 
+                
+                {"name": "garage_widget",
+                 "possible_regions": small_region_indices, 
                  "region_index": 1, 
                  "text_components": 
                     {"garage_header": {"text": "My Home", "position_percentage": [], "position_pixel": []},
-                     "garage_door": {"text": "Garage Door\nOpen", "position_percentage": [], "position_pixel": []}
+                     "garage_door": {"text": "", "position_percentage": [], "position_pixel": []}
                      },
                  "image_components": 
                  {"garage": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [], "position_pixel": []}
                   },
                 },
 
-"temperature_widget": {"possible_regions": small_region_indices, 
-                 "region_index": 5, 
+                {"name": "temperature_widget",
+                "possible_regions": small_region_indices, 
+                 "region_index": 3, 
                  "text_components": 
-                    {"temperature": {"text": "My Home", "position_percentage": [], "position_pixel": []},
-                     "garage_door": {"text": "Garage Door\nOpen", "position_percentage": [], "position_pixel": []}
+                    {"temperature": {"text": "", "position_percentage": [], "position_pixel": []}                   
+                     },
+                 "image_components": 
+                 {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [], "position_pixel": []}
+                  },
+                },
+
+                {"name": "battery_widget",
+                 "possible_regions": small_region_indices, 
+                 "region_index": 4, 
+                 "text_components": 
+                    {"battery": {"text": "", "position_percentage": [], "position_pixel": []},
+                     "miles": {"text": "", "position_percentage": [], "position_pixel": []}
                      },
                  "image_components": 
                  {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), "position_percentage": [], "position_pixel": []}
                   },
                 }
+        ] 
 
-}
+dynamic_clutter_values = [{"duration": 28, "fuel": 34, "distance": 78}, 
+                          {"date": 0}, 
+                          {"garage_door": 0},
+                          {"temperature": 96},
+                          {"battery": 24, "miles": 76}]
 
-print(('').join(["1 hr", str(all["trip_widget"]["text_components"]["duration"]["dynamic_clutter"]), " min"]))
-[]
-# parse manual: panel is sliced based on the second element.  
-# [1,3] > segments the panel into three and retrieves the second segment's midpoint.
-# [0,5] > segments the panel into five and retrieves the first segment's midpoint.  
+for index in range(0, len(all_widgets)):
+    curr_dyn_clutter = dynamic_clutter_values[index]
+    for key, val in curr_dyn_clutter.items():
+        all_widgets[index]["text_components"][key]["text"] = updateText(val, key)
+
+
+a=0
 
 left_symbol_x = [2, 10]
 symbol_y_parse = [0, 3]
