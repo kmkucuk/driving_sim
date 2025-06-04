@@ -118,7 +118,7 @@
       <CodeComponent name="exp_init">
         <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="# select a panel for the large clutter 1 (duration, fuel, distance)&amp;#10;# select from 0 to 6.&amp;#10;clutter_panel = 0&amp;#10;&amp;#10;if 'win' not in locals():&amp;#10;    from panel_generation_function import Panel&amp;#10;    class win:&amp;#10;        def __init__(self):&amp;#10;            self.size = [1920, 1080]&amp;#10;    window = win()&amp;#10;    panel_layout = Panel(window.size[0], window.size[1])&amp;#10;&amp;#10;else:&amp;#10;    panel_layout = Panel(win.size[0], win.size[1])&amp;#10;&amp;#10;widget_regions = panel_layout.generate_panel_layout([1, 0, 0, 1]) &amp;#10;&amp;#10;# parse manual: panel is sliced based on the second element.  &amp;#10;# [1,3] &gt; segments the panel into three and retrieves the second segment's midpoint.&amp;#10;# [0,5] &gt; segments the panel into five and retrieves the first segment's midpoint.  &amp;#10;&amp;#10;left_symbol_x = [2, 10]&amp;#10;symbol_y_parse = [0, 3]&amp;#10;&amp;#10;centered_symbol_x = [1, 3]&amp;#10;centered_symbol_y = [1, 3]&amp;#10;&amp;#10;# &amp;#10;text_x_parse = [3, 10]&amp;#10;text_y_parse = [0, 3]&amp;#10;&amp;#10;&amp;#10;temp_text_x = [5, 20]&amp;#10;temp_text_y = [8, 20]&amp;#10;&amp;#10;battery_text_x = [2, 20]&amp;#10;battery_text_y = [8, 20]&amp;#10;&amp;#10;miles_text_x = [6, 20]&amp;#10;miles_text_y = [15, 20]&amp;#10;&amp;#10;temperature_int = 96&amp;#10;battery_int = 24&amp;#10;miles_int = 78&amp;#10;temperature_text = ('').join([str(temperature_int), &quot;F&quot;])&amp;#10;battery_text = ('').join([&quot;%&quot;, str(battery_int)])&amp;#10;miles_text = ('').join([str(miles_int), &quot;mi&quot;])&amp;#10;&amp;#10;trip_widget = {&quot;info&quot;: {&quot;parse_symbol&quot;: [left_symbol_x, symbol_y_parse], &quot;parse_text&quot;: [text_x_parse, text_y_parse], &quot;widget_index&quot;: 0, &quot;section_count&quot;: 4},                &amp;#10;               &quot;components&quot;: {&quot;header&quot;: &quot;Current Trip&quot;,&amp;#10;                            &quot;duration&quot;: &quot;1 hr 53 min&quot;, &amp;#10;                            &quot;fuel&quot;: &quot;34 mpg&quot;, &amp;#10;                            &quot;distance&quot;: &quot;78 mi&quot;},&amp;#10;                &quot;img_files&quot;: {},&amp;#10;                &quot;sym_component_positions&quot;: {},&amp;#10;                &quot;txt_component_positions&quot;: {}&amp;#10;                            } # todo: add variable parameters to these text&amp;#10;&amp;#10;&amp;#10;garage_widget = {&quot;info&quot;: {&quot;parse_symbol&quot;: [left_symbol_x, symbol_y_parse], &quot;parse_text&quot;: [text_x_parse, text_y_parse], &quot;widget_index&quot;: 1, &quot;section_count&quot;: 2}, &amp;#10;                 &quot;components&quot;: {&quot;header&quot;: &quot;My Home&quot;,&amp;#10;                                &quot;garage&quot;: &quot;Garage Door\nOpen&quot;},&amp;#10;                &quot;img_files&quot;: {},&amp;#10;                &quot;sym_component_positions&quot;: {},&amp;#10;                &quot;txt_component_positions&quot;: {}&amp;#10;                }&amp;#10;&amp;#10;&amp;#10;temperature_widget = {&quot;info&quot;: {&quot;parse_symbol&quot;: [centered_symbol_x, centered_symbol_y], &quot;parse_text&quot;: [temp_text_x, temp_text_y], &quot;widget_index&quot;: 3, &quot;section_count&quot;: 1}, &amp;#10;              &quot;components&quot;: {&quot;temperature&quot;: temperature_text},&amp;#10;                &quot;img_files&quot;: {},&amp;#10;                &quot;sym_component_positions&quot;: {},&amp;#10;                &quot;txt_component_positions&quot;: {}&amp;#10;               }&amp;#10;&amp;#10;battery_widget = {&quot;info&quot;: {&quot;parse_symbol&quot;: [centered_symbol_x, centered_symbol_y], &quot;parse_text&quot;: [text_x_parse, text_y_parse], &quot;widget_index&quot;: 4, &quot;section_count&quot;: 1}, &amp;#10;                 &quot;components&quot;: {&quot;battery&quot;: battery_text,&amp;#10;                                &quot;miles&quot;: miles_text},&amp;#10;                &quot;img_files&quot;: {},&amp;#10;                &quot;sym_component_positions&quot;: {},&amp;#10;                &quot;txt_component_positions&quot;: {}&amp;#10;                }&amp;#10;&amp;#10;day_widget = {&quot;info&quot;: {&quot;parse_symbol&quot;: [centered_symbol_x, centered_symbol_y], &quot;parse_text&quot;: [text_x_parse, text_y_parse], &quot;widget_index&quot;: 5, &quot;section_count&quot;: 2}, &amp;#10;                 &quot;components&quot;: {&quot;header&quot;: &quot;day&quot;,&amp;#10;                                &quot;calendar&quot;: None},&amp;#10;                &quot;img_files&quot;: {},&amp;#10;                &quot;sym_component_positions&quot;: {},&amp;#10;                &quot;txt_component_positions&quot;: {}&amp;#10;                }&amp;#10;&amp;#10;all_widgets = [trip_widget, garage_widget, temperature_widget, battery_widget, day_widget]&amp;#10;&amp;#10;# first assume header to be the same size in terms of roi&amp;#10;# then we can adjust it to become something else (smaller then etc.)&amp;#10;def segment_roi(panel, roi, widget_dict):&amp;#10;    &amp;#10;    # garage widget (duration, fuel, distance)&amp;#10;&amp;#10;    component_count = widget_dict[&quot;info&quot;][&quot;section_count&quot;]&amp;#10;    component_regions = panel.panel_separator(roi[widget_dict[&quot;info&quot;][&quot;widget_index&quot;]], component_count, &quot;vertical&quot;)&amp;#10;    iteration = 0&amp;#10;    widget_dict[&quot;component_regions&quot;] = component_regions&amp;#10;    # garage widget (duration, fuel, distance)&amp;#10;&amp;#10;    for key, comp_val in widget_dict[&quot;components&quot;].items():         &amp;#10;        placement_desc = None&amp;#10;        if key != &quot;header&quot;:&amp;#10;            # get symbol positions             &amp;#10;            widget_dict[&quot;sym_component_positions&quot;][key] = [panel.get_clutter_coordinate(component_regions[iteration], &quot;horizontal&quot;, widget_dict[&quot;info&quot;][&quot;parse_symbol&quot;][0]), &amp;#10;            panel.get_clutter_coordinate(component_regions[iteration], &quot;vertical&quot;, widget_dict[&quot;info&quot;][&quot;parse_symbol&quot;][1])]&amp;#10;            widget_dict[&quot;img_files&quot;][key] = panel.getImageWithKeyword(&quot;./stimuli/clutter&quot;, key)&amp;#10;           &amp;#10;        if key == &quot;header&quot;:&amp;#10;            text_x_header = [1, 10]&amp;#10;            text_y_header = [2, 7]     &amp;#10;            &amp;#10;            if comp_val == &quot;day&quot;:&amp;#10;                # get current day for text display on calemdar widget&amp;#10;                my_date = date.today()&amp;#10;                today = datetime.now()&amp;#10;                month = calendar.month_name[3]&amp;#10;                text_x_header = [1, 10]&amp;#10;                text_y_header = [2, 7]&amp;#10;                numeric_day = today.day # this is a integer&amp;#10;                str_num_day = str(numeric_day)&amp;#10;                if str_num_day[-1] == '1':&amp;#10;                    day_suffix = 'st'&amp;#10;                elif str_num_day[-1] == '2':&amp;#10;                    day_suffix = 'nd'&amp;#10;                elif str_num_day[-1] == '3':&amp;#10;                    day_suffix = 'rd'&amp;#10;                elif int(str_num_day[-1]) &gt;= 4:&amp;#10;                    day_suffix = 'th'                &amp;#10;                widget_dict[&quot;components&quot;][&quot;header&quot;] =  str_num_day + day_suffix + &quot; &quot; + month +&quot;\n&quot; + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber         &amp;#10;                &amp;#10;            # headers are more leftward than regular text, hence specific text parsing&amp;#10;            widget_dict[&quot;txt_component_positions&quot;][key] = [panel.get_clutter_coordinate(component_regions[iteration], &amp;#10;                                                                                        &quot;horizontal&quot;, text_x_header), &amp;#10;                                                           panel.get_clutter_coordinate(component_regions[iteration], &amp;#10;                                                                                        &quot;vertical&quot;, text_y_header)]&amp;#10;            &amp;#10;        elif key != &quot;header&quot; and isinstance(comp_val, str):&amp;#10;            placement_desc = 'bottom'&amp;#10;            if comp_val == &quot;battery&quot;:&amp;#10;                text_x_parse = battery_text_x&amp;#10;                text_y_parse = battery_text_y&amp;#10;            elif comp_val == &quot;miles&quot;:&amp;#10;                text_x_parse = miles_text_x&amp;#10;                text_y_parse = miles_text_y&amp;#10;            else:&amp;#10;                text_x_parse = widget_dict[&quot;info&quot;][&quot;parse_text&quot;][0]&amp;#10;                text_y_parse = widget_dict[&quot;info&quot;][&quot;parse_text&quot;][1]&amp;#10;            widget_dict[&quot;txt_component_positions&quot;][key] = [panel.get_clutter_coordinate(component_regions[iteration], &quot;horizontal&quot;, text_x_parse, placement_desc), &amp;#10;            panel.get_clutter_coordinate(component_regions[iteration], &quot;vertical&quot;, text_y_parse)]&amp;#10;        &amp;#10;        if component_count == len(widget_dict[&quot;components&quot;].items()):&amp;#10;            iteration = iteration + 1&amp;#10;&amp;#10;    return widget_dict&amp;#10;&amp;#10;trip_widget = segment_roi(panel_layout, widget_regions, trip_widget)&amp;#10;garage_widget = segment_roi(panel_layout, widget_regions, garage_widget)&amp;#10;day_widget = segment_roi(panel_layout, widget_regions, day_widget)&amp;#10;temperature_widget = segment_roi(panel_layout, widget_regions, temperature_widget)&amp;#10;battery_widget = segment_roi(panel_layout, widget_regions, battery_widget)&amp;#10;&amp;#10;trip_widget[&quot;sym_component_positions&quot;][&quot;duration&quot;]&amp;#10;trip_widget[&quot;sym_component_positions&quot;][&quot;fuel&quot;]&amp;#10;trip_widget[&quot;sym_component_positions&quot;][&quot;distance&quot;]&amp;#10;&amp;#10;print(widget_regions)&amp;#10;print('trip_widget\n', json.dumps(trip_widget, indent=2))&amp;#10;# print('\n\ngarage_widget\n',json.dumps(garage_widget, indent=2))&amp;#10;# print('\n\ntemperature_widget\n',json.dumps(temperature_widget, indent=2))&amp;#10;# print('\n\nbattery_widget',json.dumps(battery_widget, indent=2))&amp;#10;print('\n\nday_widget\n',json.dumps(day_widget, indent=2))&amp;#10;&amp;#10;garage_icon_size = [garage_widget[&quot;component_regions&quot;][1][&quot;width&quot;] * 0.35, garage_widget[&quot;component_regions&quot;][1][&quot;width&quot;] * 0.35]&amp;#10;onethird_icon_size = [trip_widget[&quot;component_regions&quot;][0][&quot;width&quot;] * 0.3125, trip_widget[&quot;component_regions&quot;][0][&quot;width&quot;] * 0.3125]&amp;#10;half_icon_size = [day_widget[&quot;component_regions&quot;][1][&quot;width&quot;] * 0.8, day_widget[&quot;component_regions&quot;][1][&quot;width&quot;] * 0.8]&amp;#10;full_icon_size = [temperature_widget[&quot;component_regions&quot;][0][&quot;width&quot;] * 0.8, temperature_widget[&quot;component_regions&quot;][0][&quot;width&quot;] * 0.8]&amp;#10;&amp;#10;textFont = &quot;./stimuli/font/robotoflex.ttf&quot;&amp;#10;&amp;#10;text_size = trip_widget[&quot;component_regions&quot;][0][&quot;width&quot;]/12&amp;#10;# choose a targel panel (1 to 10)&amp;#10;# Panel Numbers: [1, [2/3], [4/5], 6]&amp;#10;target_panel = 3&amp;#10;&amp;#10;# letter size is dependent on the large panel's height&amp;#10;letter_size = temperature_widget[&quot;component_regions&quot;][0][&quot;height&quot;] * 0.2&amp;#10;day_size = day_widget[&quot;component_regions&quot;][0][&quot;width&quot;] * 0.125&amp;#10;header_size = trip_widget[&quot;component_regions&quot;][0][&quot;width&quot;] * 0.1&amp;#10;temperature_size = temperature_widget[&quot;component_regions&quot;][0][&quot;width&quot;] * 0.14&amp;#10;battery_size = battery_widget[&quot;component_regions&quot;][0][&quot;width&quot;] * 0.12&amp;#10;&amp;#10;&amp;#10;header_wrap_width = 500" valType="extendedCode" updates="constant" name="Begin Experiment"/>
+        <Param val="import calendar&amp;#10;import json&amp;#10;import math&amp;#10;import random&amp;#10;from datetime import date&amp;#10;from datetime import datetime&amp;#10;import os&amp;#10;&amp;#10;&amp;#10;def getGarageText(boolean):&amp;#10;    if boolean == 0:&amp;#10;        return &quot;Garage Door\nClosed&quot;&amp;#10;    elif boolean == 1:&amp;#10;        return &quot;Garage Door\nOpen&quot;&amp;#10;    else:&amp;#10;        ValueError(&quot;Garage door clutter value is not valid.&quot;)&amp;#10;&amp;#10;def getDateTimeText(value):&amp;#10;    &quot;&quot;&quot;&amp;#10;    param day_shift: used for changing the day display on the panel for changing clutter&amp;#10;    condition. adding or subtracting int value from day of the month (13 +- day_shift ) &amp;#10;    &quot;&quot;&quot;&amp;#10;    &amp;#10;    # get current day for text display on calemdar widget&amp;#10;    my_date = date.today()&amp;#10;    today = datetime.now()&amp;#10;    month_index = datetime.now().month&amp;#10;    month = calendar.month_name[month_index]&amp;#10;    numeric_day = today.day # this is a integer&amp;#10;    if numeric_day + value &lt;= 0 or numeric_day + value &gt; 31:&amp;#10;        ValueError(&quot;Unacceptable day of the month after subtracting the clutter change value.&quot;)&amp;#10;    else:&amp;#10;        str_num_day = str(numeric_day + value)&amp;#10;        if str_num_day[-1] == '1':&amp;#10;            day_suffix = 'st'&amp;#10;        elif str_num_day[-1] == '2':&amp;#10;            day_suffix = 'nd'&amp;#10;        elif str_num_day[-1] == '3':&amp;#10;            day_suffix = 'rd'&amp;#10;        elif int(str_num_day[-1]) &gt;= 4:&amp;#10;            day_suffix = 'th'    &amp;#10;&amp;#10;        return str_num_day + day_suffix + &quot; &quot; + month +&quot;\n&quot; + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber   &amp;#10;&amp;#10;def updateText(value, key):&amp;#10;&amp;#10;    if key == &quot;duration&quot;:&amp;#10;        return ('').join([&quot;1 hr &quot;, str(value), &quot; min&quot;])&amp;#10;    elif key == &quot;fuel&quot;:&amp;#10;        return ('').join([str(value) , &quot; mpg&quot;])&amp;#10;    elif key == &quot;distance&quot;:&amp;#10;        return ('').join([str(value) , &quot; mi&quot;])&amp;#10;    elif key == &quot;date&quot;:&amp;#10;        return getDateTimeText(value)&amp;#10;    elif key == &quot;garage_door&quot;:&amp;#10;        return getGarageText(value)&amp;#10;    elif key == &quot;battery&quot;:&amp;#10;        return ('').join([&quot;%&quot;, str(value)])&amp;#10;    elif key == &quot;miles&quot;:&amp;#10;        return ('').join([str(value), &quot;mi&quot;])&amp;#10;    else:&amp;#10;        KeyError('Widget was not found [', key,']')&amp;#10;&amp;#10;&amp;#10;def getImageWithKeyword(directory, keyword):&amp;#10;    image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp'}&amp;#10;&amp;#10;    for root, _, files in os.walk(directory):&amp;#10;        for file in files:&amp;#10;            if any(file.lower().endswith(ext) for ext in image_extensions) and keyword.lower() in file.lower():&amp;#10;                return &quot;/&quot;.join([root, file])&amp;#10;&amp;#10;&amp;#10;&amp;#10;def getPositions(widget_regions, position_percentage):&amp;#10;    &quot;&quot;&quot; This function is used for obtaining axis coordinates for clutter placement&amp;#10;&amp;#10;    :param clutter_region: (dict) enter the clutter's region dictionary obtained by clutter_separator (e.g. clutter[0] or clutter[target_clutter])&amp;#10;&amp;#10;    :param position_percentages: (int) List of 2 integers indicating the placement in percentage of the clutter region size:&amp;#10;             [25, 50] =&gt; [width * 25/100, height * 50/100]&amp;#10;    :return: point in coordinate system (x, y)&amp;#10;    &quot;&quot;&quot;&amp;#10;&amp;#10;    y_origin = widget_regions['y'] + (widget_regions['height']/2)&amp;#10;    x_origin = widget_regions['x'] - (widget_regions['width']/2)&amp;#10;&amp;#10;    return [round(x_origin + widget_regions['width']*(position_percentage[0]/100)), &amp;#10;            round(y_origin - widget_regions['height']*(position_percentage[1]/100))]&amp;#10;&amp;#10;&amp;#10;def getIconSize(widget_regions, size_ratio):&amp;#10;    &quot;&quot;&quot; This function is used for obtaining axis coordinates for clutter placement&amp;#10;&amp;#10;    :param widget_regions: (dict) enter the clutter's region dictionary obtained by clutter_separator (e.g. clutter[0] or clutter[target_clutter])&amp;#10;&amp;#10;    :param size_ratio: (int) List of 2 integers indicating the ratio of icon size relative to the widget region's width&amp;#10;    :return: size in pixels (w, h)&amp;#10;    &quot;&quot;&quot;&amp;#10;    return [round(widget_regions['width']*(size_ratio[0])), &amp;#10;            round(widget_regions['width']*(size_ratio[1]))]&amp;#10;    &amp;#10;if 'win' not in locals():&amp;#10;    from panel_generation_function import Panel&amp;#10;    class win:&amp;#10;        def __init__(self):&amp;#10;            self.size = [1920, 1080]&amp;#10;    window = win()&amp;#10;    panel_layout = Panel(window.size[0], window.size[1])&amp;#10;&amp;#10;else:&amp;#10;    panel_layout = Panel(win.size[0], win.size[1])&amp;#10;&amp;#10;widget_regions = panel_layout.generate_panel_layout([1, 0, 0, 1]) &amp;#10;&amp;#10;target_panel = 2&amp;#10;large_region_indices = [0, 5]&amp;#10;small_region_indices = [1, 2, 3, 4]&amp;#10;if target_panel in large_region_indices:&amp;#10;    large_region_indices.remove(target_panel)&amp;#10;elif target_panel in small_region_indices:&amp;#10;    small_region_indices.remove(target_panel)&amp;#10; &amp;#10;all_widgets = [&amp;#10;                {&quot;name&quot;: &quot;trip_widget&quot;,&amp;#10;                &quot;possible_regions&quot;: large_region_indices, &amp;#10;                &quot;region_index&quot;: 0,&amp;#10;                &quot;text_components&quot;: &amp;#10;                    {&quot;trip_header&quot;: {&quot;text&quot;: &quot;Current Trip&quot;, &quot;position_percentage&quot;: [15, 10], &quot;position_pixel&quot;: []},&amp;#10;                    &quot;duration&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [12, 25], &quot;position_pixel&quot;: []},  &amp;#10;                    &quot;fuel&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [12, 50], &quot;position_pixel&quot;: []}, &amp;#10;                    &quot;distance&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [12, 75], &quot;position_pixel&quot;: []}&amp;#10;                    },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;duration&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;duration&quot;), &amp;#10;                               &quot;position_percentage&quot;: [10, 25], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.3125, 0.3125], &quot;size_pixel&quot;: []}, &amp;#10;                  &quot;fuel&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;fuel&quot;), &amp;#10;                           &quot;position_percentage&quot;: [10, 50], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.3125, 0.3125], &quot;size_pixel&quot;: []}, &amp;#10;                  &quot;distance&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;distance&quot;), &amp;#10;                               &quot;position_percentage&quot;: [10, 75], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.3125, 0.3125], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                },&amp;#10;&amp;#10;                {&quot;name&quot;: &quot;calendar_widget&quot;,&amp;#10;                 &quot;possible_regions&quot;: large_region_indices,&amp;#10;                 &quot;region_index&quot;: 5,&amp;#10;                 &quot;text_components&quot;: &amp;#10;                    {&quot;date&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [15, 15], &quot;position_pixel&quot;: []}&amp;#10;                     },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;calendar&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;calendar&quot;), &amp;#10;                               &quot;position_percentage&quot;: [10 , 60], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.8, 0.8], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                },&amp;#10;                &amp;#10;                {&quot;name&quot;: &quot;garage_widget&quot;,&amp;#10;                 &quot;possible_regions&quot;: small_region_indices, &amp;#10;                 &quot;region_index&quot;: 1, &amp;#10;                 &quot;text_components&quot;: &amp;#10;                    {&quot;garage_header&quot;: {&quot;text&quot;: &quot;My Home&quot;, &quot;position_percentage&quot;: [10, 10], &quot;position_pixel&quot;: []},&amp;#10;                     &quot;garage_door&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [15, 50], &quot;position_pixel&quot;: []}&amp;#10;                     },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;garage&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;garage&quot;), &amp;#10;                             &quot;position_percentage&quot;: [10, 50], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.35, 0.35], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                },&amp;#10;&amp;#10;                {&quot;name&quot;: &quot;temperature_widget&quot;,&amp;#10;                &quot;possible_regions&quot;: small_region_indices, &amp;#10;                 &quot;region_index&quot;: 3, &amp;#10;                 &quot;text_components&quot;: &amp;#10;                    {&quot;temperature&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [40, 50], &quot;position_pixel&quot;: []}                   &amp;#10;                     },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;temperature&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;temperature&quot;), &amp;#10;                                  &quot;position_percentage&quot;: [50, 50], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.8, 0.8], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                },&amp;#10;&amp;#10;                {&quot;name&quot;: &quot;battery_widget&quot;,&amp;#10;                 &quot;possible_regions&quot;: small_region_indices, &amp;#10;                 &quot;region_index&quot;: 4, &amp;#10;                 &quot;text_components&quot;: &amp;#10;                    {&quot;battery&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [30, 30], &quot;position_pixel&quot;: []},&amp;#10;                     &quot;miles&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [60, 60], &quot;position_pixel&quot;: []}&amp;#10;                     },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;battery&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;battery&quot;), &amp;#10;                                  &quot;position_percentage&quot;: [50, 50], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.8, 0.8], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                }&amp;#10;        ] &amp;#10;&amp;#10;&amp;#10;&amp;#10;&amp;#10;dynamic_clutter_values = [{&quot;duration&quot;: 28, &quot;fuel&quot;: 34, &quot;distance&quot;: 78}, &amp;#10;                          {&quot;date&quot;: 0}, &amp;#10;                          {&quot;garage_door&quot;: 0},&amp;#10;                          {&quot;temperature&quot;: 96},&amp;#10;                          {&quot;battery&quot;: 24, &quot;miles&quot;: 76}]&amp;#10;&amp;#10;# TODO: function to change order of elements in each data strct. to create interchangeable widget positions&amp;#10;all_data_structures = [all_widgets, dynamic_clutter_values]&amp;#10;&amp;#10;for index in range(0, len(all_widgets)):&amp;#10;    curr_dyn_clutter = dynamic_clutter_values[index]&amp;#10;    for key, val in curr_dyn_clutter.items():&amp;#10;        all_widgets[index][&quot;text_components&quot;][key][&quot;text&quot;] = updateText(val, key)&amp;#10;&amp;#10;for index in range(0, len(all_widgets)):&amp;#10;    curr_text_comps = all_widgets[index][&quot;text_components&quot;]&amp;#10;    widget_index = all_widgets[index][&quot;region_index&quot;]&amp;#10;    for key, val in curr_text_comps.items():&amp;#10;        all_widgets[index][&quot;text_components&quot;][key][&quot;position_pixel&quot;] = getPositions(widget_regions[widget_index], val[&quot;position_percentage&quot;])&amp;#10;&amp;#10;    curr_img_comps = all_widgets[index][&quot;image_components&quot;]&amp;#10;    for key, val in curr_img_comps.items():&amp;#10;        all_widgets[index][&quot;image_components&quot;][key][&quot;position_pixel&quot;] = getPositions(widget_regions[widget_index], val[&quot;position_percentage&quot;])   &amp;#10;        all_widgets[index][&quot;image_components&quot;][key][&quot;size_pixel&quot;] = getIconSize(widget_regions[widget_index], val[&quot;size_ratio&quot;])&amp;#10;&amp;#10;&amp;#10;# letter size is dependent on the large panel's height&amp;#10;letter_size = widget_regions[1][&quot;height&quot;] * 0.2&amp;#10;day_size = widget_regions[1][&quot;width&quot;] * 0.125&amp;#10;header_size = widget_regions[1][&quot;width&quot;]  * 0.1&amp;#10;temperature_size = widget_regions[1][&quot;width&quot;]  * 0.14&amp;#10;battery_size = widget_regions[1][&quot;width&quot;] * 0.12&amp;#10;&amp;#10;textFont = &quot;./stimuli/font/robotoflex.ttf&quot;&amp;#10;&amp;#10;text_size = widget_regions[1][&quot;width&quot;]/12&amp;#10;header_wrap_width = 500" valType="extendedCode" updates="constant" name="Begin Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin Routine"/>
@@ -374,15 +374,15 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$trip_widget[&quot;img_files&quot;][&quot;duration&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget1_symbol1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(onethird_icon_size, trip_widget[&quot;sym_component_positions&quot;][&quot;duration&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="onethird_icon_size" valType="list" updates="set every repeat" name="size"/>
+        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
@@ -401,15 +401,15 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$trip_widget[&quot;img_files&quot;][&quot;fuel&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget1_symbol2" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(onethird_icon_size, trip_widget[&quot;sym_component_positions&quot;][&quot;fuel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="onethird_icon_size" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
@@ -428,15 +428,15 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$trip_widget[&quot;img_files&quot;][&quot;distance&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget1_symbol3" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(onethird_icon_size, trip_widget[&quot;sym_component_positions&quot;][&quot;distance&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="onethird_icon_size" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
@@ -459,7 +459,7 @@
         <Param val="widget1_text1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctTextPosition(widget1_text1, trip_widget[&quot;txt_component_positions&quot;][&quot;duration&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctTextPosition(widget1_text1, all_widgets[0][&quot;text_components&quot;][&quot;duration&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
@@ -467,7 +467,7 @@
         <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
         <Param val="$stim_duration" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="$trip_widget[&quot;components&quot;][&quot;duration&quot;]" valType="str" updates="set every repeat" name="text"/>
+        <Param val="$all_widgets[0][&quot;text_components&quot;][&quot;duration&quot;][&quot;text&quot;]" valType="str" updates="set every repeat" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
@@ -484,7 +484,7 @@
         <Param val="widget1_text2" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctTextPosition(widget1_text2,trip_widget[&quot;txt_component_positions&quot;][&quot;fuel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctTextPosition(widget1_text2, all_widgets[0][&quot;text_components&quot;][&quot;fuel&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
@@ -492,7 +492,7 @@
         <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
         <Param val="$stim_duration" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="$trip_widget[&quot;components&quot;][&quot;fuel&quot;]" valType="str" updates="set every repeat" name="text"/>
+        <Param val="$all_widgets[0][&quot;text_components&quot;][&quot;fuel&quot;][&quot;text&quot;]" valType="str" updates="set every repeat" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
@@ -509,7 +509,7 @@
         <Param val="widget1_text3" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctTextPosition(widget1_text3, trip_widget[&quot;txt_component_positions&quot;][&quot;distance&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctTextPosition(widget1_text3, all_widgets[0][&quot;text_components&quot;][&quot;distance&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
@@ -517,7 +517,7 @@
         <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
         <Param val="$stim_duration" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="$trip_widget[&quot;components&quot;][&quot;distance&quot;]" valType="str" updates="set every repeat" name="text"/>
+        <Param val="$all_widgets[0][&quot;text_components&quot;][&quot;distance&quot;][&quot;text&quot;]" valType="str" updates="set every repeat" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
@@ -534,7 +534,7 @@
         <Param val="widget1_text4" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctTextPosition(widget1_text4,trip_widget[&quot;txt_component_positions&quot;][&quot;header&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctTextPosition(widget1_text4, all_widgets[0][&quot;text_components&quot;][&quot;trip_header&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
@@ -542,7 +542,7 @@
         <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
         <Param val="$stim_duration" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="$trip_widget[&quot;components&quot;][&quot;header&quot;]" valType="str" updates="set every repeat" name="text"/>
+        <Param val="$all_widgets[0][&quot;text_components&quot;][&quot;trip_header&quot;][&quot;text&quot;]" valType="str" updates="set every repeat" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="header_wrap_width" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
@@ -555,15 +555,15 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$garage_widget[&quot;img_files&quot;][&quot;garage&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget2_symbol1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(garage_icon_size, garage_widget[&quot;sym_component_positions&quot;][&quot;garage&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;size_pixel&quot;], all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="garage_icon_size" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
@@ -586,7 +586,7 @@
         <Param val="widget2_text1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctTextPosition(widget2_text1,garage_widget[&quot;txt_component_positions&quot;][&quot;header&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctTextPosition(widget2_text1, all_widgets[2][&quot;text_components&quot;][&quot;garage_header&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
@@ -594,7 +594,7 @@
         <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
         <Param val="$stim_duration" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="$garage_widget[&quot;components&quot;][&quot;header&quot;]" valType="str" updates="set every repeat" name="text"/>
+        <Param val="$all_widgets[2][&quot;text_components&quot;][&quot;garage_header&quot;][&quot;text&quot;]" valType="str" updates="set every repeat" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="header_wrap_width" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
@@ -611,7 +611,7 @@
         <Param val="widget2_text2" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctTextPosition(widget2_text2, garage_widget[&quot;txt_component_positions&quot;][&quot;garage&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctTextPosition(widget2_text2, all_widgets[2][&quot;text_components&quot;][&quot;garage_door&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
@@ -619,7 +619,7 @@
         <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
         <Param val="$stim_duration" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="$garage_widget[&quot;components&quot;][&quot;garage&quot;]" valType="str" updates="set every repeat" name="text"/>
+        <Param val="$all_widgets[2][&quot;text_components&quot;][&quot;garage_door&quot;][&quot;text&quot;]" valType="str" updates="set every repeat" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
@@ -632,15 +632,15 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$temperature_widget[&quot;img_files&quot;][&quot;temperature&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget3_symbol1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPosition(full_icon_size, temperature_widget[&quot;sym_component_positions&quot;][&quot;temperature&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;size_pixel&quot;], all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="full_icon_size" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
@@ -663,7 +663,7 @@
         <Param val="widget3_text1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctTextPosition(widget3_text1, temperature_widget[&quot;txt_component_positions&quot;][&quot;temperature&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctTextPosition(widget3_text1, all_widgets[3][&quot;text_components&quot;][&quot;temperature&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
@@ -671,7 +671,7 @@
         <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
         <Param val="$stim_duration" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="$temperature_widget[&quot;components&quot;][&quot;temperature&quot;]" valType="str" updates="set every repeat" name="text"/>
+        <Param val="$all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;file&quot;]" valType="str" updates="set every repeat" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
@@ -684,15 +684,15 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$battery_widget[&quot;img_files&quot;][&quot;battery&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget4_symbol1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPosition(full_icon_size, battery_widget[&quot;sym_component_positions&quot;][&quot;battery&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;size_pixel&quot;], all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="full_icon_size" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
@@ -715,7 +715,7 @@
         <Param val="widget5_text1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="set every repeat" name="ori"/>
-        <Param val="correctTextPosition(widget5_text1, day_widget[&quot;txt_component_positions&quot;][&quot;header&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctTextPosition(widget5_text1, all_widgets[3][&quot;text_components&quot;][&quot;date&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
@@ -723,7 +723,7 @@
         <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
         <Param val="$stim_duration" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="$day_widget[&quot;components&quot;][&quot;header&quot;]" valType="str" updates="set every repeat" name="text"/>
+        <Param val="$all_widgets[1][&quot;image_components&quot;][&quot;date&quot;][&quot;file&quot;]" valType="str" updates="set every repeat" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="header_wrap_width" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
@@ -736,15 +736,15 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$day_widget[&quot;img_files&quot;][&quot;calendar&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget5_symbol1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="day_widget[&quot;sym_component_positions&quot;][&quot;calendar&quot;]" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;size_pixel&quot;], all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="half_icon_size" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="time (s)" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
