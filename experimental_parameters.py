@@ -58,6 +58,8 @@ def updateText(value, key):
         return ('').join(["%", str(value)])
     elif key == "miles":
         return ('').join([str(value), "mi"])
+    elif key == "temperature":
+        return ('').join([str(value), "F"])
     else:
         KeyError('Widget was not found [', key,']')
 
@@ -127,19 +129,19 @@ all_widgets = [
                 "region_index": 0,
                 "text_components": 
                     {"trip_header": {"text": "Current Trip", "position_percentage": [15, 10], "position_pixel": []},
-                    "duration": {"text": "", "position_percentage": [12, 25], "position_pixel": []},  
-                    "fuel": {"text": "", "position_percentage": [12, 50], "position_pixel": []}, 
-                    "distance": {"text": "", "position_percentage": [12, 75], "position_pixel": []}
+                    "duration": {"text": "", "position_percentage": [35, 25], "position_pixel": []},  
+                    "fuel": {"text": "", "position_percentage": [35, 50], "position_pixel": []}, 
+                    "distance": {"text": "", "position_percentage": [35, 75], "position_pixel": []}
                     },
                  "image_components": 
                  {"duration": {"file":  getImageWithKeyword("./stimuli/clutter", "duration"), 
-                               "position_percentage": [10, 25], "position_pixel": [],
+                               "position_percentage": [20, 25], "position_pixel": [],
                                "size_ratio": [0.3125, 0.3125], "size_pixel": []}, 
                   "fuel": {"file":  getImageWithKeyword("./stimuli/clutter", "fuel"), 
-                           "position_percentage": [10, 50], "position_pixel": [],
+                           "position_percentage": [20, 50], "position_pixel": [],
                                "size_ratio": [0.3125, 0.3125], "size_pixel": []}, 
                   "distance": {"file":  getImageWithKeyword("./stimuli/clutter", "distance"), 
-                               "position_percentage": [10, 75], "position_pixel": [],
+                               "position_percentage": [20, 75], "position_pixel": [],
                                "size_ratio": [0.3125, 0.3125], "size_pixel": []}
                   },
                 },
@@ -148,11 +150,11 @@ all_widgets = [
                  "possible_regions": large_region_indices,
                  "region_index": 5,
                  "text_components": 
-                    {"date": {"text": "", "position_percentage": [15, 15], "position_pixel": []}
+                    {"date": {"text": "", "position_percentage": [20, 15], "position_pixel": []}
                      },
                  "image_components": 
                  {"calendar": {"file":  getImageWithKeyword("./stimuli/clutter", "calendar"), 
-                               "position_percentage": [10 , 60], "position_pixel": [],
+                               "position_percentage": [50 , 70], "position_pixel": [],
                                "size_ratio": [0.8, 0.8], "size_pixel": []}
                   },
                 },
@@ -161,12 +163,12 @@ all_widgets = [
                  "possible_regions": small_region_indices, 
                  "region_index": 1, 
                  "text_components": 
-                    {"garage_header": {"text": "My Home", "position_percentage": [10, 10], "position_pixel": []},
-                     "garage_door": {"text": "", "position_percentage": [15, 50], "position_pixel": []}
+                    {"garage_header": {"text": "My Home", "position_percentage": [15, 20], "position_pixel": []},
+                     "garage_door": {"text": "", "position_percentage": [35, 50], "position_pixel": []}
                      },
                  "image_components": 
                  {"garage": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), 
-                             "position_percentage": [10, 50], "position_pixel": [],
+                             "position_percentage": [20, 50], "position_pixel": [],
                                "size_ratio": [0.35, 0.35], "size_pixel": []}
                   },
                 },
@@ -175,7 +177,7 @@ all_widgets = [
                 "possible_regions": small_region_indices, 
                  "region_index": 3, 
                  "text_components": 
-                    {"temperature": {"text": "", "position_percentage": [40, 50], "position_pixel": []}                   
+                    {"temperature": {"text": "", "position_percentage": [30, 40], "position_pixel": []}                   
                      },
                  "image_components": 
                  {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "temperature"), 
@@ -188,8 +190,8 @@ all_widgets = [
                  "possible_regions": small_region_indices, 
                  "region_index": 4, 
                  "text_components": 
-                    {"battery": {"text": "", "position_percentage": [30, 30], "position_pixel": []},
-                     "miles": {"text": "", "position_percentage": [60, 60], "position_pixel": []}
+                    {"battery": {"text": "", "position_percentage": [21, 45], "position_pixel": []},
+                     "miles": {"text": "", "position_percentage": [55, 63], "position_pixel": []}
                      },
                  "image_components": 
                  {"battery": {"file":  getImageWithKeyword("./stimuli/clutter", "battery"), 
@@ -199,16 +201,13 @@ all_widgets = [
                 }
         ] 
 
-
-
-
 dynamic_clutter_values = [{"duration": 28, "fuel": 34, "distance": 78}, 
                           {"date": 0}, 
                           {"garage_door": 0},
                           {"temperature": 96},
                           {"battery": 24, "miles": 76}]
 
-# TODO: function to change order of elements in each data strct. to create interchangeable widget positions
+# TODO: function to change order of elements in each data strct. to do what?
 all_data_structures = [all_widgets, dynamic_clutter_values]
 
 for index in range(0, len(all_widgets)):
@@ -224,7 +223,7 @@ for index in range(0, len(all_widgets)):
 
     curr_img_comps = all_widgets[index]["image_components"]
     for key, val in curr_img_comps.items():
-        all_widgets[index]["image_components"][key]["position_pixel"] = getPositions(widget_regions[widget_index], val["position_percentage"])   
+        all_widgets[index]["image_components"][key]["position_pixel"] = getPositions(widget_regions[widget_index], val["position_percentage"])
         all_widgets[index]["image_components"][key]["size_pixel"] = getIconSize(widget_regions[widget_index], val["size_ratio"])
 
 
@@ -233,7 +232,7 @@ letter_size = widget_regions[1]["height"] * 0.2
 day_size = widget_regions[1]["width"] * 0.125
 header_size = widget_regions[1]["width"]  * 0.1
 temperature_size = widget_regions[1]["width"]  * 0.14
-battery_size = widget_regions[1]["width"] * 0.12
+battery_size = widget_regions[1]["width"] * 0.085
 
 textFont = "./stimuli/font/robotoflex.ttf"
 

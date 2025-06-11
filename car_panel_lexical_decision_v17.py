@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on June 09, 2025, at 22:25
+    on June 09, 2025, at 22:26
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -54,7 +54,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
-    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\car_panel_lexical_decision_v17_lastrun.py',
+    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\car_panel_lexical_decision_v17.py',
     savePickle=True, saveWideText=True,
     dataFileName=filename)
 # save a log file for detail verbose info
@@ -746,14 +746,14 @@ widget4_text1 = visual.TextStim(win=win, name='widget4_text1',
     pos=[0,0], height=1.0, wrapWidth=None, ori=0.0, 
     color='black', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
-    depth=-22.0);
+    depth=-20.0);
 widget4_text2 = visual.TextStim(win=win, name='widget4_text2',
     text='',
     font='Arial',
     pos=[0,0], height=1.0, wrapWidth=None, ori=0.0, 
     color='black', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
-    depth=-23.0);
+    depth=-20.0);
 widget5_text1 = visual.TextStim(win=win, name='widget5_text1',
     text='',
     font='Arial',
@@ -939,14 +939,14 @@ widget4_text1_2 = visual.TextStim(win=win, name='widget4_text1_2',
     pos=[0,0], height=1.0, wrapWidth=None, ori=0.0, 
     color='black', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
-    depth=-21.0);
+    depth=-20.0);
 widget4_text2_2 = visual.TextStim(win=win, name='widget4_text2_2',
     text='',
     font='Arial',
     pos=[0,0], height=1.0, wrapWidth=None, ori=0.0, 
     color='black', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
-    depth=-22.0);
+    depth=-20.0);
 widget5_text1_2 = visual.TextStim(win=win, name='widget5_text1_2',
     text='',
     font='Arial',
