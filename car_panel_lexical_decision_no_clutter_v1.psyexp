@@ -147,7 +147,7 @@
         <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="thisExp.addData('trial_frame_durations', t_frame_time);&amp;#10;thisExp.addData('current_time', str(datetime.now()));" valType="extendedCode" updates="constant" name="End Routine"/>
+        <Param val="thisExp.addData('trial_frame_durations', t_frame_time);&amp;#10;thisExp.addData('current_time', datetime.now().strftime(&quot;%H:%M:%S&quot;));" valType="extendedCode" updates="constant" name="End Routine"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="estimate_frame_durations_2" valType="code" updates="None" name="name"/>
       </CodeComponent>
@@ -399,7 +399,7 @@
         <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="thisExp.addData('trial_frame_durations', t_frame_time);&amp;#10;thisExp.addData('current_time', str(datetime.now()));&amp;#10;print('is it working second end routine')" valType="extendedCode" updates="constant" name="End Routine"/>
+        <Param val="thisExp.addData('trial_frame_durations', t_frame_time);&amp;#10;thisExp.addData('current_time', datetime.now().strftime(&quot;%H:%M:%S&quot;));&amp;#10;print('is it working second end routine')" valType="extendedCode" updates="constant" name="End Routine"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="estimate_frame_durations" valType="code" updates="None" name="name"/>
       </CodeComponent>
