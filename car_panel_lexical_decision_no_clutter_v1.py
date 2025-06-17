@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on June 17, 2025, at 22:53
+    on June 17, 2025, at 21:06
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -54,7 +54,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
-    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\car_panel_lexical_decision_no_clutter_v1_lastrun.py',
+    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\car_panel_lexical_decision_no_clutter_v1.py',
     savePickle=True, saveWideText=True,
     dataFileName=filename)
 # save a log file for detail verbose info
@@ -105,22 +105,6 @@ import random
 from datetime import date
 from datetime import datetime
 import os
-
-def trial_sampling(vector, n):
-    if n > len(vector):
-        raise ValueError("n cannot be greater than the length of the vector.")
-    
-    return random.sample(vector, n)
-
-def join_and_shuffle(vector1, vector2):
-    combined = vector1 + vector2
-    random.shuffle(combined)
-    return combined
-
-def remove_elements(source_vector, elements_to_remove):
-    result = [x for x in source_vector if x not in elements_to_remove]
-    return result
-
 
 def getDateTimeText():
     # get current day for text display on calemdar widget
@@ -595,98 +579,12 @@ header_wrap_width = 500
 exp_version = "no_clutter"
 
 
-if expInfo['cb_group'] == '1':
-    block_rows = [0, 1, 2, 3]
-elif expInfo['cb_group'] == '2':
-    block_rows = [0, 2, 1, 3]
-else:
-    raise ValueError('Wrong counterbalance group, it should be 1 or 2')
 
-# --- Initialize components for Routine "get_trials" ---
-# Run 'Begin Experiment' code from extract_trials
-all_word_trials = range(0, 764)
-all_nonword_trials = range(764, 1264)
-
-
-maxword_no = 763
-maxnonword_no = 1263
- 
-block_instruction_text = visual.TextStim(win=win, name='block_instruction_text',
-    text='',
-    font='Open Sans',
-    pos=(0, 0), height=1.0, wrapWidth=None, ori=0.0, 
-    color='white', colorSpace='rgb', opacity=None, 
-    languageStyle='LTR',
-    depth=-1.0);
-key_resp = keyboard.Keyboard()
-
-# --- Initialize components for Routine "inter_trial_interval" ---
-background_panel_2 = visual.ImageStim(
-    win=win,
-    name='background_panel_2', 
-    image='stimuli/panels/background_panel.png', mask=None, anchor='center',
-    ori=0.0, pos=[0,0], size=1.0,
-    color=[1,1,1], colorSpace='rgb', opacity=None,
-    flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-1.0)
-panel1_2 = visual.ImageStim(
-    win=win,
-    name='panel1_2', 
-    image='stimuli/panels/large_panel.png', mask=None, anchor='center',
-    ori=0.0, pos=[0,0], size=1.0,
-    color=[1,1,1], colorSpace='rgb', opacity=None,
-    flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-2.0)
-panel2_2 = visual.ImageStim(
-    win=win,
-    name='panel2_2', 
-    image='stimuli/panels/small_panel.png', mask=None, anchor='center',
-    ori=0.0, pos=[0,0], size=1.0,
-    color=[1,1,1], colorSpace='rgb', opacity=None,
-    flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-3.0)
-panel3_2 = visual.ImageStim(
-    win=win,
-    name='panel3_2', 
-    image='stimuli/panels/small_panel.png', mask=None, anchor='center',
-    ori=0.0, pos=[0,0], size=1.0,
-    color=[1,1,1], colorSpace='rgb', opacity=None,
-    flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-4.0)
-panel4_2 = visual.ImageStim(
-    win=win,
-    name='panel4_2', 
-    image='stimuli/panels/small_panel.png', mask=None, anchor='center',
-    ori=0.0, pos=[0,0], size=1.0,
-    color=[1,1,1], colorSpace='rgb', opacity=None,
-    flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-5.0)
-panel5_2 = visual.ImageStim(
-    win=win,
-    name='panel5_2', 
-    image='stimuli/panels/small_panel.png', mask=None, anchor='center',
-    ori=0.0, pos=[0,0], size=1.0,
-    color=[1,1,1], colorSpace='rgb', opacity=None,
-    flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-6.0)
-panel6_2 = visual.ImageStim(
-    win=win,
-    name='panel6_2', 
-    image='stimuli/panels/large_panel.png', mask=None, anchor='center',
-    ori=0.0, pos=[0,0], size=1.0,
-    color=[1,1,1], colorSpace='rgb', opacity=None,
-    flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-7.0)
-sound_cue = sound.Sound('A', secs=-1, stereo=True, hamming=True,
-    name='sound_cue')
-sound_cue.setVolume(1.0)
 
 # --- Initialize components for Routine "screen_display_images" ---
 # Run 'Begin Experiment' code from estimate_frame_durations_2
 exp_clock = core.Clock()
 stim_duration = 10
-
-
 background_panel = visual.ImageStim(
     win=win,
     name='background_panel', 
@@ -752,6 +650,64 @@ lexical_text_2 = visual.TextStim(win=win, name='lexical_text_2',
     depth=-8.0);
 keybaord_input_2 = keyboard.Keyboard()
 
+# --- Initialize components for Routine "inter_trial_interval" ---
+background_panel_2 = visual.ImageStim(
+    win=win,
+    name='background_panel_2', 
+    image='stimuli/panels/background_panel.png', mask=None, anchor='center',
+    ori=0.0, pos=[0,0], size=1.0,
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-1.0)
+panel1_2 = visual.ImageStim(
+    win=win,
+    name='panel1_2', 
+    image='stimuli/panels/large_panel.png', mask=None, anchor='center',
+    ori=0.0, pos=[0,0], size=1.0,
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-2.0)
+panel2_2 = visual.ImageStim(
+    win=win,
+    name='panel2_2', 
+    image='stimuli/panels/small_panel.png', mask=None, anchor='center',
+    ori=0.0, pos=[0,0], size=1.0,
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-3.0)
+panel3_2 = visual.ImageStim(
+    win=win,
+    name='panel3_2', 
+    image='stimuli/panels/small_panel.png', mask=None, anchor='center',
+    ori=0.0, pos=[0,0], size=1.0,
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-4.0)
+panel4_2 = visual.ImageStim(
+    win=win,
+    name='panel4_2', 
+    image='stimuli/panels/small_panel.png', mask=None, anchor='center',
+    ori=0.0, pos=[0,0], size=1.0,
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-5.0)
+panel5_2 = visual.ImageStim(
+    win=win,
+    name='panel5_2', 
+    image='stimuli/panels/small_panel.png', mask=None, anchor='center',
+    ori=0.0, pos=[0,0], size=1.0,
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-6.0)
+panel6_2 = visual.ImageStim(
+    win=win,
+    name='panel6_2', 
+    image='stimuli/panels/large_panel.png', mask=None, anchor='center',
+    ori=0.0, pos=[0,0], size=1.0,
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-7.0)
+
 # Create some handy timers
 globalClock = core.Clock()  # to track the time since experiment started
 routineTimer = core.Clock()  # to track time remaining of each (possibly non-slip) routine 
@@ -809,9 +765,9 @@ for thisComponent in initializationComponents:
 routineTimer.reset()
 
 # set up handler to look after randomisation of conditions etc
-blocks = data.TrialHandler(nReps=1.0, method='sequential', 
+blocks = data.TrialHandler(nReps=1.0, method='random', 
     extraInfo=expInfo, originPath=-1,
-    trialList=data.importConditions('blocks_pilot.xlsx', selection=block_rows),
+    trialList=data.importConditions('blocks_pilot.xlsx'),
     seed=None, name='blocks')
 thisExp.addLoop(blocks)  # add the loop to the experiment
 thisBlock = blocks.trialList[0]  # so we can initialise stimuli with some values
@@ -827,107 +783,10 @@ for thisBlock in blocks:
         for paramName in thisBlock:
             exec('{} = thisBlock[paramName]'.format(paramName))
     
-    # --- Prepare to start Routine "get_trials" ---
-    continueRoutine = True
-    routineForceEnded = False
-    # update component parameters for each repeat
-    # Run 'Begin Routine' code from extract_trials
-    current_WORD_trials = trial_sampling(all_word_trials, word_trial_count)
-    current_NONWORD_trials = trial_sampling(all_nonword_trials, nonword_trial_count)
-    
-    all_word_trials = remove_elements(all_word_trials, current_WORD_trials)
-    all_nonword_trials = remove_elements(all_nonword_trials, current_NONWORD_trials)
-    
-    current_trials = join_and_shuffle(current_WORD_trials, current_NONWORD_trials)
-    
-    print('block print: ', current_font)
-    block_instruction_text.setText(instruction_text)
-    block_instruction_text.setHeight(header_size)
-    key_resp.keys = []
-    key_resp.rt = []
-    _key_resp_allKeys = []
-    # keep track of which components have finished
-    get_trialsComponents = [block_instruction_text, key_resp]
-    for thisComponent in get_trialsComponents:
-        thisComponent.tStart = None
-        thisComponent.tStop = None
-        thisComponent.tStartRefresh = None
-        thisComponent.tStopRefresh = None
-        if hasattr(thisComponent, 'status'):
-            thisComponent.status = NOT_STARTED
-    # reset timers
-    t = 0
-    _timeToFirstFrame = win.getFutureFlipTime(clock="now")
-    frameN = -1
-    
-    # --- Run Routine "get_trials" ---
-    while continueRoutine:
-        # get current time
-        t = routineTimer.getTime()
-        tThisFlip = win.getFutureFlipTime(clock=routineTimer)
-        tThisFlipGlobal = win.getFutureFlipTime(clock=None)
-        frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
-        # update/draw components on each frame
-        
-        # *block_instruction_text* updates
-        if block_instruction_text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-            # keep track of start time/frame for later
-            block_instruction_text.frameNStart = frameN  # exact frame index
-            block_instruction_text.tStart = t  # local t and not account for scr refresh
-            block_instruction_text.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(block_instruction_text, 'tStartRefresh')  # time at next scr refresh
-            block_instruction_text.setAutoDraw(True)
-        
-        # *key_resp* updates
-        waitOnFlip = False
-        if key_resp.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-            # keep track of start time/frame for later
-            key_resp.frameNStart = frameN  # exact frame index
-            key_resp.tStart = t  # local t and not account for scr refresh
-            key_resp.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(key_resp, 'tStartRefresh')  # time at next scr refresh
-            key_resp.status = STARTED
-            # keyboard checking is just starting
-            waitOnFlip = True
-            win.callOnFlip(key_resp.clock.reset)  # t=0 on next screen flip
-        if key_resp.status == STARTED and not waitOnFlip:
-            theseKeys = key_resp.getKeys(keyList=['space'], waitRelease=False)
-            _key_resp_allKeys.extend(theseKeys)
-            if len(_key_resp_allKeys):
-                key_resp.keys = _key_resp_allKeys[-1].name  # just the last key pressed
-                key_resp.rt = _key_resp_allKeys[-1].rt
-                # a response ends the routine
-                continueRoutine = False
-        
-        # check for quit (typically the Esc key)
-        if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
-            core.quit()
-        
-        # check if all components have finished
-        if not continueRoutine:  # a component has requested a forced-end of Routine
-            routineForceEnded = True
-            break
-        continueRoutine = False  # will revert to True if at least one component still running
-        for thisComponent in get_trialsComponents:
-            if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
-                continueRoutine = True
-                break  # at least one component has not yet finished
-        
-        # refresh the screen
-        if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
-            win.flip()
-    
-    # --- Ending Routine "get_trials" ---
-    for thisComponent in get_trialsComponents:
-        if hasattr(thisComponent, "setAutoDraw"):
-            thisComponent.setAutoDraw(False)
-    # the Routine "get_trials" was not non-slip safe, so reset the non-slip timer
-    routineTimer.reset()
-    
     # set up handler to look after randomisation of conditions etc
-    trials = data.TrialHandler(nReps=1.0, method='sequential', 
+    trials = data.TrialHandler(nReps=1.0, method='random', 
         extraInfo=expInfo, originPath=-1,
-        trialList=data.importConditions('stimulus_sheet.xlsx', selection=current_trials),
+        trialList=data.importConditions('stimulus_sheet.xlsx'),
         seed=None, name='trials')
     thisExp.addLoop(trials)  # add the loop to the experiment
     thisTrial = trials.trialList[0]  # so we can initialise stimuli with some values
@@ -943,254 +802,6 @@ for thisBlock in blocks:
             for paramName in thisTrial:
                 exec('{} = thisTrial[paramName]'.format(paramName))
         
-        # --- Prepare to start Routine "inter_trial_interval" ---
-        continueRoutine = True
-        routineForceEnded = False
-        # update component parameters for each repeat
-        # Run 'Begin Routine' code from estimate_frame_durations
-        t_start_time = exp_clock.getTime()
-        t_frame_time = []
-        iti_duration = random.randint(iti_min*1000,iti_max*1000)/1000 # duration in msec units
-         
-        if enableSound == 'yes':
-            soundVolume = 1
-            soundDuration = 1
-        elif enableSound == 'no':
-            soundVolume = 0
-            soundDuration = 0.01
-        else:
-            raise ValueError('Sound condition is not defined properly, type in yes or no in the blocks file')
-        background_panel_2.setPos([panel_layout.panel_position])
-        background_panel_2.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
-        panel1_2.setPos((widget_regions[0]['x'], widget_regions[0]['y']))
-        panel1_2.setSize((widget_regions[0]['width'], widget_regions[0]['height']))
-        panel2_2.setPos((widget_regions[1]['x'], widget_regions[1]['y']))
-        panel2_2.setSize((widget_regions[1]['width'], widget_regions[1]['height']))
-        panel3_2.setPos((widget_regions[2]['x'], widget_regions[2]['y']))
-        panel3_2.setSize((widget_regions[2]['width'], widget_regions[2]['height']))
-        panel4_2.setPos((widget_regions[3]['x'], widget_regions[3]['y']))
-        panel4_2.setSize((widget_regions[3]['width'], widget_regions[3]['height']))
-        panel5_2.setPos((widget_regions[4]['x'], widget_regions[4]['y']))
-        panel5_2.setSize((widget_regions[4]['width'], widget_regions[4]['height']))
-        panel6_2.setPos((widget_regions[5]['x'], widget_regions[5]['y']))
-        panel6_2.setSize((widget_regions[5]['width'], widget_regions[5]['height']))
-        sound_cue.setSound('A', secs=soundDuration, hamming=True)
-        sound_cue.setVolume(soundVolume, log=False)
-        # keep track of which components have finished
-        inter_trial_intervalComponents = [background_panel_2, panel1_2, panel2_2, panel3_2, panel4_2, panel5_2, panel6_2, sound_cue]
-        for thisComponent in inter_trial_intervalComponents:
-            thisComponent.tStart = None
-            thisComponent.tStop = None
-            thisComponent.tStartRefresh = None
-            thisComponent.tStopRefresh = None
-            if hasattr(thisComponent, 'status'):
-                thisComponent.status = NOT_STARTED
-        # reset timers
-        t = 0
-        _timeToFirstFrame = win.getFutureFlipTime(clock="now")
-        frameN = -1
-        
-        # --- Run Routine "inter_trial_interval" ---
-        while continueRoutine:
-            # get current time
-            t = routineTimer.getTime()
-            tThisFlip = win.getFutureFlipTime(clock=routineTimer)
-            tThisFlipGlobal = win.getFutureFlipTime(clock=None)
-            frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
-            # update/draw components on each frame
-            # Run 'Each Frame' code from estimate_frame_durations
-            t_frame_time.append(round((exp_clock.getTime() - t_start_time)*1000,2))
-            
-            t_start_time = exp_clock.getTime()
-            
-            # *background_panel_2* updates
-            if background_panel_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                # keep track of start time/frame for later
-                background_panel_2.frameNStart = frameN  # exact frame index
-                background_panel_2.tStart = t  # local t and not account for scr refresh
-                background_panel_2.tStartRefresh = tThisFlipGlobal  # on global time
-                win.timeOnFlip(background_panel_2, 'tStartRefresh')  # time at next scr refresh
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'background_panel_2.started')
-                background_panel_2.setAutoDraw(True)
-            if background_panel_2.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > background_panel_2.tStartRefresh + iti_duration-frameTolerance:
-                    # keep track of stop time/frame for later
-                    background_panel_2.tStop = t  # not accounting for scr refresh
-                    background_panel_2.frameNStop = frameN  # exact frame index
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'background_panel_2.stopped')
-                    background_panel_2.setAutoDraw(False)
-            
-            # *panel1_2* updates
-            if panel1_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                # keep track of start time/frame for later
-                panel1_2.frameNStart = frameN  # exact frame index
-                panel1_2.tStart = t  # local t and not account for scr refresh
-                panel1_2.tStartRefresh = tThisFlipGlobal  # on global time
-                win.timeOnFlip(panel1_2, 'tStartRefresh')  # time at next scr refresh
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'panel1_2.started')
-                panel1_2.setAutoDraw(True)
-            if panel1_2.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > panel1_2.tStartRefresh + iti_duration-frameTolerance:
-                    # keep track of stop time/frame for later
-                    panel1_2.tStop = t  # not accounting for scr refresh
-                    panel1_2.frameNStop = frameN  # exact frame index
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'panel1_2.stopped')
-                    panel1_2.setAutoDraw(False)
-            
-            # *panel2_2* updates
-            if panel2_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                # keep track of start time/frame for later
-                panel2_2.frameNStart = frameN  # exact frame index
-                panel2_2.tStart = t  # local t and not account for scr refresh
-                panel2_2.tStartRefresh = tThisFlipGlobal  # on global time
-                win.timeOnFlip(panel2_2, 'tStartRefresh')  # time at next scr refresh
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'panel2_2.started')
-                panel2_2.setAutoDraw(True)
-            if panel2_2.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > panel2_2.tStartRefresh + iti_duration-frameTolerance:
-                    # keep track of stop time/frame for later
-                    panel2_2.tStop = t  # not accounting for scr refresh
-                    panel2_2.frameNStop = frameN  # exact frame index
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'panel2_2.stopped')
-                    panel2_2.setAutoDraw(False)
-            
-            # *panel3_2* updates
-            if panel3_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                # keep track of start time/frame for later
-                panel3_2.frameNStart = frameN  # exact frame index
-                panel3_2.tStart = t  # local t and not account for scr refresh
-                panel3_2.tStartRefresh = tThisFlipGlobal  # on global time
-                win.timeOnFlip(panel3_2, 'tStartRefresh')  # time at next scr refresh
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'panel3_2.started')
-                panel3_2.setAutoDraw(True)
-            if panel3_2.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > panel3_2.tStartRefresh + iti_duration-frameTolerance:
-                    # keep track of stop time/frame for later
-                    panel3_2.tStop = t  # not accounting for scr refresh
-                    panel3_2.frameNStop = frameN  # exact frame index
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'panel3_2.stopped')
-                    panel3_2.setAutoDraw(False)
-            
-            # *panel4_2* updates
-            if panel4_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                # keep track of start time/frame for later
-                panel4_2.frameNStart = frameN  # exact frame index
-                panel4_2.tStart = t  # local t and not account for scr refresh
-                panel4_2.tStartRefresh = tThisFlipGlobal  # on global time
-                win.timeOnFlip(panel4_2, 'tStartRefresh')  # time at next scr refresh
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'panel4_2.started')
-                panel4_2.setAutoDraw(True)
-            if panel4_2.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > panel4_2.tStartRefresh + iti_duration-frameTolerance:
-                    # keep track of stop time/frame for later
-                    panel4_2.tStop = t  # not accounting for scr refresh
-                    panel4_2.frameNStop = frameN  # exact frame index
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'panel4_2.stopped')
-                    panel4_2.setAutoDraw(False)
-            
-            # *panel5_2* updates
-            if panel5_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                # keep track of start time/frame for later
-                panel5_2.frameNStart = frameN  # exact frame index
-                panel5_2.tStart = t  # local t and not account for scr refresh
-                panel5_2.tStartRefresh = tThisFlipGlobal  # on global time
-                win.timeOnFlip(panel5_2, 'tStartRefresh')  # time at next scr refresh
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'panel5_2.started')
-                panel5_2.setAutoDraw(True)
-            if panel5_2.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > panel5_2.tStartRefresh + iti_duration-frameTolerance:
-                    # keep track of stop time/frame for later
-                    panel5_2.tStop = t  # not accounting for scr refresh
-                    panel5_2.frameNStop = frameN  # exact frame index
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'panel5_2.stopped')
-                    panel5_2.setAutoDraw(False)
-            
-            # *panel6_2* updates
-            if panel6_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                # keep track of start time/frame for later
-                panel6_2.frameNStart = frameN  # exact frame index
-                panel6_2.tStart = t  # local t and not account for scr refresh
-                panel6_2.tStartRefresh = tThisFlipGlobal  # on global time
-                win.timeOnFlip(panel6_2, 'tStartRefresh')  # time at next scr refresh
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'panel6_2.started')
-                panel6_2.setAutoDraw(True)
-            if panel6_2.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > panel6_2.tStartRefresh + iti_duration-frameTolerance:
-                    # keep track of stop time/frame for later
-                    panel6_2.tStop = t  # not accounting for scr refresh
-                    panel6_2.frameNStop = frameN  # exact frame index
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'panel6_2.stopped')
-                    panel6_2.setAutoDraw(False)
-            # start/stop sound_cue
-            if sound_cue.status == NOT_STARTED and tThisFlip >= iti_duration-soundDuration-1-frameTolerance:
-                # keep track of start time/frame for later
-                sound_cue.frameNStart = frameN  # exact frame index
-                sound_cue.tStart = t  # local t and not account for scr refresh
-                sound_cue.tStartRefresh = tThisFlipGlobal  # on global time
-                # add timestamp to datafile
-                thisExp.addData('sound_cue.started', tThisFlipGlobal)
-                sound_cue.play(when=win)  # sync with win flip
-            if sound_cue.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > sound_cue.tStartRefresh + soundDuration-frameTolerance:
-                    # keep track of stop time/frame for later
-                    sound_cue.tStop = t  # not accounting for scr refresh
-                    sound_cue.frameNStop = frameN  # exact frame index
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'sound_cue.stopped')
-                    sound_cue.stop()
-            
-            # check for quit (typically the Esc key)
-            if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
-                core.quit()
-            
-            # check if all components have finished
-            if not continueRoutine:  # a component has requested a forced-end of Routine
-                routineForceEnded = True
-                break
-            continueRoutine = False  # will revert to True if at least one component still running
-            for thisComponent in inter_trial_intervalComponents:
-                if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
-                    continueRoutine = True
-                    break  # at least one component has not yet finished
-            
-            # refresh the screen
-            if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
-                win.flip()
-        
-        # --- Ending Routine "inter_trial_interval" ---
-        for thisComponent in inter_trial_intervalComponents:
-            if hasattr(thisComponent, "setAutoDraw"):
-                thisComponent.setAutoDraw(False)
-        # Run 'End Routine' code from estimate_frame_durations
-        thisExp.addData('trial_frame_durations', t_frame_time);
-        thisExp.addData('current_time', datetime.now().strftime("%H:%M:%S"));
-        print('is it working second end routine')
-        sound_cue.stop()  # ensure sound has stopped at end of routine
-        # the Routine "inter_trial_interval" was not non-slip safe, so reset the non-slip timer
-        routineTimer.reset()
-        
         # --- Prepare to start Routine "screen_display_images" ---
         continueRoutine = True
         routineForceEnded = False
@@ -1200,7 +811,7 @@ for thisBlock in blocks:
         t_frame_time = []
         
         
-        print('trial print: ', current_font)
+        print('is it working first')
         background_panel.setPos([panel_layout.panel_position])
         background_panel.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
         panel1.setPos((widget_regions[0]['x'], widget_regions[0]['y']))
@@ -1401,7 +1012,7 @@ for thisBlock in blocks:
                 lexical_text_2.setAutoDraw(True)
             if lexical_text_2.status == STARTED:
                 # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > lexical_text_2.tStartRefresh + stimulus_duration-frameTolerance:
+                if tThisFlipGlobal > lexical_text_2.tStartRefresh + stim_duration-frameTolerance:
                     # keep track of stop time/frame for later
                     lexical_text_2.tStop = t  # not accounting for scr refresh
                     lexical_text_2.frameNStop = frameN  # exact frame index
@@ -1426,7 +1037,7 @@ for thisBlock in blocks:
                 win.callOnFlip(keybaord_input_2.clearEvents, eventType='keyboard')  # clear events on next screen flip
             if keybaord_input_2.status == STARTED:
                 # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > keybaord_input_2.tStartRefresh + stimulus_duration-frameTolerance:
+                if tThisFlipGlobal > keybaord_input_2.tStartRefresh + stim_duration-frameTolerance:
                     # keep track of stop time/frame for later
                     keybaord_input_2.tStop = t  # not accounting for scr refresh
                     keybaord_input_2.frameNStop = frameN  # exact frame index
@@ -1486,6 +1097,226 @@ for thisBlock in blocks:
         if keybaord_input_2.keys != None:  # we had a response
             trials.addData('keybaord_input_2.rt', keybaord_input_2.rt)
         # the Routine "screen_display_images" was not non-slip safe, so reset the non-slip timer
+        routineTimer.reset()
+        
+        # --- Prepare to start Routine "inter_trial_interval" ---
+        continueRoutine = True
+        routineForceEnded = False
+        # update component parameters for each repeat
+        # Run 'Begin Routine' code from estimate_frame_durations
+        t_start_time = exp_clock.getTime()
+        t_frame_time = []
+        iti_duration = random.randint(iti_min*1000,iti_max*1000)/1000 # duration in msec units
+         
+            
+        background_panel_2.setPos([panel_layout.panel_position])
+        background_panel_2.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
+        panel1_2.setPos((widget_regions[0]['x'], widget_regions[0]['y']))
+        panel1_2.setSize((widget_regions[0]['width'], widget_regions[0]['height']))
+        panel2_2.setPos((widget_regions[1]['x'], widget_regions[1]['y']))
+        panel2_2.setSize((widget_regions[1]['width'], widget_regions[1]['height']))
+        panel3_2.setPos((widget_regions[2]['x'], widget_regions[2]['y']))
+        panel3_2.setSize((widget_regions[2]['width'], widget_regions[2]['height']))
+        panel4_2.setPos((widget_regions[3]['x'], widget_regions[3]['y']))
+        panel4_2.setSize((widget_regions[3]['width'], widget_regions[3]['height']))
+        panel5_2.setPos((widget_regions[4]['x'], widget_regions[4]['y']))
+        panel5_2.setSize((widget_regions[4]['width'], widget_regions[4]['height']))
+        panel6_2.setPos((widget_regions[5]['x'], widget_regions[5]['y']))
+        panel6_2.setSize((widget_regions[5]['width'], widget_regions[5]['height']))
+        # keep track of which components have finished
+        inter_trial_intervalComponents = [background_panel_2, panel1_2, panel2_2, panel3_2, panel4_2, panel5_2, panel6_2]
+        for thisComponent in inter_trial_intervalComponents:
+            thisComponent.tStart = None
+            thisComponent.tStop = None
+            thisComponent.tStartRefresh = None
+            thisComponent.tStopRefresh = None
+            if hasattr(thisComponent, 'status'):
+                thisComponent.status = NOT_STARTED
+        # reset timers
+        t = 0
+        _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+        frameN = -1
+        
+        # --- Run Routine "inter_trial_interval" ---
+        while continueRoutine:
+            # get current time
+            t = routineTimer.getTime()
+            tThisFlip = win.getFutureFlipTime(clock=routineTimer)
+            tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+            frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+            # update/draw components on each frame
+            # Run 'Each Frame' code from estimate_frame_durations
+            t_frame_time.append(round((exp_clock.getTime() - t_start_time)*1000,2))
+            
+            t_start_time = exp_clock.getTime()
+            
+            # *background_panel_2* updates
+            if background_panel_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                background_panel_2.frameNStart = frameN  # exact frame index
+                background_panel_2.tStart = t  # local t and not account for scr refresh
+                background_panel_2.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(background_panel_2, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'background_panel_2.started')
+                background_panel_2.setAutoDraw(True)
+            if background_panel_2.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > background_panel_2.tStartRefresh + iti_duration-frameTolerance:
+                    # keep track of stop time/frame for later
+                    background_panel_2.tStop = t  # not accounting for scr refresh
+                    background_panel_2.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'background_panel_2.stopped')
+                    background_panel_2.setAutoDraw(False)
+            
+            # *panel1_2* updates
+            if panel1_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                panel1_2.frameNStart = frameN  # exact frame index
+                panel1_2.tStart = t  # local t and not account for scr refresh
+                panel1_2.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(panel1_2, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'panel1_2.started')
+                panel1_2.setAutoDraw(True)
+            if panel1_2.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > panel1_2.tStartRefresh + iti_duration-frameTolerance:
+                    # keep track of stop time/frame for later
+                    panel1_2.tStop = t  # not accounting for scr refresh
+                    panel1_2.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'panel1_2.stopped')
+                    panel1_2.setAutoDraw(False)
+            
+            # *panel2_2* updates
+            if panel2_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                panel2_2.frameNStart = frameN  # exact frame index
+                panel2_2.tStart = t  # local t and not account for scr refresh
+                panel2_2.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(panel2_2, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'panel2_2.started')
+                panel2_2.setAutoDraw(True)
+            if panel2_2.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > panel2_2.tStartRefresh + iti_duration-frameTolerance:
+                    # keep track of stop time/frame for later
+                    panel2_2.tStop = t  # not accounting for scr refresh
+                    panel2_2.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'panel2_2.stopped')
+                    panel2_2.setAutoDraw(False)
+            
+            # *panel3_2* updates
+            if panel3_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                panel3_2.frameNStart = frameN  # exact frame index
+                panel3_2.tStart = t  # local t and not account for scr refresh
+                panel3_2.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(panel3_2, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'panel3_2.started')
+                panel3_2.setAutoDraw(True)
+            if panel3_2.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > panel3_2.tStartRefresh + iti_duration-frameTolerance:
+                    # keep track of stop time/frame for later
+                    panel3_2.tStop = t  # not accounting for scr refresh
+                    panel3_2.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'panel3_2.stopped')
+                    panel3_2.setAutoDraw(False)
+            
+            # *panel4_2* updates
+            if panel4_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                panel4_2.frameNStart = frameN  # exact frame index
+                panel4_2.tStart = t  # local t and not account for scr refresh
+                panel4_2.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(panel4_2, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'panel4_2.started')
+                panel4_2.setAutoDraw(True)
+            if panel4_2.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > panel4_2.tStartRefresh + iti_duration-frameTolerance:
+                    # keep track of stop time/frame for later
+                    panel4_2.tStop = t  # not accounting for scr refresh
+                    panel4_2.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'panel4_2.stopped')
+                    panel4_2.setAutoDraw(False)
+            
+            # *panel5_2* updates
+            if panel5_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                panel5_2.frameNStart = frameN  # exact frame index
+                panel5_2.tStart = t  # local t and not account for scr refresh
+                panel5_2.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(panel5_2, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'panel5_2.started')
+                panel5_2.setAutoDraw(True)
+            if panel5_2.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > panel5_2.tStartRefresh + iti_duration-frameTolerance:
+                    # keep track of stop time/frame for later
+                    panel5_2.tStop = t  # not accounting for scr refresh
+                    panel5_2.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'panel5_2.stopped')
+                    panel5_2.setAutoDraw(False)
+            
+            # *panel6_2* updates
+            if panel6_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                panel6_2.frameNStart = frameN  # exact frame index
+                panel6_2.tStart = t  # local t and not account for scr refresh
+                panel6_2.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(panel6_2, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'panel6_2.started')
+                panel6_2.setAutoDraw(True)
+            if panel6_2.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > panel6_2.tStartRefresh + iti_duration-frameTolerance:
+                    # keep track of stop time/frame for later
+                    panel6_2.tStop = t  # not accounting for scr refresh
+                    panel6_2.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'panel6_2.stopped')
+                    panel6_2.setAutoDraw(False)
+            
+            # check for quit (typically the Esc key)
+            if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
+                core.quit()
+            
+            # check if all components have finished
+            if not continueRoutine:  # a component has requested a forced-end of Routine
+                routineForceEnded = True
+                break
+            continueRoutine = False  # will revert to True if at least one component still running
+            for thisComponent in inter_trial_intervalComponents:
+                if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+                    continueRoutine = True
+                    break  # at least one component has not yet finished
+            
+            # refresh the screen
+            if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+                win.flip()
+        
+        # --- Ending Routine "inter_trial_interval" ---
+        for thisComponent in inter_trial_intervalComponents:
+            if hasattr(thisComponent, "setAutoDraw"):
+                thisComponent.setAutoDraw(False)
+        # Run 'End Routine' code from estimate_frame_durations
+        thisExp.addData('trial_frame_durations', t_frame_time);
+        thisExp.addData('current_time', datetime.now().strftime("%H:%M:%S"));
+        print('is it working second end routine')
+        # the Routine "inter_trial_interval" was not non-slip safe, so reset the non-slip timer
         routineTimer.reset()
         thisExp.nextEntry()
         
