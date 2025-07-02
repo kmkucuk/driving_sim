@@ -699,6 +699,7 @@
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
       </ImageComponent>
     </Routine>
+<<<<<<< HEAD
     <Routine name="finish_instructions">
       <TextComponent name="finish_text">
         <Param val="black" valType="color" updates="constant" name="color"/>
@@ -771,6 +772,8 @@
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
       </ImageComponent>
     </Routine>
+=======
+>>>>>>> 389e2f46f6192b1c2c95a63bb9d2958ea32c5440
   </Routines>
   <Flow>
     <Routine name="initialization"/>
@@ -801,6 +804,9 @@
     <Routine name="screen_display_images"/>
     <LoopTerminator name="trials"/>
     <LoopTerminator name="blocks"/>
+<<<<<<< HEAD
     <Routine name="finish_instructions"/>
+=======
+>>>>>>> 389e2f46f6192b1c2c95a63bb9d2958ea32c5440
   </Flow>
 </PsychoPy2experiment>

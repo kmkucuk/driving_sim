@@ -40,7 +40,7 @@ def getDateTimeText(value):
         elif int(str_num_day[-1]) >= 4:
             day_suffix = 'th'    
 
-        return str_num_day + day_suffix + " " + month +"\n" + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber   
+        return str_num_day + " " + month +"\n" + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber   
 
 def updateText(value, key):
 
