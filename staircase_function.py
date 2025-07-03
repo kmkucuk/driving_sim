@@ -70,17 +70,26 @@ class stairCaseFunction():
 
         else: # no change
             self.level[self.nPresented] = self.level[self.nPresented-1] 
-            self.selfSign=self.lastSign # self staircase stays in same direction
+            self.selfSign = self.lastSign # self staircase stays in same direction
         
         if (self.selfSign * self.lastSign == -1): # staircase changed direction
-            self.nReversals = self.nReversals+1 # increment # reversals
+            self.nReversals = self.nReversals+1 # increment v c vb# reversals
             self.nReversalsSinceReset = self.nReversalsSinceReset+1
             self.trialsSinceReversal = 1#number of trials since last reversal
             self.revLevel[self.nReversals-1] = self.level[self.nPresented] # record level at which observer's response changed
         
         self.testLevel = self.level[self.nPresented]
 
-
+        if (self.trialsSinceReversal==10):
+            self.stepSize = 1/15
+            self.nReversalsSinceReset = 0
+            self.nDown = 1
+            self.nYes = 0
+            self.nNo = 0
+        
+        if (self.nReversalsSinceReset == 2):
+            self.nDown = 3 
+        
 
 textDurPractice = 0.5 #text duration (in seconds) for practice
 ISI = 0.5 #blank interval between trials
