@@ -98,23 +98,6 @@
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="panel_initialization" valType="code" updates="None" name="name"/>
       </CodeComponent>
-      <CodeComponent name="experimental_parameters">
-        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="import math&amp;#10;import random&amp;#10;# select a panel for the large clutter 1 (duration, fuel, distance)&amp;#10;# select from 0 to 6.&amp;#10;clutter_panel = 0&amp;#10;&amp;#10;&amp;#10;panel_layout = Panel(win.size[0], win.size[1])&amp;#10;r = panel_layout.generate_panel_layout([1, 0, 0, 1]) &amp;#10;large_clutter1 = panel_layout.panel_separator(r[5], 3, &quot;vertical&quot;)&amp;#10;&amp;#10;symbol_x_parse = [1, 10]&amp;#10;text_x_parse = [8, 10]&amp;#10;vertical_three_regions = [1, 3]&amp;#10;&amp;#10;# word widgets: Today, Navigation (Orlando), My home (garage door)&amp;#10;# number widgets: Duration, Fuel, Distance&amp;#10;&amp;#10;large_clutter1_regions = []&amp;#10;large_clutter1_text = []&amp;#10;clutter_positions = [0, 3, 4, 5] # do not add clutter to second column (i.e. [1, 2])&amp;#10;large_clutter1_content = {&quot;header&quot;: &quot;Current Trip&quot;, &quot;duration&quot;: &quot;0 hr 40 min&quot;, &quot;fuel&quot;: &quot;32 mpg&quot;, &quot;distance&quot;: &quot;54 mi&quot;} # todo: add variable parameters to these text&amp;#10;# if any key is navigation, place symbol to [5, 10] at header line&amp;#10;small_clutter2_content = { &quot;navigation&quot;: &quot;Orlando&quot;, &quot;day&quot;: &quot;Monday&quot;} # todo: get today's day using datetime &amp;#10;small_clutter3_content = {&quot;header&quot;: &quot;My Home&quot;, &quot;garage&quot;: &quot;null&quot;}&amp;#10;large_clutter4_content = {&quot;header&quot;: &quot;Orlando&quot;,} &amp;#10;&amp;#10;for i in range(0,3):&amp;#10;    large_clutter1_regions.append([panel_layout.place_large_clutter(large_clutter1[i], &quot;horizontal&quot;, symbol_x_parse), &amp;#10;    panel_layout.place_large_clutter(large_clutter1[i], &quot;vertical&quot;, vertical_three_regions)])&amp;#10;    &amp;#10;    # &quot;+large_clutter1[i][&quot;width&quot;] &gt; compensates space for left aligned text&amp;#10;    large_clutter1_text.append([panel_layout.place_large_clutter(clutter1[i], &quot;horizontal&quot;, text_x_parse), &amp;#10;    panel_layout.place_large_clutter(clutter1[i], &quot;vertical&quot;, [1,3])])&amp;#10;&amp;#10;clutter_position_text = [panel_layout.place_large_clutter(clutter1[0], &quot;horizontal&quot;, text_x_parse) + clutter1[0][&quot;width&quot;], &amp;#10;panel_layout.place_large_clutter(clutter1[0], &quot;vertical&quot;, [1,3])] &amp;#10;&amp;#10;clutter_position_text2 = [panel_layout.place_large_clutter(clutter1[1], &quot;horizontal&quot;, text_x_parse) + clutter1[1][&quot;width&quot;], &amp;#10;panel_layout.place_large_clutter(clutter1[1], &quot;vertical&quot;, [1,3])] &amp;#10;&amp;#10;clutter_position_text3 = [panel_layout.place_large_clutter(clutter1[2], &quot;horizontal&quot;, text_x_parse) + clutter1[2][&quot;width&quot;], &amp;#10;panel_layout.place_large_clutter(clutter1[2], &quot;vertical&quot;, [1,3])] &amp;#10;&amp;#10;clutter_size = [clutter1[0][&quot;width&quot;]/4, clutter1[0][&quot;height&quot;]/4]&amp;#10;clutter_size2 = [clutter1[1][&quot;width&quot;]/4, clutter1[1][&quot;height&quot;]/4]&amp;#10;clutter_size3 = [clutter1[2][&quot;width&quot;]/4, clutter1[2][&quot;height&quot;]/4]&amp;#10;&amp;#10;&amp;#10;&amp;#10;" valType="extendedCode" updates="constant" name="Begin Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin Routine"/>
-        <Param val="Py" valType="str" updates="None" name="Code Type"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Each Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
-        <Param val="True" valType="bool" updates="None" name="disabled"/>
-        <Param val="experimental_parameters" valType="code" updates="None" name="name"/>
-      </CodeComponent>
       <CodeComponent name="exp_init">
         <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
@@ -699,7 +682,6 @@
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
       </ImageComponent>
     </Routine>
-<<<<<<< HEAD
     <Routine name="finish_instructions">
       <TextComponent name="finish_text">
         <Param val="black" valType="color" updates="constant" name="color"/>
@@ -772,8 +754,6 @@
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
       </ImageComponent>
     </Routine>
-=======
->>>>>>> 389e2f46f6192b1c2c95a63bb9d2958ea32c5440
   </Routines>
   <Flow>
     <Routine name="initialization"/>
@@ -804,9 +784,6 @@
     <Routine name="screen_display_images"/>
     <LoopTerminator name="trials"/>
     <LoopTerminator name="blocks"/>
-<<<<<<< HEAD
     <Routine name="finish_instructions"/>
-=======
->>>>>>> 389e2f46f6192b1c2c95a63bb9d2958ea32c5440
   </Flow>
 </PsychoPy2experiment>

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on July 02, 2025, at 16:08
+    on July 03, 2025, at 17:23
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -758,6 +758,24 @@ sound_cue = sound.Sound('A', secs=-1, stereo=True, hamming=True,
     name='sound_cue')
 sound_cue.setVolume(1.0)
 
+# --- Initialize components for Routine "finish_instructions" ---
+finish_text = visual.TextStim(win=win, name='finish_text',
+    text='Experiment is finished, thank you!',
+    font='Open Sans',
+    pos=(0, 0), height=50.0, wrapWidth=1000.0, ori=0.0, 
+    color='black', colorSpace='rgb', opacity=None, 
+    languageStyle='LTR',
+    depth=0.0);
+finish_key = keyboard.Keyboard()
+background_panel_4 = visual.ImageStim(
+    win=win,
+    name='background_panel_4', 
+    image='stimuli/panels/background_panel.png', mask=None, anchor='center',
+    ori=0.0, pos=[0,0], size=1.0,
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-2.0)
+
 # Create some handy timers
 globalClock = core.Clock()  # to track the time since experiment started
 routineTimer = core.Clock()  # to track time remaining of each (possibly non-slip) routine 
@@ -854,9 +872,6 @@ for thisBlock in blocks:
     else:
         instructionDuration = 999
             
-    
-    instr_x = win.size[0] * 2/3 
-    instr_y = instr_x / wh_ratio
     
     instr_y = win.size[1] * 2/3
     instr_x = instr_y * wh_ratio
@@ -1483,6 +1498,116 @@ for thisBlock in blocks:
     
 # completed 1.0 repeats of 'blocks'
 
+
+# --- Prepare to start Routine "finish_instructions" ---
+continueRoutine = True
+routineForceEnded = False
+# update component parameters for each repeat
+finish_key.keys = []
+finish_key.rt = []
+_finish_key_allKeys = []
+background_panel_4.setPos([panel_layout.panel_position])
+background_panel_4.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
+# keep track of which components have finished
+finish_instructionsComponents = [finish_text, finish_key, background_panel_4]
+for thisComponent in finish_instructionsComponents:
+    thisComponent.tStart = None
+    thisComponent.tStop = None
+    thisComponent.tStartRefresh = None
+    thisComponent.tStopRefresh = None
+    if hasattr(thisComponent, 'status'):
+        thisComponent.status = NOT_STARTED
+# reset timers
+t = 0
+_timeToFirstFrame = win.getFutureFlipTime(clock="now")
+frameN = -1
+
+# --- Run Routine "finish_instructions" ---
+while continueRoutine:
+    # get current time
+    t = routineTimer.getTime()
+    tThisFlip = win.getFutureFlipTime(clock=routineTimer)
+    tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+    frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+    # update/draw components on each frame
+    
+    # *finish_text* updates
+    if finish_text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # keep track of start time/frame for later
+        finish_text.frameNStart = frameN  # exact frame index
+        finish_text.tStart = t  # local t and not account for scr refresh
+        finish_text.tStartRefresh = tThisFlipGlobal  # on global time
+        win.timeOnFlip(finish_text, 'tStartRefresh')  # time at next scr refresh
+        # add timestamp to datafile
+        thisExp.timestampOnFlip(win, 'finish_text.started')
+        finish_text.setAutoDraw(True)
+    
+    # *finish_key* updates
+    waitOnFlip = False
+    if finish_key.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # keep track of start time/frame for later
+        finish_key.frameNStart = frameN  # exact frame index
+        finish_key.tStart = t  # local t and not account for scr refresh
+        finish_key.tStartRefresh = tThisFlipGlobal  # on global time
+        win.timeOnFlip(finish_key, 'tStartRefresh')  # time at next scr refresh
+        # add timestamp to datafile
+        thisExp.timestampOnFlip(win, 'finish_key.started')
+        finish_key.status = STARTED
+        # keyboard checking is just starting
+        waitOnFlip = True
+        win.callOnFlip(finish_key.clock.reset)  # t=0 on next screen flip
+        win.callOnFlip(finish_key.clearEvents, eventType='keyboard')  # clear events on next screen flip
+    if finish_key.status == STARTED and not waitOnFlip:
+        theseKeys = finish_key.getKeys(keyList=['space'], waitRelease=False)
+        _finish_key_allKeys.extend(theseKeys)
+        if len(_finish_key_allKeys):
+            finish_key.keys = _finish_key_allKeys[-1].name  # just the last key pressed
+            finish_key.rt = _finish_key_allKeys[-1].rt
+            # a response ends the routine
+            continueRoutine = False
+    
+    # *background_panel_4* updates
+    if background_panel_4.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # keep track of start time/frame for later
+        background_panel_4.frameNStart = frameN  # exact frame index
+        background_panel_4.tStart = t  # local t and not account for scr refresh
+        background_panel_4.tStartRefresh = tThisFlipGlobal  # on global time
+        win.timeOnFlip(background_panel_4, 'tStartRefresh')  # time at next scr refresh
+        # add timestamp to datafile
+        thisExp.timestampOnFlip(win, 'background_panel_4.started')
+        background_panel_4.setAutoDraw(True)
+    
+    # check for quit (typically the Esc key)
+    if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
+        core.quit()
+    
+    # check if all components have finished
+    if not continueRoutine:  # a component has requested a forced-end of Routine
+        routineForceEnded = True
+        break
+    continueRoutine = False  # will revert to True if at least one component still running
+    for thisComponent in finish_instructionsComponents:
+        if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+            continueRoutine = True
+            break  # at least one component has not yet finished
+    
+    # refresh the screen
+    if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+        win.flip()
+
+# --- Ending Routine "finish_instructions" ---
+for thisComponent in finish_instructionsComponents:
+    if hasattr(thisComponent, "setAutoDraw"):
+        thisComponent.setAutoDraw(False)
+# check responses
+if finish_key.keys in ['', [], None]:  # No response was made
+    finish_key.keys = None
+thisExp.addData('finish_key.keys',finish_key.keys)
+if finish_key.keys != None:  # we had a response
+    thisExp.addData('finish_key.rt', finish_key.rt)
+thisExp.nextEntry()
+# the Routine "finish_instructions" was not non-slip safe, so reset the non-slip timer
+routineTimer.reset()
 
 # --- End experiment ---
 # Flip one final time so any remaining win.callOnFlip() 
