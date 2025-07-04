@@ -1,6 +1,6 @@
 
 
-class stairCaseFunction():
+class staircaseFunction():
 
     def __init__(self, maxNTrials, maxNReversals, startGuess, nUp, nDown):
         self.response = [0] * maxNTrials   #trial by trial record of observer correct/incorrect responses
@@ -24,9 +24,12 @@ class stairCaseFunction():
         self.maxNTReversals = maxNReversals
         self.stairBounds = [0.033, 0.500]
 
-    def updateStaircase(self, response):
+    def update(self, response):
         if not (response == 1 or response == 0):
             ValueError("Incorrect accuracy input, staircase is not updated. Accuracy should be either 1 or 0 in integer type. ")
+            return None
+        elif self.nPresented + 1 == self.maxNTrials:
+            InterruptedError("Completed all staircase trials, update procedure is interrupted.")
             return None
             
         if (response == 1):  # correct or 'Yes' response
@@ -92,16 +95,8 @@ class stairCaseFunction():
         
 
 textDurPractice = 0.5 #text duration (in seconds) for practice
-ISI = 0.5 #blank interval between trials
-maskDur = 0.25 #duration of each mask
-nMasks = 10 #number of unqiue masks
-stairBounds = [2/60, .5] #lower and upper duration bounds of staircase (33 ms and 500 ms)
-textCol = [1,1,1] #color
-instrTextSize = .05#norm units (proportion of screen height)
-testText = "H" #letter to show on test screen
-trialsPerStaircase = 2#100 # trials per staircase
+trialsPerStaircase = 80 # trials per staircase
 staircaseStart = 0.3 #staircase start point (300 ms)
 staircasesPerFont = 1 # #number of staircases per font
-nRepsPractice = 1 # number of times each unique condition is repeated in the practice 
-breakFreq = trialsPerStaircase # break screen appears every N trials
+
 
