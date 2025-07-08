@@ -11,7 +11,6 @@ pix_per_cm_mert = monitor_res_lab[1] / cm_vert_monitor_mert
 
 distance_cm = 55.88
 
-
 pix_per_cm_lab = 36.381
 pix_per_cm_mert = 32.381
 char_size_arc_min = 19.6
@@ -24,10 +23,7 @@ print(pix_per_cm_lab)
 print(pix_per_cm_mert)
 print(stim_pix)
 
-
 pix_for_required_inch = 31.21152
-
-
 
 # get pixel size to x-height ratio.
 # then use this ratio to multiply letter height in Psychopy. 

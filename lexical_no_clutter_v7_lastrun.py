@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on July 08, 2025, at 10:17
+    on July 08, 2025, at 11:47
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -55,7 +55,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
-    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\lexical_no_clutter_v6_lastrun.py',
+    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\lexical_no_clutter_v7_lastrun.py',
     savePickle=True, saveWideText=True,
     dataFileName=filename)
 # save a log file for detail verbose info
@@ -1020,6 +1020,9 @@ for thisBlock in blocks:
     for thisComponent in get_trialsComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
+    # Run 'End Routine' code from extract_trials
+    if blocks.thisN == 0:
+        exp_start_time = exp_clock.getTime()
     # the Routine "get_trials" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset()
     
@@ -1050,6 +1053,7 @@ for thisBlock in blocks:
         t_start_time = exp_clock.getTime()
         t_frame_time = []
         iti_duration = random.randint(iti_min*1000,iti_max*1000)/1000 # duration in msec units
+        thisExp.addData('current_time', datetime.now().strftime("%H:%M:%S"));
         
         
         background_panel_2.setPos([panel_layout.panel_position])
@@ -1257,7 +1261,6 @@ for thisBlock in blocks:
                 thisComponent.setAutoDraw(False)
         # Run 'End Routine' code from estimate_frame_durations
         thisExp.addData('trial_frame_durations', t_frame_time);
-        thisExp.addData('current_time', datetime.now().strftime("%H:%M:%S"));
         thisExp.addData('iti_duration', iti_duration);
         print('is it working second end routine')
         # the Routine "inter_trial_interval" was not non-slip safe, so reset the non-slip timer
@@ -1270,6 +1273,8 @@ for thisBlock in blocks:
         # Run 'Begin Routine' code from estimate_frame_durations_2
         t_start_time = exp_clock.getTime()
         t_frame_time = []
+        thisExp.addData('current_time', datetime.now().strftime("%H:%M:%S"));
+        thisExp.addData('elapsed_time', exp_clock.getTime() - exp_start_time);
         
         if enableSound == 'yes':
             soundVolume = 1
@@ -1506,7 +1511,6 @@ for thisBlock in blocks:
                 thisComponent.setAutoDraw(False)
         # Run 'End Routine' code from estimate_frame_durations_2
         thisExp.addData('trial_frame_durations', t_frame_time);
-        thisExp.addData('current_time', datetime.now().strftime("%H:%M:%S"));
         thisExp.addData('stimulus_duration', stimulus_duration);
         
         
