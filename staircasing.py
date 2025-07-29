@@ -6,7 +6,7 @@ class staircaseFunction():
         self.response = [0] * maxNTrials   #trial by trial record of observer correct/incorrect responses
         self.level = [0] * maxNTrials      # trial by trial record of match level
         self.condFinished = 0                # record of when condition finished (either max # trials or desired # staircase reversals
-        self.stepSize = 13               # 16f per sec *13= 208 ms staircase starts with large stepsize, then is halved after 1 and 3 reversals
+        self.stepSize = 12               # 16f per sec *12 = 200 ms staircase starts with large stepsize, then is halved after 1 and 3 reversals
         self.stepSizeMin = 2
         self.nReversals = 0                  # record of # staircase reversals
         self.nReversalsSinceReset = 0                  # record of # staircase reversals
