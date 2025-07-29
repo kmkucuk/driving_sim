@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on July 29, 2025, at 17:26
+    on July 29, 2025, at 17:41
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -926,7 +926,7 @@ for thisBlock in blocks:
     if staircaseEnabled:    
         trialsPerStaircase = 51
         start_duration = 0.200
-        staircase_dict[current_font] = staircaseFunction(trialsPerStaircase, trialsPerStaircase, start_duration, 1, 1)
+        staircase_dict[current_font] = staircaseFunction(trialsPerStaircase, trialsPerStaircase, start_duration, 1, 3)
     background_panel_3.setPos([panel_layout.panel_position])
     background_panel_3.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
     key_resp.keys = []
