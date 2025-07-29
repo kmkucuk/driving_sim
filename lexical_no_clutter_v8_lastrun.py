@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on July 29, 2025, at 17:50
+    on July 29, 2025, at 18:39
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -627,7 +627,7 @@ all_nonword_trials = range(764, 1261)
 
 
 maxword_no = 760
-maxnonword_no = 1260
+maxnonword_no = 1257
 
 
 
@@ -922,8 +922,10 @@ for thisBlock in blocks:
     
     if staircaseEnabled:    
         trialsPerStaircase = 51
-        start_duration = 0.200
+        start_duration = 13
         staircase_dict[current_font] = staircaseFunction(trialsPerStaircase, trialsPerStaircase, start_duration, 1, 3)
+            
+    
     background_panel_3.setPos([panel_layout.panel_position])
     background_panel_3.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
     key_resp.keys = []
@@ -1308,21 +1310,28 @@ for thisBlock in blocks:
         
         if trials.thisN < 3:
             stimulus_duration = 0.800
+            stimulus_frames = 48
         elif trials.thisN < 6:
             stimulus_duration = 0.400
+            stimulus_frames = 24
         elif trials.thisN < 9:
             stimulus_duration = 0.200
+            stimulus_frames = 12
         elif staircaseUpdateEnabled and staircaseEnabled:    
-            stimulus_duration = staircase_dict[current_font].testLevel    
+            stimulus_frames = staircase_dict[current_font].testLevel    
         elif task_name == "full_task_roboto" or task_name == "full_task_neuefrutigerworld" or task_name == "training_driving_lexical":
             stimulus_duration = 5
+            stimulus_frames = 300
         else: 
             stimulus_duration = 0.500
+            stimulus_frames = 30
             
         if enableSound == 'yes':
             soundVolume = 1
             soundDuration = 1
+            soundFrames = 60
             fixationDuration = soundDuration
+            fixationFrames = 60
             
             if (maskEnabled == "yes"):
                 maskDuration = 0.200
@@ -1330,6 +1339,9 @@ for thisBlock in blocks:
                 postMaskOffset = fixationDuration + maskDuration + stimulus_duration        
                 maskSize = [stim_size * xheight_to_size * 8, stim_size * xheight_to_size * 1.5]
                 currentMaskImage = selectRandomMask(mask_imgs)
+                maskFrames = 12
+                preMaskOffsetFrames = 60
+                postMaskOffsetFrames = fixationFrames + maskFrames + stimulus_frames + 1
             else:        
                 currentMaskImage = []
                 preMaskOffset = 0
@@ -1338,6 +1350,7 @@ for thisBlock in blocks:
                 maskSize = [1, 1]
                 
             stimOffset = fixationDuration + maskDuration 
+            stimOffsetFrames = fixationFrames + maskFrames + 1
         elif enableSound == 'no':
             soundVolume = 0
             soundDuration = 0.01
@@ -1422,7 +1435,7 @@ for thisBlock in blocks:
             
             
             # *background_panel* updates
-            if background_panel.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            if background_panel.status == NOT_STARTED and frameN >= 0.0:
                 # keep track of start time/frame for later
                 background_panel.frameNStart = frameN  # exact frame index
                 background_panel.tStart = t  # local t and not account for scr refresh
@@ -1432,8 +1445,7 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'background_panel.started')
                 background_panel.setAutoDraw(True)
             if background_panel.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > background_panel.tStartRefresh + 5-frameTolerance:
+                if frameN >= (background_panel.frameNStart + 300):
                     # keep track of stop time/frame for later
                     background_panel.tStop = t  # not accounting for scr refresh
                     background_panel.frameNStop = frameN  # exact frame index
@@ -1442,7 +1454,7 @@ for thisBlock in blocks:
                     background_panel.setAutoDraw(False)
             
             # *panel1* updates
-            if panel1.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            if panel1.status == NOT_STARTED and frameN >= 0.0:
                 # keep track of start time/frame for later
                 panel1.frameNStart = frameN  # exact frame index
                 panel1.tStart = t  # local t and not account for scr refresh
@@ -1452,8 +1464,7 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'panel1.started')
                 panel1.setAutoDraw(True)
             if panel1.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > panel1.tStartRefresh + 5-frameTolerance:
+                if frameN >= (panel1.frameNStart + 300):
                     # keep track of stop time/frame for later
                     panel1.tStop = t  # not accounting for scr refresh
                     panel1.frameNStop = frameN  # exact frame index
@@ -1462,7 +1473,7 @@ for thisBlock in blocks:
                     panel1.setAutoDraw(False)
             
             # *panel2* updates
-            if panel2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            if panel2.status == NOT_STARTED and frameN >= 0.0:
                 # keep track of start time/frame for later
                 panel2.frameNStart = frameN  # exact frame index
                 panel2.tStart = t  # local t and not account for scr refresh
@@ -1472,8 +1483,7 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'panel2.started')
                 panel2.setAutoDraw(True)
             if panel2.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > panel2.tStartRefresh + 5-frameTolerance:
+                if frameN >= (panel2.frameNStart + 300):
                     # keep track of stop time/frame for later
                     panel2.tStop = t  # not accounting for scr refresh
                     panel2.frameNStop = frameN  # exact frame index
@@ -1482,7 +1492,7 @@ for thisBlock in blocks:
                     panel2.setAutoDraw(False)
             
             # *panel3* updates
-            if panel3.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            if panel3.status == NOT_STARTED and frameN >= 0.0:
                 # keep track of start time/frame for later
                 panel3.frameNStart = frameN  # exact frame index
                 panel3.tStart = t  # local t and not account for scr refresh
@@ -1492,8 +1502,7 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'panel3.started')
                 panel3.setAutoDraw(True)
             if panel3.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > panel3.tStartRefresh + 5-frameTolerance:
+                if frameN >= (panel3.frameNStart + 300):
                     # keep track of stop time/frame for later
                     panel3.tStop = t  # not accounting for scr refresh
                     panel3.frameNStop = frameN  # exact frame index
@@ -1502,7 +1511,7 @@ for thisBlock in blocks:
                     panel3.setAutoDraw(False)
             
             # *panel4* updates
-            if panel4.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            if panel4.status == NOT_STARTED and frameN >= 0.0:
                 # keep track of start time/frame for later
                 panel4.frameNStart = frameN  # exact frame index
                 panel4.tStart = t  # local t and not account for scr refresh
@@ -1512,8 +1521,7 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'panel4.started')
                 panel4.setAutoDraw(True)
             if panel4.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > panel4.tStartRefresh + 5-frameTolerance:
+                if frameN >= (panel4.frameNStart + 300):
                     # keep track of stop time/frame for later
                     panel4.tStop = t  # not accounting for scr refresh
                     panel4.frameNStop = frameN  # exact frame index
@@ -1522,7 +1530,7 @@ for thisBlock in blocks:
                     panel4.setAutoDraw(False)
             
             # *panel5* updates
-            if panel5.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            if panel5.status == NOT_STARTED and frameN >= 0.0:
                 # keep track of start time/frame for later
                 panel5.frameNStart = frameN  # exact frame index
                 panel5.tStart = t  # local t and not account for scr refresh
@@ -1532,8 +1540,7 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'panel5.started')
                 panel5.setAutoDraw(True)
             if panel5.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > panel5.tStartRefresh + 5-frameTolerance:
+                if frameN >= (panel5.frameNStart + 300):
                     # keep track of stop time/frame for later
                     panel5.tStop = t  # not accounting for scr refresh
                     panel5.frameNStop = frameN  # exact frame index
@@ -1542,7 +1549,7 @@ for thisBlock in blocks:
                     panel5.setAutoDraw(False)
             
             # *panel6* updates
-            if panel6.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            if panel6.status == NOT_STARTED and frameN >= 0.0:
                 # keep track of start time/frame for later
                 panel6.frameNStart = frameN  # exact frame index
                 panel6.tStart = t  # local t and not account for scr refresh
@@ -1552,8 +1559,7 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'panel6.started')
                 panel6.setAutoDraw(True)
             if panel6.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > panel6.tStartRefresh + 5-frameTolerance:
+                if frameN >= (panel6.frameNStart + 300):
                     # keep track of stop time/frame for later
                     panel6.tStop = t  # not accounting for scr refresh
                     panel6.frameNStop = frameN  # exact frame index
@@ -1562,7 +1568,7 @@ for thisBlock in blocks:
                     panel6.setAutoDraw(False)
             
             # *pre_mask* updates
-            if pre_mask.status == NOT_STARTED and tThisFlip >= preMaskOffset-frameTolerance:
+            if pre_mask.status == NOT_STARTED and frameN >= preMaskOffsetFrames:
                 # keep track of start time/frame for later
                 pre_mask.frameNStart = frameN  # exact frame index
                 pre_mask.tStart = t  # local t and not account for scr refresh
@@ -1572,8 +1578,7 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'pre_mask.started')
                 pre_mask.setAutoDraw(True)
             if pre_mask.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > pre_mask.tStartRefresh + maskDuration-frameTolerance:
+                if frameN >= (pre_mask.frameNStart + maskFrames):
                     # keep track of stop time/frame for later
                     pre_mask.tStop = t  # not accounting for scr refresh
                     pre_mask.frameNStop = frameN  # exact frame index
@@ -1582,7 +1587,7 @@ for thisBlock in blocks:
                     pre_mask.setAutoDraw(False)
             
             # *post_mask* updates
-            if post_mask.status == NOT_STARTED and tThisFlip >= postMaskOffset-frameTolerance:
+            if post_mask.status == NOT_STARTED and frameN >= postMaskOffsetFrames:
                 # keep track of start time/frame for later
                 post_mask.frameNStart = frameN  # exact frame index
                 post_mask.tStart = t  # local t and not account for scr refresh
@@ -1592,8 +1597,7 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'post_mask.started')
                 post_mask.setAutoDraw(True)
             if post_mask.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > post_mask.tStartRefresh + maskDuration-frameTolerance:
+                if frameN >= (post_mask.frameNStart + maskFrames):
                     # keep track of stop time/frame for later
                     post_mask.tStop = t  # not accounting for scr refresh
                     post_mask.frameNStop = frameN  # exact frame index
@@ -1602,7 +1606,7 @@ for thisBlock in blocks:
                     post_mask.setAutoDraw(False)
             
             # *lexical_text* updates
-            if lexical_text.status == NOT_STARTED and tThisFlip >= stimOffset-frameTolerance:
+            if lexical_text.status == NOT_STARTED and frameN >= stimOffsetFrames:
                 # keep track of start time/frame for later
                 lexical_text.frameNStart = frameN  # exact frame index
                 lexical_text.tStart = t  # local t and not account for scr refresh
@@ -1612,8 +1616,7 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'lexical_text.started')
                 lexical_text.setAutoDraw(True)
             if lexical_text.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > lexical_text.tStartRefresh + stimulus_duration-frameTolerance:
+                if frameN >= (lexical_text.frameNStart + stimulus_frames):
                     # keep track of stop time/frame for later
                     lexical_text.tStop = t  # not accounting for scr refresh
                     lexical_text.frameNStop = frameN  # exact frame index
@@ -1622,7 +1625,7 @@ for thisBlock in blocks:
                     lexical_text.setAutoDraw(False)
             
             # *fixation_cross* updates
-            if fixation_cross.status == NOT_STARTED and tThisFlip >= 0-frameTolerance:
+            if fixation_cross.status == NOT_STARTED and frameN >= 0:
                 # keep track of start time/frame for later
                 fixation_cross.frameNStart = frameN  # exact frame index
                 fixation_cross.tStart = t  # local t and not account for scr refresh
@@ -1632,8 +1635,7 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'fixation_cross.started')
                 fixation_cross.setAutoDraw(True)
             if fixation_cross.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > fixation_cross.tStartRefresh + fixationDuration-frameTolerance:
+                if frameN >= (fixation_cross.frameNStart + fixationFrames):
                     # keep track of stop time/frame for later
                     fixation_cross.tStop = t  # not accounting for scr refresh
                     fixation_cross.frameNStop = frameN  # exact frame index
@@ -1643,7 +1645,7 @@ for thisBlock in blocks:
             
             # *lexical_response* updates
             waitOnFlip = False
-            if lexical_response.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            if lexical_response.status == NOT_STARTED and frameN >= 0.0:
                 # keep track of start time/frame for later
                 lexical_response.frameNStart = frameN  # exact frame index
                 lexical_response.tStart = t  # local t and not account for scr refresh
@@ -1657,8 +1659,7 @@ for thisBlock in blocks:
                 win.callOnFlip(lexical_response.clock.reset)  # t=0 on next screen flip
                 win.callOnFlip(lexical_response.clearEvents, eventType='keyboard')  # clear events on next screen flip
             if lexical_response.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > lexical_response.tStartRefresh + 5-frameTolerance:
+                if frameN >= 300:
                     # keep track of stop time/frame for later
                     lexical_response.tStop = t  # not accounting for scr refresh
                     lexical_response.frameNStop = frameN  # exact frame index
@@ -1696,7 +1697,8 @@ for thisBlock in blocks:
                 thisComponent.setAutoDraw(False)
         # Run 'End Routine' code from estimate_frame_durations_2
         thisExp.addData('trial_frame_durations', t_frame_time);
-        thisExp.addData('stimulus_duration', stimulus_duration);
+        thisExp.addData('stimulus_frames', stimulus_frames);
+        thisExp.addData('stimulus_duration', stimulus_duration * 0.016666667);
         thisExp.addData('response_accuracy', lexical_response.corr);
         
         print(lexical_response)

@@ -6,8 +6,8 @@ class staircaseFunction():
         self.response = [0] * maxNTrials   #trial by trial record of observer correct/incorrect responses
         self.level = [0] * maxNTrials      # trial by trial record of match level
         self.condFinished = 0                # record of when condition finished (either max # trials or desired # staircase reversals
-        self.stepSize = 0.200              # staircase starts with large stepsize, then is halved after 1 and 3 reversals
-        self.stepSizeMin = 0.033
+        self.stepSize = 13               # 16f per sec *13= 208 ms staircase starts with large stepsize, then is halved after 1 and 3 reversals
+        self.stepSizeMin = 2
         self.nReversals = 0                  # record of # staircase reversals
         self.nReversalsSinceReset = 0                  # record of # staircase reversals
         self.trialsSinceReversal = 1
@@ -23,7 +23,7 @@ class staircaseFunction():
         self.testLevel = self.level[self.nPresented]
         self.maxNTrials = maxNTrials
         self.maxNTReversals = maxNReversals
-        self.stairBounds = [0.066, 1]
+        self.stairBounds = [2, 60]
 
     def update(self, response):
         if not (response == 1 or response == 0):
@@ -75,8 +75,8 @@ class staircaseFunction():
             self.nReversalsSinceReset = self.nReversalsSinceReset+1
             self.trialsSinceReversal = 1#number of trials since last reversal
             self.revLevel[self.nReversals-1] = self.level[self.nPresented] # record level at which observer's response changed
-            if self.stepSize * 0.80 >= self.stepSizeMin:
-                self.stepSize = self.stepSize * 0.80
+            if round(self.stepSize * 0.80) >= self.stepSizeMin:
+                self.stepSize = round(self.stepSize * 0.80)
             else: 
                 self.stepSize = self.stepSizeMin
         self.testLevel = self.level[self.nPresented]
