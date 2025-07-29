@@ -6,7 +6,8 @@ class staircaseFunction():
         self.response = [0] * maxNTrials   #trial by trial record of observer correct/incorrect responses
         self.level = [0] * maxNTrials      # trial by trial record of match level
         self.condFinished = 0                # record of when condition finished (either max # trials or desired # staircase reversals
-        self.stepSize = 1/15              # staircase starts with large stepsize, then is halved after 1 and 3 reversals
+        self.stepSize = 0.200              # staircase starts with large stepsize, then is halved after 1 and 3 reversals
+        self.stepSizeMin = 0.033
         self.nReversals = 0                  # record of # staircase reversals
         self.nReversalsSinceReset = 0                  # record of # staircase reversals
         self.trialsSinceReversal = 1
@@ -22,7 +23,7 @@ class staircaseFunction():
         self.testLevel = self.level[self.nPresented]
         self.maxNTrials = maxNTrials
         self.maxNTReversals = maxNReversals
-        self.stairBounds = [0.033, 0.500]
+        self.stairBounds = [0.033, 1]
 
     def update(self, response):
         if not (response == 1 or response == 0):
@@ -44,11 +45,6 @@ class staircaseFunction():
         if (self.nPresented == self.maxNTrials or self.nReversals == self.maxNTReversals): # if enough trials or reversals reached, terminate condition
             self.condFinished = 1       
 
-        if (self.nReversalsSinceReset == 6): 
-            self.stepSize = 1/30
-
-        if (self.nReversalsSinceReset == 12):   
-            self.stepSize = 1/60
         
         self.lastSign = self.selfSign
         self.nPresented = self.nPresented+1 # increment # trials
@@ -80,20 +76,13 @@ class staircaseFunction():
             self.nReversalsSinceReset = self.nReversalsSinceReset+1
             self.trialsSinceReversal = 1#number of trials since last reversal
             self.revLevel[self.nReversals-1] = self.level[self.nPresented] # record level at which observer's response changed
-        
+            if self.stepSize * 0.80 >= self.stepSizeMin:
+                self.stepSize = self.stepSize * 0.80
+            else: 
+                self.stepSize = self.stepSizeMin
         self.testLevel = self.level[self.nPresented]
 
-        if (self.trialsSinceReversal==10):
-            self.stepSize = 1/15
-            self.nReversalsSinceReset = 0
-            self.nDown = 1
-            self.nYes = 0
-            self.nNo = 0
-        
-        if (self.nReversalsSinceReset == 2):
-            self.nDown = 3 
-        
-
+      
 textDurPractice = 0.5 #text duration (in seconds) for practice
 trialsPerStaircase = 80 # trials per staircase
 staircaseStart = 0.3 #staircase start point (300 ms)
