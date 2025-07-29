@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on July 29, 2025, at 15:35
+    on July 29, 2025, at 17:10
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -55,7 +55,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
-    originPath='C:\\Users\\Administrator\\Desktop\\repos\\driving_sim\\lexical_no_clutter_v8_lastrun.py',
+    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\lexical_no_clutter_v8_lastrun.py',
     savePickle=True, saveWideText=True,
     dataFileName=filename)
 # save a log file for detail verbose info
@@ -1082,6 +1082,7 @@ for thisBlock in blocks:
         iti_duration = random.randint(iti_min*1000,iti_max*1000)/1000 # duration in msec units
         thisExp.addData('current_time', datetime.now().strftime("%H:%M:%S"));
         
+        staircaseUpdateEnabled = trials.thisN > 8
         background_panel_2.setPos([panel_layout.panel_position])
         background_panel_2.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
         panel1_2.setPos((widget_regions[0]['x'], widget_regions[0]['y']))
@@ -1314,7 +1315,7 @@ for thisBlock in blocks:
             stimulus_duration = 0.400
         elif trials.thisN < 9:
             stimulus_duration = 0.200
-        elif staircaseEnabled:    
+        elif staircaseUpdateEnabled:    
             stimulus_duration = staircase_dict[current_font].testLevel    
         elif task_name == "full_task_roboto" or task_name == "full_task_neuefrutigerworld" or task_name == "training_driving_lexical":
             stimulus_duration = 5
@@ -1715,18 +1716,19 @@ for thisBlock in blocks:
         # Run 'End Routine' code from estimate_frame_durations_2
         thisExp.addData('trial_frame_durations', t_frame_time);
         thisExp.addData('stimulus_duration', stimulus_duration);
+        thisExp.addData('response_accuracy', lexical_response.corr);
         
         print(lexical_response)
         
-        if staircaseEnabled:    
-            thisExp.addData('st_font', current_font);    
+        if staircaseUpdateEnabled:    
+            thisExp.addData('st_font', current_font);
             thisExp.addData('st_is_reversal', (staircase_dict[current_font].selfSign * staircase_dict[current_font].lastSign) == -1);
             thisExp.addData('st_cumulative_reversals', staircase_dict[current_font].nReversals);
             thisExp.addData('st_trial_number', staircase_dict[current_font].nPresented + 1);
-            thisExp.addData('st_nDown', staircase_dict[current_font].nDown);    
+            thisExp.addData('st_nDown', staircase_dict[current_font].nDown);
             thisExp.addData('st_stepSize', staircase_dict[current_font].stepSize);
-            staircase_dict[current_font].update(lexical_response.corr)    
-        else:        
+            staircase_dict[current_font].update(lexical_response.corr)
+        else:
             thisExp.addData('st_font', None);       
             thisExp.addData('st_is_reversal', None);
             thisExp.addData('st_cumulative_reversals', None);

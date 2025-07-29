@@ -4,20 +4,12 @@ class staircaseFunction():
 
     def __init__(self, maxNTrials, maxNReversals, startGuess, nUp, nDown):
         self.response = [0] * maxNTrials   #trial by trial record of observer correct/incorrect responses
-<<<<<<< HEAD
-        self.level = [0] * maxNTrials # trial by trial record of match level
-        self.condFinished = 0    # record of when condition finished (either max # trials or desired # staircase reversals
-        self.stepSize = 0.200  # staircase starts with large stepsize, then is halved after 1 and 3 reversals
-        self.nReversals = 0 # record of # staircase reversals
-        self.nReversalsSinceReset = 0 # record of # staircase reversals
-=======
         self.level = [0] * maxNTrials      # trial by trial record of match level
         self.condFinished = 0                # record of when condition finished (either max # trials or desired # staircase reversals
         self.stepSize = 0.200              # staircase starts with large stepsize, then is halved after 1 and 3 reversals
         self.stepSizeMin = 0.033
         self.nReversals = 0                  # record of # staircase reversals
         self.nReversalsSinceReset = 0                  # record of # staircase reversals
->>>>>>> 8dcfdb2ef59e07d324b93903d0d716d237edae70
         self.trialsSinceReversal = 1
         self.revLevel = [0] * maxNTrials  # record of match level at reversal, used to calculate mean at end of run
         self.level[0] = startGuess  # 1st matching level is set by experimenter +/- 0 to 2 steps
@@ -31,11 +23,7 @@ class staircaseFunction():
         self.testLevel = self.level[self.nPresented]
         self.maxNTrials = maxNTrials
         self.maxNTReversals = maxNReversals
-<<<<<<< HEAD
-        self.stairBounds = [0.033, 1] # threshold for stimulus durations (min, max respectively).
-=======
         self.stairBounds = [0.033, 1]
->>>>>>> 8dcfdb2ef59e07d324b93903d0d716d237edae70
 
     def update(self, response):
         if not (response == 1 or response == 0):
@@ -56,17 +44,7 @@ class staircaseFunction():
     
         if (self.nPresented == self.maxNTrials or self.nReversals == self.maxNTReversals): # if enough trials or reversals reached, terminate condition
             self.condFinished = 1       
-<<<<<<< HEAD
-        
-        if (self.nReversalsSinceReset == 6): 
-            self.stepSize = 1/30
-
-        if (self.nReversalsSinceReset == 12):   
-            self.stepSize = 1/60
-=======
-
->>>>>>> 8dcfdb2ef59e07d324b93903d0d716d237edae70
-        
+                    
         self.lastSign = self.selfSign
         self.nPresented = self.nPresented+1 # increment # trials
         self.trialsSinceReversal = self.trialsSinceReversal+1
