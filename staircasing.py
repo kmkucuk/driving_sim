@@ -23,7 +23,7 @@ class staircaseFunction():
         self.testLevel = self.level[self.nPresented]
         self.maxNTrials = maxNTrials
         self.maxNTReversals = maxNReversals
-        self.stairBounds = [0.033, 1]
+        self.stairBounds = [0.066, 1]
 
     def update(self, response):
         if not (response == 1 or response == 0):
