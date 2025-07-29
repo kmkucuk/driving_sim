@@ -38,7 +38,7 @@ def getDateTimeText(value):
         elif str_num_day[-1] == '3':
             day_suffix = 'rd'
         elif int(str_num_day[-1]) >= 4:
-            day_suffix = 'th'    
+            day_suffix = 'th'
 
         return str_num_day + " " + month +"\n" + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber   
 
