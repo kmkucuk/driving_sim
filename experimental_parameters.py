@@ -7,6 +7,37 @@ from datetime import datetime
 import os
 
 
+
+def getChangeIndex(dyn_values, chang_indx):
+    change_order = []
+    # chang_indx represents the len(keys) in dynamic_clutter_values
+    
+    while True:
+        rand_indx = random.randint(0, len(chang_indx) - 1)
+        if chang_indx[rand_indx] != 0:
+            cur_clut = dyn_values[rand_indx]
+            keys = list(cur_clut.keys())
+            selectAgain = False
+            while True:
+                rand_keyi = random.randint(0, len(keys) - 1)
+                selected_key = keys[rand_keyi]                    
+                for ki in range(0, len(change_order)):
+                    lookup_key = change_order[ki][1]
+                    if selected_key == lookup_key:
+                        selectAgain = True
+                if selectAgain:
+                    break
+                else:
+                    change_order.append([rand_indx, selected_key])
+                    chang_indx[rand_indx] = chang_indx[rand_indx] - 1
+                    break
+        elif sum(chang_indx) == 0:
+            break
+    return change_order
+
+def generateChangeSequence():
+    return random.sample(range(1, 12), 8)
+
 def getGarageText(boolean):
     if boolean == 0:
         return "Garage Door\nClosed"
@@ -206,6 +237,11 @@ dynamic_clutter_values = [{"duration": 28, "fuel": 34, "distance": 78},
                           {"garage_door": 0},
                           {"temperature": 96},
                           {"battery": 24, "miles": 76}]
+# 12 trials, 8 total widgets, how many clutter change?
+# 8?
+
+# select 1 index, che
+
 
 # TODO: function to change order of elements in each data strct. to do what?
 all_data_structures = [all_widgets, dynamic_clutter_values]
