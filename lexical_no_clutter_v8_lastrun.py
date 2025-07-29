@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on July 29, 2025, at 17:41
+    on July 29, 2025, at 17:50
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -800,9 +800,6 @@ fixation_cross = visual.TextStim(win=win, name='fixation_cross',
     languageStyle='LTR',
     depth=-11.0);
 lexical_response = keyboard.Keyboard()
-sound_cue = sound.Sound('A', secs=-1, stereo=True, hamming=True,
-    name='sound_cue')
-sound_cue.setVolume(1.0)
 
 # --- Initialize components for Routine "finish_instructions" ---
 background_panel_4 = visual.ImageStim(
@@ -1380,10 +1377,8 @@ for thisBlock in blocks:
         lexical_response.keys = []
         lexical_response.rt = []
         _lexical_response_allKeys = []
-        sound_cue.setSound('A', secs=soundDuration, hamming=True)
-        sound_cue.setVolume(soundVolume, log=False)
         # keep track of which components have finished
-        screen_display_imagesComponents = [background_panel, panel1, panel2, panel3, panel4, panel5, panel6, pre_mask, post_mask, lexical_text, fixation_cross, lexical_response, sound_cue]
+        screen_display_imagesComponents = [background_panel, panel1, panel2, panel3, panel4, panel5, panel6, pre_mask, post_mask, lexical_text, fixation_cross, lexical_response]
         for thisComponent in screen_display_imagesComponents:
             thisComponent.tStart = None
             thisComponent.tStop = None
@@ -1676,20 +1671,6 @@ for thisBlock in blocks:
                 if len(_lexical_response_allKeys):
                     lexical_response.keys = _lexical_response_allKeys[-1].name  # just the last key pressed
                     lexical_response.rt = _lexical_response_allKeys[-1].rt
-            # start/stop sound_cue
-            if sound_cue.status == NOT_STARTED and tThisFlip >= 0-frameTolerance:
-                # keep track of start time/frame for later
-                sound_cue.frameNStart = frameN  # exact frame index
-                sound_cue.tStart = t  # local t and not account for scr refresh
-                sound_cue.tStartRefresh = tThisFlipGlobal  # on global time
-                sound_cue.play(when=win)  # sync with win flip
-            if sound_cue.status == STARTED:
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > sound_cue.tStartRefresh + soundDuration-frameTolerance:
-                    # keep track of stop time/frame for later
-                    sound_cue.tStop = t  # not accounting for scr refresh
-                    sound_cue.frameNStop = frameN  # exact frame index
-                    sound_cue.stop()
             
             # check for quit (typically the Esc key)
             if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
@@ -1742,7 +1723,6 @@ for thisBlock in blocks:
         trials.addData('lexical_response.keys',lexical_response.keys)
         if lexical_response.keys != None:  # we had a response
             trials.addData('lexical_response.rt', lexical_response.rt)
-        sound_cue.stop()  # ensure sound has stopped at end of routine
         # the Routine "screen_display_images" was not non-slip safe, so reset the non-slip timer
         routineTimer.reset()
         thisExp.nextEntry()
