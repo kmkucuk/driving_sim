@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on July 29, 2025, at 18:41
+    on July 30, 2025, at 15:21
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -55,7 +55,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
-    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\lexical_no_clutter_v8_lastrun.py',
+    originPath='C:\\Users\\Administrator\\Desktop\\repos\\driving_sim\\lexical_no_clutter_v9_lastrun.py',
     savePickle=True, saveWideText=True,
     dataFileName=filename)
 # save a log file for detail verbose info
@@ -622,12 +622,12 @@ mask_imgs = getFilesInDir("./stimuli/masks")
 
 # --- Initialize components for Routine "get_trials" ---
 # Run 'Begin Experiment' code from extract_trials
-all_word_trials = range(0, 761)
-all_nonword_trials = range(764, 1261)
+all_word_trials = range(0, 759)
+all_nonword_trials = range(764, 1256)
 
 
-maxword_no = 760
-maxnonword_no = 1257
+maxword_no = 159
+maxnonword_no = 1256
 
 
 
@@ -921,8 +921,11 @@ for thisBlock in blocks:
     staircaseEnabled = task_name == "lexical_wo_driving_roboto" or task_name == "lexical_wo_driving_neuefrutigerworld"
     
     if staircaseEnabled:    
-        trialsPerStaircase = 51
-        start_duration = 13
+        if (blocks.thisN < 2):
+            trialsPerStaircase = 51
+        elif blocks.thisN == 2:
+            trialsPerStaircase = 60    
+        start_duration = 12
         staircase_dict[current_font] = staircaseFunction(trialsPerStaircase, trialsPerStaircase, start_duration, 1, 3)
             
     
@@ -1081,7 +1084,7 @@ for thisBlock in blocks:
         iti_duration = random.randint(iti_min*1000,iti_max*1000)/1000 # duration in msec units
         thisExp.addData('current_time', datetime.now().strftime("%H:%M:%S"));
         
-        staircaseUpdateEnabled = trials.thisN > 8
+        
         background_panel_2.setPos([panel_layout.panel_position])
         background_panel_2.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
         panel1_2.setPos((widget_regions[0]['x'], widget_regions[0]['y']))
@@ -1306,15 +1309,18 @@ for thisBlock in blocks:
         checkTerminate = False
         print('trial print: ', current_font)
         
+        first_two_blocks = (blocks.thisN < 2)
         
+        # controlled descent for first two block, no descent for 3rd block
+        staircaseUpdateEnabled = (trials.thisN > 8 and first_two_blocks) or (blocks.thisN == 2)
         
-        if trials.thisN < 3:
+        if (trials.thisN < 3) and first_two_blocks:
             stimulus_duration = 0.800
             stimulus_frames = 48
-        elif trials.thisN < 6:
+        elif (trials.thisN < 6) and first_two_blocks:
             stimulus_duration = 0.400
             stimulus_frames = 24
-        elif trials.thisN < 9:
+        elif (trials.thisN < 9) and first_two_blocks:
             stimulus_duration = 0.200
             stimulus_frames = 12
         elif staircaseUpdateEnabled and staircaseEnabled:    
@@ -1426,7 +1432,7 @@ for thisBlock in blocks:
                    lexical_response.corr = 1
                 else:
                    lexical_response.corr = 0
-                lexical_response.keys = []     
+                lexical_response.keys = []
                 checkKey = False
                 checkTerminate = True
             if checkTerminate and maskShown:
@@ -1699,25 +1705,34 @@ for thisBlock in blocks:
         thisExp.addData('trial_frame_durations', t_frame_time);
         thisExp.addData('stimulus_frames', stimulus_frames);
         thisExp.addData('stimulus_duration', stimulus_frames * 0.016666667);
+        
+        # omission
+        if checkKey == True:
+            lexical_response.corr = 0
+            
+        acc_v = ["wrong", "correct"]
         thisExp.addData('response_accuracy', lexical_response.corr);
         
-        print(lexical_response)
         
         if staircaseUpdateEnabled and staircaseEnabled:    
-            thisExp.addData('st_font', current_font);
-            thisExp.addData('st_is_reversal', (staircase_dict[current_font].selfSign * staircase_dict[current_font].lastSign) == -1);
-            thisExp.addData('st_cumulative_reversals', staircase_dict[current_font].nReversals);
-            thisExp.addData('st_trial_number', staircase_dict[current_font].nPresented + 1);
-            thisExp.addData('st_nDown', staircase_dict[current_font].nDown);
-            thisExp.addData('st_stepSize', staircase_dict[current_font].stepSize);
+            thisExp.addData('st_stepSizeFrames', staircase_dict[current_font].stepSize)
+            thisExp.addData('st_stepSizeDuration', staircase_dict[current_font].stepSize * 0.016667);   
+            thisExp.addData('st_font', current_font)
+            thisExp.addData('st_trial_number', staircase_dict[current_font].nPresented + 1)
+            thisExp.addData('st_nDown', staircase_dict[current_font].nDown)
             staircase_dict[current_font].update(lexical_response.corr)
+            # register reversals after the update to 
+            # accurately mark the reversal trial
+            thisExp.addData('st_is_reversal', (staircase_dict[current_font].selfSign * staircase_dict[current_font].lastSign) == -1)
+            thisExp.addData('st_cumulative_reversals', staircase_dict[current_font].nReversals)    
         else:
+            thisExp.addData('st_stepSizeFrames', None)
+            thisExp.addData('st_stepSizeDuration', None);      
             thisExp.addData('st_font', None);       
             thisExp.addData('st_is_reversal', None);
             thisExp.addData('st_cumulative_reversals', None);
             thisExp.addData('st_trial_number', None);
-            thisExp.addData('st_nDown', None);    
-            thisExp.addData('st_stepSize', None);    
+            thisExp.addData('st_nDown', None);     
         
         # check responses
         if lexical_response.keys in ['', [], None]:  # No response was made
