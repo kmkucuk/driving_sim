@@ -2,12 +2,12 @@
 
 class staircaseFunction():
 
-    def __init__(self, maxNTrials, maxNReversals, startGuess, nUp, nDown):
+    def __init__(self, maxNTrials, maxNReversals, startGuess, nUp, nDown, secPerFrame):
         self.response = [0] * maxNTrials   #trial by trial record of observer correct/incorrect responses
         self.level = [0] * maxNTrials      # trial by trial record of match level
         self.condFinished = 0                # record of when condition finished (either max # trials or desired # staircase reversals
-        self.stepSize = 12               # 16f per sec *12 = 200 ms staircase starts with large stepsize, then is halved after 1 and 3 reversals
-        self.stepSizeMin = 2
+        self.stepSize = self.getFrames(0.200, secPerFrame)               # 16f per sec *12 = 200 ms staircase starts with large stepsize, then is halved after 1 and 3 reversals
+        self.stepSizeMin = self.getFrames(0.033, secPerFrame)
         self.nReversals = 0                  # record of # staircase reversals
         self.nReversalsSinceReset = 0                  # record of # staircase reversals
         self.trialsSinceReversal = 1
@@ -23,7 +23,11 @@ class staircaseFunction():
         self.testLevel = self.level[self.nPresented]
         self.maxNTrials = maxNTrials
         self.maxNTReversals = maxNReversals
-        self.stairBounds = [2, 60]
+        self.stairBounds = [self.getFrames(0.033, secPerFrame), self.getFrames(1, secPerFrame)]
+
+    def getFrames(self, duration, secPerFrame):
+        return round(duration / secPerFrame)
+
 
     def update(self, response):
         if not (response == 1 or response == 0):
@@ -44,7 +48,7 @@ class staircaseFunction():
     
         if (self.nPresented == self.maxNTrials or self.nReversals == self.maxNTReversals): # if enough trials or reversals reached, terminate condition
             self.condFinished = 1       
-                    
+
         self.lastSign = self.selfSign
         self.nPresented = self.nPresented+1 # increment # trials
         self.trialsSinceReversal = self.trialsSinceReversal+1
