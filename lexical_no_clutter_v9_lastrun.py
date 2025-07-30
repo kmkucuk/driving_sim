@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on July 30, 2025, at 15:21
+    on July 30, 2025, at 16:45
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -69,12 +69,12 @@ frameTolerance = 0.001  # how close to onset before 'same' frame
 
 # --- Setup the Window ---
 win = visual.Window(
-    size=[1536, 864], fullscr=False, screen=0, 
+    size=[1536, 864], fullscr=True, screen=0, 
     winType='pyglet', allowStencil=False,
     monitor='testMonitor', color=[-1.0000, -1.0000, -1.0000], colorSpace='rgb',
     blendMode='avg', useFBO=True, 
     units='pix')
-win.mouseVisible = True
+win.mouseVisible = False
 # store frame rate of monitor if we can measure it
 expInfo['frameRate'] = win.getActualFrameRate()
 if expInfo['frameRate'] != None:
@@ -108,6 +108,9 @@ from datetime import datetime
 import os
 from staircasing import staircaseFunction
 from masking import getFilesInDir, selectRandomMask
+
+def getFrames(duration, secPerFrame):
+    return round(duration / secPerFrame)
 
 
 def trial_sampling(vector, n):
@@ -620,6 +623,14 @@ stim_size = stim_cm * pixPerCm
 
 mask_imgs = getFilesInDir("./stimuli/masks")
 
+
+frameRate = win.getActualFrameRate();
+# convert to py float
+frameRate = frameRate.item()
+if frameRate == None:
+    frameRate = 60    
+secPerFrame = 1 / frameRate
+
 # --- Initialize components for Routine "get_trials" ---
 # Run 'Begin Experiment' code from extract_trials
 all_word_trials = range(0, 759)
@@ -925,8 +936,8 @@ for thisBlock in blocks:
             trialsPerStaircase = 51
         elif blocks.thisN == 2:
             trialsPerStaircase = 60    
-        start_duration = 12
-        staircase_dict[current_font] = staircaseFunction(trialsPerStaircase, trialsPerStaircase, start_duration, 1, 3)
+        startFrames = getFrames(0.200, secPerFrame)
+        staircase_dict[current_font] = staircaseFunction(trialsPerStaircase, trialsPerStaircase, startFrames, 1, 3, secPerFrame)
             
     
     background_panel_3.setPos([panel_layout.panel_position])
@@ -1316,38 +1327,37 @@ for thisBlock in blocks:
         
         if (trials.thisN < 3) and first_two_blocks:
             stimulus_duration = 0.800
-            stimulus_frames = 48
+            stimulus_frames = getFrames(stimulus_duration, secPerFrame)
         elif (trials.thisN < 6) and first_two_blocks:
             stimulus_duration = 0.400
-            stimulus_frames = 24
+            stimulus_frames = getFrames(stimulus_duration, secPerFrame)
         elif (trials.thisN < 9) and first_two_blocks:
             stimulus_duration = 0.200
-            stimulus_frames = 12
+            stimulus_frames = getFrames(stimulus_duration, secPerFrame)
         elif staircaseUpdateEnabled and staircaseEnabled:    
             stimulus_frames = staircase_dict[current_font].testLevel    
         elif task_name == "full_task_roboto" or task_name == "full_task_neuefrutigerworld" or task_name == "training_driving_lexical":
             stimulus_duration = 5
-            stimulus_frames = 300
+            stimulus_frames = getFrames(stimulus_duration, secPerFrame)
         else: 
             stimulus_duration = 0.500
-            stimulus_frames = 30
+            stimulus_frames = getFrames(stimulus_duration, secPerFrame)
             
         if enableSound == 'yes':
             soundVolume = 1
             soundDuration = 1
-            soundFrames = 60
             fixationDuration = soundDuration
-            fixationFrames = 60
+            soundFrames = getFrames(soundDuration, secPerFrame)    
+            fixationFrames = getFrames(fixationDuration, secPerFrame)
             
             if (maskEnabled == "yes"):
                 maskDuration = 0.200
-                preMaskOffset = 1        
-                postMaskOffset = fixationDuration + maskDuration + stimulus_duration        
+                maskFrames = getFrames(maskDuration, secPerFrame)
+                preMaskOffsetFrames = fixationFrames + 1
+                postMaskOffsetFrames = preMaskOffsetFrames + maskFrames + stimulus_frames      
+                
                 maskSize = [stim_size * xheight_to_size * 8, stim_size * xheight_to_size * 1.5]
-                currentMaskImage = selectRandomMask(mask_imgs)
-                maskFrames = 12
-                preMaskOffsetFrames = 60
-                postMaskOffsetFrames = fixationFrames + maskFrames + stimulus_frames + 1
+                currentMaskImage = selectRandomMask(mask_imgs)        
             else:        
                 currentMaskImage = []
                 preMaskOffset = 0
@@ -1355,8 +1365,7 @@ for thisBlock in blocks:
                 maskDuration = 0.01
                 maskSize = [1, 1]
                 
-            stimOffset = fixationDuration + maskDuration 
-            stimOffsetFrames = fixationFrames + maskFrames + 1
+            stimOffsetFrames = preMaskOffsetFrames + maskFrames + 1
         elif enableSound == 'no':
             soundVolume = 0
             soundDuration = 0.01
@@ -1424,7 +1433,7 @@ for thisBlock in blocks:
             t_start_time = exp_clock.getTime()
             
             
-            maskShown = (t_start_time - tbegin) >= (postMaskOffset + maskDuration)        
+            maskShown = frameN >= (postMaskOffsetFrames + maskFrames) - 1     
                     
             if lexical_response.keys and checkKey:
                 print(lexical_response.keys)    
@@ -1704,7 +1713,7 @@ for thisBlock in blocks:
         # Run 'End Routine' code from estimate_frame_durations_2
         thisExp.addData('trial_frame_durations', t_frame_time);
         thisExp.addData('stimulus_frames', stimulus_frames);
-        thisExp.addData('stimulus_duration', stimulus_frames * 0.016666667);
+        thisExp.addData('stimulus_duration', stimulus_frames * secPerFrame);
         
         # omission
         if checkKey == True:
@@ -1713,10 +1722,9 @@ for thisBlock in blocks:
         acc_v = ["wrong", "correct"]
         thisExp.addData('response_accuracy', lexical_response.corr);
         
-        
         if staircaseUpdateEnabled and staircaseEnabled:    
             thisExp.addData('st_stepSizeFrames', staircase_dict[current_font].stepSize)
-            thisExp.addData('st_stepSizeDuration', staircase_dict[current_font].stepSize * 0.016667);   
+            thisExp.addData('st_stepSizeDuration', staircase_dict[current_font].stepSize * secPerFrame);   
             thisExp.addData('st_font', current_font)
             thisExp.addData('st_trial_number', staircase_dict[current_font].nPresented + 1)
             thisExp.addData('st_nDown', staircase_dict[current_font].nDown)
