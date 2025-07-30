@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on July 30, 2025, at 18:08
+    on July 30, 2025, at 18:25
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -1353,7 +1353,7 @@ for thisBlock in blocks:
             if (maskEnabled == "yes"):
                 maskDuration = 0.200
                 maskFrames = getFrames(maskDuration, secPerFrame)
-                preMaskOffsetFrames = fixationFrames + 1
+                preMaskOffsetFrames = fixationFrames
                 postMaskOffsetFrames = preMaskOffsetFrames + maskFrames + stimulus_frames      
                 
                 maskSize = [stim_size * xheight_to_size * 8, stim_size * xheight_to_size * 1.5]
@@ -1365,7 +1365,7 @@ for thisBlock in blocks:
                 maskDuration = 0.01
                 maskSize = [1, 1]
                 
-            stimOffsetFrames = preMaskOffsetFrames + maskFrames + 1
+            stimOffsetFrames = preMaskOffsetFrames + maskFrames
         elif enableSound == 'no':
             soundVolume = 0
             soundDuration = 0.01
