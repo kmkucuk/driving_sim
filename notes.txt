@@ -1,0 +1,8 @@
+- for text alignment, first trial in clutter exp should be skipped. Adjust training trials accordingly for the first training block. 
+
+- integrate frame durations to clutter exp 
+
+- integrate data registry to clutter exp 
+
+- integrate score screen to clutter exp 
+

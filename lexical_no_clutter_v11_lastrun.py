@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on August 06, 2025, at 14:56
+    on August 06, 2025, at 18:13
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -55,7 +55,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
-    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\lexical_no_clutter_v10_lastrun.py',
+    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\lexical_no_clutter_v11_lastrun.py',
     savePickle=True, saveWideText=True,
     dataFileName=filename)
 # save a log file for detail verbose info
@@ -619,7 +619,7 @@ panel6_2 = visual.ImageStim(
 # Run 'Begin Experiment' code from estimate_frame_durations_2
 exp_clock = core.Clock()
 stim_duration = 0.5 
-
+minimum_acceptable_rt = 0.100
 background_panel = visual.ImageStim(
     win=win,
     name='background_panel', 
@@ -723,7 +723,7 @@ background_panel_4 = visual.ImageStim(
 finish_text = visual.TextStim(win=win, name='finish_text',
     text='',
     font='Open Sans',
-    pos=[0,0], height=50.0, wrapWidth=win.size[0] * 0.85, ori=0.0, 
+    pos=[0,0], height=35.0, wrapWidth=win.size[0] * 0.85, ori=0.0, 
     color='black', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
     depth=-2.0);
@@ -1220,6 +1220,7 @@ for thisBlock in blocks:
         checkKey = True
         checkTerminate = False
         
+        
         # controlled descent for first two block, no descent for 3rd block
         first_two_blocks = (blocks.thisN < 2)
         staircaseUpdateEnabled = (trials.thisN > 8 and first_two_blocks) or (blocks.thisN == 2)
@@ -1338,15 +1339,13 @@ for thisBlock in blocks:
             # update/draw components on each frame
             # Run 'Each Frame' code from estimate_frame_durations_2
             t_frame_time.append(round((exp_clock.getTime() - t_start_time)*1000,2))
-            
             t_start_time = exp_clock.getTime()
             
-            
-            maskShown = frameN >= (postMaskOffsetFrames + maskFrames) - 1     
-                    
             if lexical_response.keys and checkKey:
-                print(lexical_response.keys)    
-                if lexical_response.keys[-1] == correct_ans:
+                # comission
+                if frameN <= stimOffsetFrames:
+                    lexical_response.corr = 0
+                elif lexical_response.keys[-1] == correct_ans:
                    lexical_response.corr = 1
                 else:
                    lexical_response.corr = 0
@@ -1355,9 +1354,13 @@ for thisBlock in blocks:
                 lexical_response.keys = []
                 checkKey = False
                 checkTerminate = True
+            
+            if blocks.thisN < 3:
+                trialTerminateEnabled = frameN >= (postMaskOffsetFrames + maskFrames) - 1
+            else:
+                trialTerminateEnabled = frameN >= fixationFrames 
                 
-            if checkTerminate and maskShown:
-                print('terminate trial')
+            if checkTerminate and trialTerminateEnabled:
                 continueRoutine = False
             
             
@@ -1641,18 +1644,19 @@ for thisBlock in blocks:
         thisExp.addData('stimulus_frames', stimulus_frames);
         thisExp.addData('stimulus_duration', stimulus_frames * secPerFrame);
         
-        # omission
-        if checkKey == True:
-            lexical_response.corr = 0    
         
-        drivingLexicalTask = task_name == "full_task_roboto" or task_name == "full_task_neuefrutigerworld"
-        lexicalOnlyTask = staircaseEnabled
+        if checkKey == True:
+            # omission
+            lexical_response.corr = 0    
+            reaction_time = 0
         if drivingLexicalTask:
             scoreScreen["driving_lexical"]["accuracy"].append(lexical_response.corr)
-            scoreScreen["driving_lexical"]["reaction_time"].append(reaction_time)
+            if reaction_time > minimum_acceptable_rt:
+                scoreScreen["driving_lexical"]["reaction_time"].append(reaction_time)
         elif lexicalOnlyTask:
             scoreScreen["lexical_only"]["accuracy"].append(lexical_response.corr)
-            scoreScreen["lexical_only"]["reaction_time"].append(reaction_time)    
+            if reaction_time > minimum_acceptable_rt:
+                scoreScreen["lexical_only"]["reaction_time"].append(reaction_time)
         
         
         thisExp.addData('resp_corrected_rt', reaction_time);
@@ -1702,18 +1706,32 @@ routineForceEnded = False
 # Run 'Begin Routine' code from prepareScores
 for key, val in scoreScreen.items():
     scoreScreen[key]["mean_acc"] = sum(scoreScreen[key]["accuracy"]) / len(scoreScreen[key]["accuracy"])
-    scoreScreen[key]["mean_rt"] = sum(scoreScreen[key]["reaction_time"]) / len(scoreScreen[key]["reaction_time"])
-    scoreScreen[key]["percent_acc"] = "%" + str(round(scoreScreen[key]["mean_acc"] *  100, 1))
+    if len(scoreScreen[key]["accuracy"]):
+        scoreScreen[key]["mean_acc"] = sum(scoreScreen[key]["accuracy"]) / len(scoreScreen[key]["accuracy"])
+    else:
+        scoreScreen[key]["mean_acc"] = 0
+        
+    if len(scoreScreen[key]["reaction_time"]) > 0:
+        scoreScreen[key]["mean_rt"] = sum(scoreScreen[key]["reaction_time"]) / len(scoreScreen[key]["reaction_time"])
+    else:
+        scoreScreen[key]["mean_rt"] = 0
+    scoreScreen[key]["percent_acc"] = "%" + str(round(scoreScreen[key]["mean_acc"] *  100))
     scoreScreen[key]["mean_rt_text"] = str(round(scoreScreen[key]["mean_rt"], 3)) + " seconds."
 
 scoreText1 = "You've responded " + scoreScreen["lexical_only"]["percent_acc"] + "of trials correctly with average reaction time of " + scoreScreen["lexical_only"]["mean_rt_text"]
 scoreText2 = "You've responded " + scoreScreen["driving_lexical"]["percent_acc"] + "of trials correctly during driving and lexical task with average reaction time of " + scoreScreen["driving_lexical"]["mean_rt_text"]
 print("score screen dict: ", json.dumps(scoreScreen, indent=4))
-scoreTextWhole = "\n\n".join(["Lexical Only Task:", scoreText1, "Driving and Lexical Task:", scoreText2])
+showScoreBothTasks = False
+if showScoreBothTasks:
+    initialText = "Experiment is finished, thank you! Your performance for each task is outlined below."
+    scoreTextWhole = "\n\n".join([initialText, "Lexical Only Task:", scoreText1, "Driving and Lexical Task:", scoreText2])
+else:
+    initialText = "Experiment is finished, thank you! Your performance is outlined below."
+    scoreTextWhole = "\n\n".join([initialText, "Driving and Lexical Task:", scoreText2])
 background_panel_4.setPos([panel_layout.panel_position])
 background_panel_4.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
 finish_text.setPos([panel_layout.panel_position])
-finish_text.setText("Experiment is finished, thank you! Your performance for each task is outlined below.\n\n" + scoreTextWhole)
+finish_text.setText(scoreTextWhole)
 finish_key.keys = []
 finish_key.rt = []
 _finish_key_allKeys = []
