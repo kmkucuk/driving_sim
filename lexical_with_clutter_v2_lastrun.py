@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on August 07, 2025, at 20:46
+    on August 08, 2025, at 02:52
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -35,10 +35,11 @@ _thisDir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(_thisDir)
 # Store info about the experiment session
 psychopyVersion = '2022.2.3'
-expName = 'car_panel_lexical_decision'  # from the Builder filename that created this script
+expName = 'lexical_with_clutter_v2'  # from the Builder filename that created this script
 expInfo = {
     'participant': f"{randint(0, 999999):06.0f}",
     'monitor_cb': '1',
+    'clutter_cb': '1',
 }
 # --- Show participant info dialog --
 dlg = gui.DlgFromDict(dictionary=expInfo, sortKeys=False, title=expName)
@@ -54,7 +55,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
-    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\lexical_with_clutter_v1_lastrun.py',
+    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\lexical_with_clutter_v2_lastrun.py',
     savePickle=True, saveWideText=True,
     dataFileName=filename)
 # save a log file for detail verbose info
@@ -68,12 +69,12 @@ frameTolerance = 0.001  # how close to onset before 'same' frame
 
 # --- Setup the Window ---
 win = visual.Window(
-    size=[1900, 1080], fullscr=False, screen=0, 
+    size=[1920, 1080], fullscr=True, screen=0, 
     winType='pyglet', allowStencil=False,
     monitor='testMonitor', color=[-1.0000, -1.0000, -1.0000], colorSpace='rgb',
     blendMode='avg', useFBO=True, 
     units='pix')
-win.mouseVisible = True
+win.mouseVisible = False
 # store frame rate of monitor if we can measure it
 expInfo['frameRate'] = win.getActualFrameRate()
 if expInfo['frameRate'] != None:
@@ -107,6 +108,71 @@ from datetime import datetime
 import os
 from staircasing import staircaseFunction
 from masking import getFilesInDir, selectRandomMask
+import pandas as pd
+from pathlib import Path
+
+def getClutterOrderCounterbalanceGroup(order_file = "clutter_change_order_cb.xlsx", cb_group = "1", practice_change_count = 10):
+    if not isinstance(cb_group, str):
+        raise ValueError(f"Counterbalance group is not entered as string {cb_group}, its type is instead {type(cb_group)}")
+
+    xlsx_path = Path(order_file)
+
+    df = pd.read_excel(xlsx_path)
+
+    df.columns = [str(c).strip().lower() for c in df.columns]
+
+    df.head(), df.columns.tolist()
+    required = {"blocks", "block_trial_#", "gr1", "gr2", "gr3", "gr4"}
+    missing = required - set(df.columns)
+    if missing:
+        raise ValueError(f"Missing columns: {missing}")
+
+    def block_num(s):
+        try:
+            return int(str(s).split()[-1])
+        except Exception:
+            return str(s)
+
+    grouped = sorted(df.groupby("blocks"), key=lambda kv: block_num(kv[0]))
+
+    gr_lists = {"gr1": [], "gr2": [], "gr3": [], "gr4": []}
+    block_labels = []
+
+    for block_label, g in grouped:
+        block_labels.append(block_label)
+        for gr in gr_lists.keys():
+            idx = g.loc[g[gr].astype(int) == 1, "block_trial_#"].astype(int).tolist()
+            gr_lists[gr].append(idx)
+
+    random_practice_indices = random.sample(range(0, 40), practice_change_count)
+    random_practice_indices.sort()
+    gr_lists["gr" + cb_group].insert(0, random_practice_indices)
+    selected_list = gr_lists["gr" + cb_group]
+    print(f"Selected clutter change order group {cb_group} indices are: {selected_list}")
+    return selected_list
+    
+
+
+def getRandomChangingIconIndex(clutter_change_v, number_of_changes):
+    clutterIconChangeIndex = []
+    while True:     
+        for i in range(0, number_of_changes):
+            clutterIconChangeIndex.extend(random.sample(clutter_change_v, 
+                                        min(len(clutter_change_v), 
+                                            number_of_changes - len(clutterIconChangeIndex))))
+            if len(clutterIconChangeIndex) == number_of_changes:
+                return clutterIconChangeIndex
+
+def changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):
+    cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]
+    all_widgets[clutter_index[0]]["image_components"][cur_key]["file"] = getImageWithKeyword("./stimuli/clutter", cur_key + "_2")
+    thisExp.addData('clutter_changed_icon', cur_key);
+
+
+def revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):
+    cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]
+    all_widgets[clutter_index[0]]["image_components"][cur_key]["file"] = getImageWithKeyword("./stimuli/clutter", cur_key + "_1")
+
 
 def getFrames(duration, secPerFrame):
     return round(duration / secPerFrame)
@@ -157,7 +223,6 @@ def getImageWithKeyword(directory, keyword):
                 
 def correctTextPosition(text_stim, text_position):
     if hasattr(text_stim, 'boundingBox'):
-        print('HERE IS THE BOUNDING BOX ', text_stim.boundingBox)
         return [text_position[0] + text_stim.boundingBox[0]/2, text_position[1]]
     else:
         return text_position
@@ -1039,14 +1104,14 @@ background_panel_6 = visual.ImageStim(
     ori=0.0, pos=[0,0], size=1.0,
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=0.0)
+    texRes=128.0, interpolate=True, depth=-1.0)
 finish_text = visual.TextStim(win=win, name='finish_text',
-    text='Experiment is finished, thank you!',
+    text='',
     font='Open Sans',
-    pos=(0, 0), height=50.0, wrapWidth=1000.0, ori=0.0, 
+    pos=[0,0], height=35.0, wrapWidth=win.size[0] * 0.85, ori=0.0, 
     color='black', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
-    depth=-1.0);
+    depth=-2.0);
 finish_key = keyboard.Keyboard()
 
 # Create some handy timers
@@ -1057,6 +1122,24 @@ routineTimer = core.Clock()  # to track time remaining of each (possibly non-sli
 continueRoutine = True
 routineForceEnded = False
 # update component parameters for each repeat
+# Run 'Begin Routine' code from init_clutter
+clutter_icon_index_v = [[0, 0], [0, 1], [0, 2], [1, 0], [2, 0], [3, 0], [4, 0]]
+
+dynamic_clutter_icons = [["duration", "fuel", "distance"], 
+                          ["calendar"], 
+                          ["garage"],
+                          ["temperature"],
+                          ["battery"]]
+                          
+                          
+clutter_change_order_indices = getClutterOrderCounterbalanceGroup(cb_group = expInfo["clutter_cb"])
+clutter_changed_icon_indices = getRandomChangingIconIndex(clutter_icon_index_v, 12)
+
+clutter_changed_icon_indices_practice = getRandomChangingIconIndex(clutter_icon_index_v, 10)
+
+
+
+
 # keep track of which components have finished
 initializationComponents = []
 for thisComponent in initializationComponents:
@@ -1161,6 +1244,12 @@ for thisBlock in blocks:
         staircase_dict[current_font] = staircaseFunction(trialsPerStaircase, trialsPerStaircase, startFrames, 1, 3, secPerFrame)
             
     
+    
+    # used for iterating over change-order-indices, ++ every time clutter changes.
+    change_iteration = 0 
+    
+    print(clutterChangeEnabled, type(clutterChangeEnabled))
+    clutterProgressionEnabled = True
     background_panel_5.setPos([panel_layout.panel_position])
     background_panel_5.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
     key_resp.keys = []
@@ -2000,8 +2089,21 @@ for thisBlock in blocks:
                 thisComponent.setAutoDraw(False)
         # Run 'End Routine' code from estimate_frame_durations
         thisExp.addData('trial_frame_durations', t_frame_time);
+          
         
-        print('is it working second end routine')
+        print('will clutter change?')
+        if clutterProgressionEnabled:     
+            print('step 1') 
+            if trials.thisN == clutter_change_order_indices[blocks.thisN - 4][change_iteration]:
+                print('step 2')         
+                if task_name == "full_task_training":    
+                    thisExp.addData('clutter_changed_trial', clutter_change_order_indices[blocks.thisN - 4][change_iteration]);    
+                    print('training change') 
+                    changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices_practice[change_iteration])
+                elif blocks.thisN > 4:
+                    thisExp.addData('clutter_changed_trial', clutter_change_order_indices[blocks.thisN - 4][change_iteration]);    
+                    print('test change') 
+                    changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices[change_iteration])            
         # the Routine "inter_trial_interval" was not non-slip safe, so reset the non-slip timer
         routineTimer.reset()
         
@@ -2933,6 +3035,23 @@ for thisBlock in blocks:
             thisExp.addData('st_trial_number', None);
             thisExp.addData('st_nDown', None);     
         
+        if clutterProgressionEnabled:     
+                if trials.thisN == clutter_change_order_indices[blocks.thisN - 4][change_iteration]:
+                    if task_name == "full_task_training":    
+                        print('clutter reverted training')
+                        revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices_practice[change_iteration])
+                    elif blocks.thisN > 4:
+                        print('clutter reverted test')
+                        revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices[change_iteration])
+                    change_iteration = change_iteration + 1    
+        
+        if clutterChangeEnabled:
+            if (len(clutter_change_order_indices[blocks.thisN - 4]) - 1) < change_iteration:
+                print('clutter progression disabled')
+                clutterProgressionEnabled = False
+            else:
+                print('clutter progression enabled')
+                clutterProgressionEnabled = True
         # check responses
         if lexical_response.keys in ['', [], None]:  # No response was made
             lexical_response.keys = None
@@ -2962,8 +3081,35 @@ for thisBlock in blocks:
 continueRoutine = True
 routineForceEnded = False
 # update component parameters for each repeat
+# Run 'Begin Routine' code from prepareScores
+for key, val in scoreScreen.items():
+    scoreScreen[key]["mean_acc"] = sum(scoreScreen[key]["accuracy"]) / len(scoreScreen[key]["accuracy"])
+    if len(scoreScreen[key]["accuracy"]):
+        scoreScreen[key]["mean_acc"] = sum(scoreScreen[key]["accuracy"]) / len(scoreScreen[key]["accuracy"])
+    else:
+        scoreScreen[key]["mean_acc"] = 0
+        
+    if len(scoreScreen[key]["reaction_time"]) > 0:
+        scoreScreen[key]["mean_rt"] = sum(scoreScreen[key]["reaction_time"]) / len(scoreScreen[key]["reaction_time"])
+    else:
+        scoreScreen[key]["mean_rt"] = 0
+    scoreScreen[key]["percent_acc"] = str(round(scoreScreen[key]["mean_acc"] *  100)) + "%"
+    scoreScreen[key]["mean_rt_text"] = str(round(scoreScreen[key]["mean_rt"], 3)) + " seconds."
+
+scoreText1 = "You've responded " + scoreScreen["lexical_only"]["percent_acc"] + " of trials correctly with average reaction time of " + scoreScreen["lexical_only"]["mean_rt_text"]
+scoreText2 = "You've responded " + scoreScreen["driving_lexical"]["percent_acc"] + " of trials correctly during driving and lexical task with average reaction time of " + scoreScreen["driving_lexical"]["mean_rt_text"]
+print("score screen dict: ", json.dumps(scoreScreen, indent=4))
+showScoreBothTasks = False
+if showScoreBothTasks:
+    initialText = "Experiment is finished, thank you! Your performance for each task is outlined below."
+    scoreTextWhole = "\n\n".join([initialText, "Lexical Only Task:", scoreText1, "Driving and Lexical Task:", scoreText2])
+else:
+    initialText = "Experiment is finished, thank you! Your performance is outlined below."
+    scoreTextWhole = "\n\n".join([initialText, "Driving and Lexical Task:", scoreText2])
 background_panel_6.setPos([panel_layout.panel_position])
 background_panel_6.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
+finish_text.setPos([panel_layout.panel_position])
+finish_text.setText(scoreTextWhole)
 finish_key.keys = []
 finish_key.rt = []
 _finish_key_allKeys = []
