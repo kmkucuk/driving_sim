@@ -165,13 +165,13 @@ all_widgets = [
                     "distance": {"text": "", "position_percentage": [35, 75], "position_pixel": []}
                     },
                  "image_components": 
-                 {"duration": {"file":  getImageWithKeyword("./stimuli/clutter", "duration"), 
+                 {"duration": {"file":  getImageWithKeyword("./stimuli/clutter", "duration_1"), 
                                "position_percentage": [20, 25], "position_pixel": [],
                                "size_ratio": [0.3125, 0.3125], "size_pixel": []}, 
-                  "fuel": {"file":  getImageWithKeyword("./stimuli/clutter", "fuel"), 
+                  "fuel": {"file":  getImageWithKeyword("./stimuli/clutter", "fuel_1"), 
                            "position_percentage": [20, 50], "position_pixel": [],
                                "size_ratio": [0.3125, 0.3125], "size_pixel": []}, 
-                  "distance": {"file":  getImageWithKeyword("./stimuli/clutter", "distance"), 
+                  "distance": {"file":  getImageWithKeyword("./stimuli/clutter", "distance_1"), 
                                "position_percentage": [20, 75], "position_pixel": [],
                                "size_ratio": [0.3125, 0.3125], "size_pixel": []}
                   },
@@ -184,7 +184,7 @@ all_widgets = [
                     {"date": {"text": "", "position_percentage": [20, 15], "position_pixel": []}
                      },
                  "image_components": 
-                 {"calendar": {"file":  getImageWithKeyword("./stimuli/clutter", "calendar"), 
+                 {"calendar": {"file":  getImageWithKeyword("./stimuli/clutter", "calendar_1"), 
                                "position_percentage": [50 , 70], "position_pixel": [],
                                "size_ratio": [0.8, 0.8], "size_pixel": []}
                   },
@@ -198,7 +198,7 @@ all_widgets = [
                      "garage_door": {"text": "", "position_percentage": [35, 50], "position_pixel": []}
                      },
                  "image_components": 
-                 {"garage": {"file":  getImageWithKeyword("./stimuli/clutter", "garage"), 
+                 {"garage": {"file":  getImageWithKeyword("./stimuli/clutter", "garage_1"), 
                              "position_percentage": [20, 50], "position_pixel": [],
                                "size_ratio": [0.35, 0.35], "size_pixel": []}
                   },
@@ -211,7 +211,7 @@ all_widgets = [
                     {"temperature": {"text": "", "position_percentage": [30, 40], "position_pixel": []}                   
                      },
                  "image_components": 
-                 {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "temperature"), 
+                 {"temperature": {"file":  getImageWithKeyword("./stimuli/clutter", "temperature_1"), 
                                   "position_percentage": [50, 50], "position_pixel": [],
                                "size_ratio": [0.8, 0.8], "size_pixel": []}
                   },
@@ -225,7 +225,7 @@ all_widgets = [
                      "miles": {"text": "", "position_percentage": [55, 63], "position_pixel": []}
                      },
                  "image_components": 
-                 {"battery": {"file":  getImageWithKeyword("./stimuli/clutter", "battery"), 
+                 {"battery": {"file":  getImageWithKeyword("./stimuli/clutter", "battery_1"), 
                                   "position_percentage": [50, 50], "position_pixel": [],
                                "size_ratio": [0.8, 0.8], "size_pixel": []}
                   },
@@ -237,10 +237,39 @@ dynamic_clutter_values = [{"duration": 28, "fuel": 34, "distance": 78},
                           {"garage_door": 0},
                           {"temperature": 96},
                           {"battery": 24, "miles": 76}]
+
+dynamic_clutter_icons = [["duration", "fuel", "distance"], 
+                          ["date"], 
+                          ["garage_door"],
+                          ["temperature"],
+                          ["battery", "miles"]]
 # 12 trials, 8 total widgets, how many clutter change?
 # 8?
 
-# select 1 index, che
+
+clutter_change_v = [[0, 0], [0, 1], [0, 2], [1, 0], [2, 0], [3, 0], [4, 0], [4, 1]]
+
+def getRandomClutterIconChangeIndex(clutter_change_v, number_of_changes):
+    clutterIconChangeIndex = []
+    CONTINUE_SELECTING = True
+    while CONTINUE_SELECTING:     
+        for i in range(0, number_of_changes):
+            clutterIconChangeIndex.extend(random.sample(clutter_change_v, 
+                                        min(len(clutter_change_v), 
+                                            number_of_changes - len(clutterIconChangeIndex))))
+            if len(clutterIconChangeIndex) == number_of_changes:
+                CONTINUE_SELECTING = False
+                return clutterIconChangeIndex
+
+def changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):
+    cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]
+    all_widgets[clutter_index[0]]["image_components"][cur_key]["file"] = getImageWithKeyword("./stimuli/clutter", cur_key + "_2")
+
+
+def revertClutterIcon(clutter_index):
+    cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]
+    all_widgets[clutter_index[0]]["image_components"][cur_key]["file"] = getImageWithKeyword("./stimuli/clutter", cur_key + "_1")
+
 
 
 # TODO: function to change order of elements in each data strct. to do what?
