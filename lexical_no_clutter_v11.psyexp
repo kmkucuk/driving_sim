@@ -469,7 +469,7 @@
         <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="t_start_time = exp_clock.getTime()&amp;#10;t_frame_time = []&amp;#10;iti_duration = random.randint(iti_min*1000,iti_max*1000)/1000 # duration in msec units&amp;#10;thisExp.addData('current_time', datetime.now().strftime(&quot;%H:%M:%S&quot;));&amp;#10;&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="t_start_time = exp_clock.getTime()&amp;#10;t_frame_time = []&amp;#10;iti_duration = random.randint(iti_min*1000,iti_max*1000)/1000 # duration in msec units&amp;#10;thisExp.addData('current_time', datetime.now().strftime(&quot;%H:%M:%S&quot;));&amp;#10;thisExp.addData('iti_duration', iti_duration);&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
         <Param val="Py" valType="str" updates="None" name="Code Type"/>
         <Param val="t_frame_time.append(round((exp_clock.getTime() - t_start_time)*1000,2))&amp;#10;&amp;#10;t_start_time = exp_clock.getTime()" valType="extendedCode" updates="constant" name="Each Frame"/>
         <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
