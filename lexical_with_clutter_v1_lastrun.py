@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on August 07, 2025, at 19:20
+    on August 07, 2025, at 20:46
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -2028,26 +2028,25 @@ for thisBlock in blocks:
         # controlled descent for first two block, no descent for 3rd block
         first_two_blocks = (blocks.thisN < 2)
         staircaseUpdateEnabled = (trials.thisN > 8 and first_two_blocks) or (blocks.thisN == 2)
-        trialDurationSeconds = 5
-        trialDurationFrames = getFrames(trialDurationSeconds, secPerFrame)
+        # first trial is blank, for clutter alignments
+        
+        
         
         # stimulus duration
-        if (trials.thisN < 3) and first_two_blocks:
+        if (trials.thisN < 4) and first_two_blocks:
             stimulus_duration = 0.800
             stimulus_frames = getFrames(stimulus_duration, secPerFrame)
-        elif (trials.thisN < 6) and first_two_blocks:
+        elif (trials.thisN < 7) and first_two_blocks:
             stimulus_duration = 0.400
             stimulus_frames = getFrames(stimulus_duration, secPerFrame)
-        elif (trials.thisN < 9) and first_two_blocks:
+        elif (trials.thisN < 10) and first_two_blocks:
             stimulus_duration = 0.200
             stimulus_frames = getFrames(stimulus_duration, secPerFrame)
         elif staircaseUpdateEnabled and staircaseEnabled:    
             stimulus_frames = staircase_dict[current_font].testLevel    
-        elif task_name == "full_task_roboto" or task_name == "full_task_neuefrutigerworld" or task_name == "training_driving_lexical":
+        elif drivingLexicalTask or task_name == "training_driving_lexical":
             stimulus_duration = 5
             stimulus_frames = getFrames(stimulus_duration, secPerFrame)
-            trialDurationSeconds = 20
-            trialDurationFrames = getFrames(trialDurationSeconds, secPerFrame)    
         else: 
             stimulus_duration = 0.500
             stimulus_frames = getFrames(stimulus_duration, secPerFrame)
@@ -2058,7 +2057,7 @@ for thisBlock in blocks:
         currentMaskImage = selectRandomMask(mask_imgs)
         preMaskOffsetFrames = fixationFrames
         
-        if (maskEnabled == "yes"):        
+        if (maskEnabled == "yes"):
             maskDuration = 0.200
             maskFrames = getFrames(maskDuration, secPerFrame)            
             maskSize = [stim_size * xheight_to_size * 8, stim_size * xheight_to_size * 1.5]        
@@ -2068,7 +2067,7 @@ for thisBlock in blocks:
             maskDuration = 0.01
             maskSize = [1, 1]
             maskFrames = 0 
-            
+        
         postMaskOffsetFrames = preMaskOffsetFrames + maskFrames + stimulus_frames    
         stimOffsetFrames = preMaskOffsetFrames + maskFrames
         
@@ -2077,7 +2076,10 @@ for thisBlock in blocks:
             soundVolume = 1
             soundDuration = fixationDuration 
             soundFrames = getFrames(soundDuration, secPerFrame)       
-            
+            if trials.thisN == 0:
+                soundVolume = 0
+                soundDuration = 0.01
+                soundFrames = getFrames(soundDuration, secPerFrame)    
         elif enableSound == 'no':
             soundVolume = 0
             soundDuration = 0.01
@@ -2085,7 +2087,19 @@ for thisBlock in blocks:
         else:
             raise ValueError('Sound condition is not defined properly, type in yes or no in the blocks file')
         
-        
+        if trials.thisN == 0:
+            trialDurationSeconds = 0.1
+            maskFrames = 0    
+            soundFrames = 0
+            stimOffsetFrames = 0
+            postMaskOffsetFrames = 0 
+            preMaskOffsetFrames = 0
+            fixationFrames = 0
+            stimulus_frames = 0
+        else:
+            trialDurationSeconds = 6
+            
+        trialDurationFrames = getFrames(trialDurationSeconds, secPerFrame)
         background_panel.setPos([panel_layout.panel_position])
         background_panel.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
         panel1.setPos((widget_regions[0]['x'], widget_regions[0]['y']))
