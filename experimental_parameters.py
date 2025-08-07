@@ -7,6 +7,27 @@ from datetime import datetime
 import os
 
 
+def getRandomClutterIconChangeIndex(clutter_change_v, number_of_changes):
+    clutterIconChangeIndex = []
+    CONTINUE_SELECTING = True
+    while CONTINUE_SELECTING:     
+        for i in range(0, number_of_changes):
+            clutterIconChangeIndex.extend(random.sample(clutter_change_v, 
+                                        min(len(clutter_change_v), 
+                                            number_of_changes - len(clutterIconChangeIndex))))
+            if len(clutterIconChangeIndex) == number_of_changes:
+                CONTINUE_SELECTING = False
+                return clutterIconChangeIndex
+
+def changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):
+    cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]
+    all_widgets[clutter_index[0]]["image_components"][cur_key]["file"] = getImageWithKeyword("./stimuli/clutter", cur_key + "_2")
+
+
+def revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):
+    cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]
+    all_widgets[clutter_index[0]]["image_components"][cur_key]["file"] = getImageWithKeyword("./stimuli/clutter", cur_key + "_1")
+
 
 def getChangeIndex(dyn_values, chang_indx):
     change_order = []
@@ -249,28 +270,8 @@ dynamic_clutter_icons = [["duration", "fuel", "distance"],
 
 clutter_change_v = [[0, 0], [0, 1], [0, 2], [1, 0], [2, 0], [3, 0], [4, 0], [4, 1]]
 
-def getRandomClutterIconChangeIndex(clutter_change_v, number_of_changes):
-    clutterIconChangeIndex = []
-    CONTINUE_SELECTING = True
-    while CONTINUE_SELECTING:     
-        for i in range(0, number_of_changes):
-            clutterIconChangeIndex.extend(random.sample(clutter_change_v, 
-                                        min(len(clutter_change_v), 
-                                            number_of_changes - len(clutterIconChangeIndex))))
-            if len(clutterIconChangeIndex) == number_of_changes:
-                CONTINUE_SELECTING = False
-                return clutterIconChangeIndex
-
-def changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):
-    cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]
-    all_widgets[clutter_index[0]]["image_components"][cur_key]["file"] = getImageWithKeyword("./stimuli/clutter", cur_key + "_2")
-
-
-def revertClutterIcon(clutter_index):
-    cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]
-    all_widgets[clutter_index[0]]["image_components"][cur_key]["file"] = getImageWithKeyword("./stimuli/clutter", cur_key + "_1")
-
-
+# changeClutterIcon(all_widgets, dynamic_clutter_icons, [0, 0])
+# revertClutterIcon(all_widgets, dynamic_clutter_icons, [0, 0])
 
 # TODO: function to change order of elements in each data strct. to do what?
 all_data_structures = [all_widgets, dynamic_clutter_values]
