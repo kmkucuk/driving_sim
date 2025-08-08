@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on August 08, 2025, at 03:01
+    on August 08, 2025, at 15:01
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -70,12 +70,12 @@ frameTolerance = 0.001  # how close to onset before 'same' frame
 
 # --- Setup the Window ---
 win = visual.Window(
-    size=[1920, 1080], fullscr=True, screen=0, 
+    size=[1900, 1000], fullscr=False, screen=0, 
     winType='pyglet', allowStencil=False,
     monitor='testMonitor', color=[-1.0000, -1.0000, -1.0000], colorSpace='rgb',
     blendMode='avg', useFBO=True, 
     units='pix')
-win.mouseVisible = False
+win.mouseVisible = True
 # store frame rate of monitor if we can measure it
 expInfo['frameRate'] = win.getActualFrameRate()
 if expInfo['frameRate'] != None:
@@ -2098,7 +2098,7 @@ for thisBlock in blocks:
           
         
         print('will clutter change?')
-        if clutterProgressionEnabled:     
+        if clutterProgressionEnabled and clutterChangeEnabled:     
             print('step 1') 
             if trials.thisN == clutter_change_order_indices[blocks.thisN - 4][change_iteration]:
                 print('step 2')         
@@ -3040,8 +3040,9 @@ for thisBlock in blocks:
             thisExp.addData('st_cumulative_reversals', None);
             thisExp.addData('st_trial_number', None);
             thisExp.addData('st_nDown', None);     
-        
-        if clutterProgressionEnabled:     
+            
+        if clutterChangeEnabled:    
+            if clutterProgressionEnabled:     
                 if trials.thisN == clutter_change_order_indices[blocks.thisN - 4][change_iteration]:
                     if task_name == "full_task_training":    
                         print('clutter reverted training')
@@ -3049,9 +3050,8 @@ for thisBlock in blocks:
                     elif blocks.thisN > 4:
                         print('clutter reverted test')
                         revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices[change_iteration])
-                    change_iteration = change_iteration + 1    
-        
-        if clutterChangeEnabled:
+                    change_iteration = change_iteration + 1
+                    
             if (len(clutter_change_order_indices[blocks.thisN - 4]) - 1) < change_iteration:
                 print('clutter progression disabled')
                 clutterProgressionEnabled = False
