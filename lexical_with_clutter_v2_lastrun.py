@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on August 08, 2025, at 02:52
+    on August 08, 2025, at 03:01
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -40,6 +40,7 @@ expInfo = {
     'participant': f"{randint(0, 999999):06.0f}",
     'monitor_cb': '1',
     'clutter_cb': '1',
+    'clutter_test': 'no',
 }
 # --- Show participant info dialog --
 dlg = gui.DlgFromDict(dictionary=expInfo, sortKeys=False, title=expName)
@@ -644,6 +645,11 @@ scoreScreen = {}
 scoreScreen["lexical_only"] = {"accuracy": [], "reaction_time": []}
 scoreScreen["driving_lexical"] = {"accuracy": [], "reaction_time": []}
 
+if expInfo["clutter_test"] == "yes":
+    blocks_file = "blocks_final_express.xlsx"
+else:
+    blocks_file = "blocks_final.xlsx"
+
 # --- Initialize components for Routine "get_trials" ---
 # Run 'Begin Experiment' code from extract_trials
 all_word_trials = range(0, 759)
@@ -1191,7 +1197,7 @@ routineTimer.reset()
 # set up handler to look after randomisation of conditions etc
 blocks = data.TrialHandler(nReps=1.0, method='sequential', 
     extraInfo=expInfo, originPath=-1,
-    trialList=data.importConditions('blocks_final.xlsx', selection=block_rows),
+    trialList=data.importConditions(blocks_file, selection=block_rows),
     seed=None, name='blocks')
 thisExp.addLoop(blocks)  # add the loop to the experiment
 thisBlock = blocks.trialList[0]  # so we can initialise stimuli with some values
@@ -1377,7 +1383,7 @@ for thisBlock in blocks:
     routineTimer.reset()
     
     # set up handler to look after randomisation of conditions etc
-    trials = data.TrialHandler(nReps=1.0, method='random', 
+    trials = data.TrialHandler(nReps=1.0, method='sequential', 
         extraInfo=expInfo, originPath=-1,
         trialList=data.importConditions('stimulus_sheet.xlsx', selection=current_trials),
         seed=None, name='trials')
