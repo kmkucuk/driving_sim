@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on September 11, 2025, at 13:08
+    on September 11, 2025, at 13:57
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -111,6 +111,35 @@ from staircasing import staircaseFunction
 from masking import getFilesInDir, selectRandomMask
 import pandas as pd
 from pathlib import Path
+import os
+from PIL import Image
+
+def getIconInfo(folder_path):
+
+    if not folder_path:
+        print("No folder selected.")
+        return {}
+    
+    files_info = {}
+    
+    for file_name in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, file_name)
+        
+        if os.path.isfile(file_path):
+            name, ext = os.path.splitext(file_name)
+            ext = ext.lower().strip(".")
+            
+            file_data = {"extension": ext, "dimension": None}
+            
+            try:
+                with Image.open(file_path) as img:
+                    file_data["dimension"] = list(img.size) 
+            except Exception:
+                pass
+            
+            files_info[name] = file_data
+    
+    return files_info
 
 def getClutterOrderCounterbalanceGroup(order_file = "clutter_change_order_cb.xlsx", cb_group = "1", practice_change_count = 10):
     if not isinstance(cb_group, str):
@@ -178,18 +207,20 @@ def revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):
 def getFrames(component_duration, secPerFrame):
     return round(component_duration / secPerFrame)
 
-def trial_sampling(vector, n):
+def trialSampling(vector, n):
+    print(vector)
+    print(n)
     if n > len(vector):
         raise ValueError("n cannot be greater than the length of the vector.")
     
     return random.sample(vector, n)
 
-def join_and_shuffle(vector1, vector2):
+def joinAndShuffle(vector1, vector2):
     combined = vector1 + vector2
     random.shuffle(combined)
     return combined
 
-def remove_elements(source_vector, elements_to_remove):
+def removeElements(source_vector, elements_to_remove):
     result = [x for x in source_vector if x not in elements_to_remove]
     return result
 
@@ -229,12 +260,14 @@ def correctTextPosition(text_stim, text_position):
         return text_position
 
 def correctPosition(icon_size, icon_position):    
+    """deprecated after update on positioning and sizes"""
     return icon_position
 #    return [icon_position[0] - icon_size[0]/2,
 #    icon_position[1] - icon_size[1]/2] # math.copysign(icon_size[0], icon_position[0])/2, math.copysign(icon_size[1], icon_position[1])/2]
 #    
     
 def correctPositionSmall(icon_size, icon_position):    
+    """deprecated after update on positioning and sizes"""
     return icon_position
 #    return [icon_position[0] + icon_size[0]/2, icon_position[1]]
 
@@ -457,6 +490,9 @@ class Panel:
 # Run 'Begin Experiment' code from exp_init
 TEXT_WIDGETS_ENABLED = False
 IMAGE_WIDGETS_ENABLED = True
+SMALL_ICON_SIZE_RATIO = [0.5, 0.5]
+LARGE_ICON_SIZE_RATIO = [0.5, 0.5]
+
 
 if 'win' not in locals():
     from panel_generation_function import Panel
@@ -479,6 +515,8 @@ if target_panel in large_region_indices:
 elif target_panel in small_region_indices:
     small_region_indices.remove(target_panel)
  
+
+
 all_widgets = [
                 {"name": "maintenance_widget",
                 "possible_regions": large_region_indices, 
@@ -486,14 +524,14 @@ all_widgets = [
                 "text_components": {},
                  "image_components": 
                  {"engine": {"file":  getImageWithKeyword("./stimuli/clutter", "engine_1"), 
-                               "position_percentage": [50, 10], "position_pixel": [],
-                               "size_ratio": [0.7, 0.7], "size_pixel": []}, 
+                               "position_percentage": [50, 25], "position_pixel": [],
+                               "size_ratio": SMALL_ICON_SIZE_RATIO, "size_pixel": []}, 
                   "oil": {"file":  getImageWithKeyword("./stimuli/clutter", "oil_1"), 
-                           "position_percentage": [50, 40], "position_pixel": [],
-                               "size_ratio": [0.7, 0.7], "size_pixel": []},
+                           "position_percentage": [50, 50], "position_pixel": [],
+                               "size_ratio": SMALL_ICON_SIZE_RATIO, "size_pixel": []},
                   "tirepressure": {"file":  getImageWithKeyword("./stimuli/clutter", "tirepressure_1"), 
-                           "position_percentage": [50, 70], "position_pixel": [],
-                               "size_ratio": [0.7, 0.7], "size_pixel": []}
+                           "position_percentage": [50, 75], "position_pixel": [],
+                               "size_ratio": SMALL_ICON_SIZE_RATIO, "size_pixel": []}
                   },
                 },
                 
@@ -503,14 +541,14 @@ all_widgets = [
                  "text_components": {},
                  "image_components": 
                  {"fuel": {"file":  getImageWithKeyword("./stimuli/clutter", "fuel_1"), 
-                               "position_percentage": [50 , 10], "position_pixel": [],
-                               "size_ratio": [0.7, 0.7], "size_pixel": []},
+                               "position_percentage": [50 , 25], "position_pixel": [],
+                               "size_ratio": SMALL_ICON_SIZE_RATIO, "size_pixel": []},
                     "ecosport": {"file":  getImageWithKeyword("./stimuli/clutter", "ecosport_1"), 
-                                    "position_percentage": [50 , 40], "position_pixel": [],
-                                    "size_ratio": [0.7, 0.7], "size_pixel": []},
+                                    "position_percentage": [50 , 50], "position_pixel": [],
+                                    "size_ratio": SMALL_ICON_SIZE_RATIO, "size_pixel": []},
                     "farlight": {"file":  getImageWithKeyword("./stimuli/clutter", "farlight_1"), 
-                                    "position_percentage": [50 , 70], "position_pixel": [],
-                                    "size_ratio": [0.7, 0.7], "size_pixel": []}
+                                    "position_percentage": [50 , 75], "position_pixel": [],
+                                    "size_ratio": SMALL_ICON_SIZE_RATIO, "size_pixel": []}
                   },
                 },
                 
@@ -520,8 +558,8 @@ all_widgets = [
                  "text_components": {},
                  "image_components": 
                  {"cardoor": {"file":  getImageWithKeyword("./stimuli/clutter", "cardoor_1"), 
-                             "position_percentage": [20, 50], "position_pixel": [],
-                               "size_ratio": [0.35, 0.35], "size_pixel": []}
+                             "position_percentage": [50, 50], "position_pixel": [],
+                               "size_ratio": LARGE_ICON_SIZE_RATIO, "size_pixel": []}
                   },
                 },
 
@@ -532,7 +570,7 @@ all_widgets = [
                  "image_components": 
                  {"carheat": {"file":  getImageWithKeyword("./stimuli/clutter", "carheat_1"), 
                                   "position_percentage": [50, 50], "position_pixel": [],
-                               "size_ratio": [0.8, 0.8], "size_pixel": []}
+                               "size_ratio": LARGE_ICON_SIZE_RATIO, "size_pixel": []}
                   },
                 },
 
@@ -543,7 +581,7 @@ all_widgets = [
                  "image_components": 
                  {"media": {"file":  getImageWithKeyword("./stimuli/clutter", "media_1"), 
                                   "position_percentage": [50, 50], "position_pixel": [],
-                               "size_ratio": [0.8, 0.8], "size_pixel": []}
+                               "size_ratio": LARGE_ICON_SIZE_RATIO, "size_pixel": []}
                   },
                 }
         ] 
@@ -587,8 +625,6 @@ textFont = "./stimuli/font/robotoflex.ttf"
 text_size = widget_regions[1]["width"]/12
 header_wrap_width = 500
 
-
-
 exp_version = "WITH_clutter"
 
 # randomization
@@ -618,7 +654,6 @@ if frameRate == None:
 secPerFrame = 1 / frameRate
 
 scoreScreen = {}
-
 scoreScreen["lexical_only"] = {"accuracy": [], "reaction_time": []}
 scoreScreen["driving_lexical"] = {"accuracy": [], "reaction_time": []}
 
@@ -631,7 +666,7 @@ else:
 # Run 'Begin Experiment' code from extract_trials
 all_word_trials = range(0, 759)
 all_nonword_trials = range(764, 1256)
-maxword_no = 159
+maxword_no = 759
 maxnonword_no = 1256
 staircase_dict = {}
 background_panel_5 = visual.ImageStim(
@@ -993,18 +1028,17 @@ continueRoutine = True
 routineForceEnded = False
 # update component parameters for each repeat
 # Run 'Begin Routine' code from init_clutter
-clutter_icon_index_v = [[0, 0], [0, 1], [0, 2], [1, 0], [2, 0], [3, 0], [4, 0]]
+clutter_icon_index_v = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [3, 0], [4, 0]]
 
-dynamic_clutter_icons = [["duration", "fuel", "distance"], 
-                          ["calendar"], 
-                          ["garage"],
-                          ["temperature"],
-                          ["battery"]]
+dynamic_clutter_icons = [["engine", "oil", "tirepressure"], 
+                          ["fuel", "ecosport", "farlight"], 
+                          ["cardoor"],
+                          ["carheat"],
+                          ["media"]]
                           
                           
 clutter_change_order_indices = getClutterOrderCounterbalanceGroup(cb_group = expInfo["clutter_cb"])
-clutter_changed_icon_indices = getRandomChangingIconIndex(clutter_icon_index_v, 12)
-
+clutter_changed_icon_indices = getRandomChangingIconIndex(clutter_icon_index_v, 9)
 clutter_changed_icon_indices_practice = getRandomChangingIconIndex(clutter_icon_index_v, 10)
 
 
@@ -1082,13 +1116,13 @@ for thisBlock in blocks:
     routineForceEnded = False
     # update component parameters for each repeat
     # Run 'Begin Routine' code from extract_trials
-    current_WORD_trials = trial_sampling(all_word_trials, word_trial_count)
-    current_NONWORD_trials = trial_sampling(all_nonword_trials, nonword_trial_count)
+    current_WORD_trials = trialSampling(all_word_trials, word_trial_count)
+    current_NONWORD_trials = trialSampling(all_nonword_trials, nonword_trial_count)
     
-    all_word_trials = remove_elements(all_word_trials, current_WORD_trials)
-    all_nonword_trials = remove_elements(all_nonword_trials, current_NONWORD_trials)
+    all_word_trials = removeElements(all_word_trials, current_WORD_trials)
+    all_nonword_trials = removeElements(all_nonword_trials, current_NONWORD_trials)
     
-    current_trials = join_and_shuffle(current_WORD_trials, current_NONWORD_trials)
+    current_trials = joinAndShuffle(current_WORD_trials, current_NONWORD_trials)
     current_trials = [0] + current_trials
     print('block print: ', current_font)
     
@@ -1275,6 +1309,7 @@ for thisBlock in blocks:
         thisExp.addData('current_time', datetime.now().strftime("%H:%M:%S"));
         
         if trials.thisN == 0:
+            # skipping first trial to align text clutters (depcrecated but here, just in case)
             iti_duration = 0.1
             dummy_panel_size = [panel_layout.panel_x_size, panel_layout.panel_y_size]    
         else:
@@ -1297,31 +1332,31 @@ for thisBlock in blocks:
         panel5_2.setSize((widget_regions[4]['width'], widget_regions[4]['height']))
         panel6_2.setPos((widget_regions[5]['x'], widget_regions[5]['y']))
         panel6_2.setSize((widget_regions[5]['width'], widget_regions[5]['height']))
-        widget1_symbol1_2.setPos([correctPositionSmall(all_widgets[0]["image_components"]["duration"]["size_pixel"], all_widgets[0]["image_components"]["engine"]["position_pixel"])])
+        widget1_symbol1_2.setPos([correctPositionSmall(all_widgets[0]["image_components"]["engine"]["size_pixel"], all_widgets[0]["image_components"]["engine"]["position_pixel"])])
         widget1_symbol1_2.setSize([all_widgets[0]["image_components"]["engine"]["size_pixel"]])
         widget1_symbol1_2.setImage(all_widgets[0]["image_components"]["engine"]["file"])
-        widget1_symbol2_2.setPos([correctPositionSmall(all_widgets[0]["image_components"]["fuel"]["size_pixel"], all_widgets[0]["image_components"]["oil"]["position_pixel"])])
+        widget1_symbol2_2.setPos([correctPositionSmall(all_widgets[0]["image_components"]["oil"]["size_pixel"], all_widgets[0]["image_components"]["oil"]["position_pixel"])])
         widget1_symbol2_2.setSize([all_widgets[0]["image_components"]["oil"]["size_pixel"]])
         widget1_symbol2_2.setImage(all_widgets[0]["image_components"]["oil"]["file"])
-        widget1_symbol3_2.setPos([correctPositionSmall(all_widgets[0]["image_components"]["distance"]["size_pixel"], all_widgets[0]["image_components"]["tirepressure"]["position_pixel"])])
+        widget1_symbol3_2.setPos([correctPositionSmall(all_widgets[0]["image_components"]["tirepressure"]["size_pixel"], all_widgets[0]["image_components"]["tirepressure"]["position_pixel"])])
         widget1_symbol3_2.setSize([all_widgets[0]["image_components"]["tirepressure"]["size_pixel"]])
         widget1_symbol3_2.setImage(all_widgets[0]["image_components"]["tirepressure"]["file"])
-        widget2_symbol1_2.setPos([correctPositionSmall(all_widgets[2]["image_components"]["garage"]["size_pixel"], all_widgets[2]["image_components"]["cardoor"]["position_pixel"])])
+        widget2_symbol1_2.setPos([correctPositionSmall(all_widgets[2]["image_components"]["cardoor"]["size_pixel"], all_widgets[2]["image_components"]["cardoor"]["position_pixel"])])
         widget2_symbol1_2.setSize([all_widgets[2]["image_components"]["cardoor"]["size_pixel"]])
         widget2_symbol1_2.setImage(all_widgets[2]["image_components"]["cardoor"]["file"])
-        widget3_symbol1_2.setPos([correctPositionSmall(all_widgets[3]["image_components"]["temperature"]["size_pixel"], all_widgets[3]["image_components"]["carheat"]["position_pixel"])])
+        widget3_symbol1_2.setPos([correctPositionSmall(all_widgets[3]["image_components"]["carheat"]["size_pixel"], all_widgets[3]["image_components"]["carheat"]["position_pixel"])])
         widget3_symbol1_2.setSize([all_widgets[3]["image_components"]["carheat"]["size_pixel"]])
         widget3_symbol1_2.setImage(all_widgets[3]["image_components"]["carheat"]["file"])
-        widget4_symbol1_2.setPos([correctPositionSmall(all_widgets[4]["image_components"]["battery"]["size_pixel"], all_widgets[4]["image_components"]["media"]["position_pixel"])])
+        widget4_symbol1_2.setPos([correctPositionSmall(all_widgets[4]["image_components"]["media"]["size_pixel"], all_widgets[4]["image_components"]["media"]["position_pixel"])])
         widget4_symbol1_2.setSize([all_widgets[4]["image_components"]["media"]["size_pixel"]])
         widget4_symbol1_2.setImage(all_widgets[4]["image_components"]["media"]["file"])
-        widget5_symbol1_2.setPos([correctPositionSmall(all_widgets[1]["image_components"]["calendar"]["size_pixel"], all_widgets[1]["image_components"]["fuel"]["position_pixel"])])
+        widget5_symbol1_2.setPos([correctPositionSmall(all_widgets[1]["image_components"]["fuel"]["size_pixel"], all_widgets[1]["image_components"]["fuel"]["position_pixel"])])
         widget5_symbol1_2.setSize([all_widgets[1]["image_components"]["fuel"]["size_pixel"]])
         widget5_symbol1_2.setImage(all_widgets[1]["image_components"]["fuel"]["file"])
-        widget5_symbol2_2.setPos([correctPositionSmall(all_widgets[1]["image_components"]["calendar"]["size_pixel"], all_widgets[1]["image_components"]["ecosport"]["position_pixel"])])
+        widget5_symbol2_2.setPos([correctPositionSmall(all_widgets[1]["image_components"]["ecosport"]["size_pixel"], all_widgets[1]["image_components"]["ecosport"]["position_pixel"])])
         widget5_symbol2_2.setSize([all_widgets[1]["image_components"]["ecosport"]["size_pixel"]])
         widget5_symbol2_2.setImage(all_widgets[1]["image_components"]["ecosport"]["file"])
-        widget5_symbol3_2.setPos([correctPositionSmall(all_widgets[1]["image_components"]["calendar"]["size_pixel"], all_widgets[1]["image_components"]["farlight"]["position_pixel"])])
+        widget5_symbol3_2.setPos([correctPositionSmall(all_widgets[1]["image_components"]["farlight"]["size_pixel"], all_widgets[1]["image_components"]["farlight"]["position_pixel"])])
         widget5_symbol3_2.setSize([all_widgets[1]["image_components"]["farlight"]["size_pixel"]])
         widget5_symbol3_2.setImage(all_widgets[1]["image_components"]["farlight"]["file"])
         background_panel_4.setPos([panel_layout.panel_position])
@@ -1494,7 +1529,7 @@ for thisBlock in blocks:
                     panel6_2.setAutoDraw(False)
             
             # *widget1_symbol1_2* updates
-            if widget1_symbol1_2.status == NOT_STARTED and frameN >= 0.0:
+            if widget1_symbol1_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
                 # keep track of start time/frame for later
                 widget1_symbol1_2.frameNStart = frameN  # exact frame index
                 widget1_symbol1_2.tStart = t  # local t and not account for scr refresh
@@ -1504,7 +1539,8 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'widget1_symbol1_2.started')
                 widget1_symbol1_2.setAutoDraw(True)
             if widget1_symbol1_2.status == STARTED:
-                if frameN >= (widget1_symbol1_2.frameNStart + trialDurationFrames):
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > widget1_symbol1_2.tStartRefresh + iti_duration-frameTolerance:
                     # keep track of stop time/frame for later
                     widget1_symbol1_2.tStop = t  # not accounting for scr refresh
                     widget1_symbol1_2.frameNStop = frameN  # exact frame index
@@ -1513,7 +1549,7 @@ for thisBlock in blocks:
                     widget1_symbol1_2.setAutoDraw(False)
             
             # *widget1_symbol2_2* updates
-            if widget1_symbol2_2.status == NOT_STARTED and frameN >= 0.0:
+            if widget1_symbol2_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
                 # keep track of start time/frame for later
                 widget1_symbol2_2.frameNStart = frameN  # exact frame index
                 widget1_symbol2_2.tStart = t  # local t and not account for scr refresh
@@ -1523,7 +1559,8 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'widget1_symbol2_2.started')
                 widget1_symbol2_2.setAutoDraw(True)
             if widget1_symbol2_2.status == STARTED:
-                if frameN >= (widget1_symbol2_2.frameNStart + trialDurationFrames):
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > widget1_symbol2_2.tStartRefresh + iti_duration-frameTolerance:
                     # keep track of stop time/frame for later
                     widget1_symbol2_2.tStop = t  # not accounting for scr refresh
                     widget1_symbol2_2.frameNStop = frameN  # exact frame index
@@ -1532,7 +1569,7 @@ for thisBlock in blocks:
                     widget1_symbol2_2.setAutoDraw(False)
             
             # *widget1_symbol3_2* updates
-            if widget1_symbol3_2.status == NOT_STARTED and frameN >= 0.0:
+            if widget1_symbol3_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
                 # keep track of start time/frame for later
                 widget1_symbol3_2.frameNStart = frameN  # exact frame index
                 widget1_symbol3_2.tStart = t  # local t and not account for scr refresh
@@ -1542,7 +1579,8 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'widget1_symbol3_2.started')
                 widget1_symbol3_2.setAutoDraw(True)
             if widget1_symbol3_2.status == STARTED:
-                if frameN >= (widget1_symbol3_2.frameNStart + trialDurationFrames):
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > widget1_symbol3_2.tStartRefresh + iti_duration-frameTolerance:
                     # keep track of stop time/frame for later
                     widget1_symbol3_2.tStop = t  # not accounting for scr refresh
                     widget1_symbol3_2.frameNStop = frameN  # exact frame index
@@ -1551,7 +1589,7 @@ for thisBlock in blocks:
                     widget1_symbol3_2.setAutoDraw(False)
             
             # *widget2_symbol1_2* updates
-            if widget2_symbol1_2.status == NOT_STARTED and frameN >= 0.0:
+            if widget2_symbol1_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
                 # keep track of start time/frame for later
                 widget2_symbol1_2.frameNStart = frameN  # exact frame index
                 widget2_symbol1_2.tStart = t  # local t and not account for scr refresh
@@ -1561,7 +1599,8 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'widget2_symbol1_2.started')
                 widget2_symbol1_2.setAutoDraw(True)
             if widget2_symbol1_2.status == STARTED:
-                if frameN >= (widget2_symbol1_2.frameNStart + trialDurationFrames):
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > widget2_symbol1_2.tStartRefresh + iti_duration-frameTolerance:
                     # keep track of stop time/frame for later
                     widget2_symbol1_2.tStop = t  # not accounting for scr refresh
                     widget2_symbol1_2.frameNStop = frameN  # exact frame index
@@ -1570,7 +1609,7 @@ for thisBlock in blocks:
                     widget2_symbol1_2.setAutoDraw(False)
             
             # *widget3_symbol1_2* updates
-            if widget3_symbol1_2.status == NOT_STARTED and frameN >= 0.0:
+            if widget3_symbol1_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
                 # keep track of start time/frame for later
                 widget3_symbol1_2.frameNStart = frameN  # exact frame index
                 widget3_symbol1_2.tStart = t  # local t and not account for scr refresh
@@ -1580,7 +1619,8 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'widget3_symbol1_2.started')
                 widget3_symbol1_2.setAutoDraw(True)
             if widget3_symbol1_2.status == STARTED:
-                if frameN >= (widget3_symbol1_2.frameNStart + trialDurationFrames):
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > widget3_symbol1_2.tStartRefresh + iti_duration-frameTolerance:
                     # keep track of stop time/frame for later
                     widget3_symbol1_2.tStop = t  # not accounting for scr refresh
                     widget3_symbol1_2.frameNStop = frameN  # exact frame index
@@ -1589,7 +1629,7 @@ for thisBlock in blocks:
                     widget3_symbol1_2.setAutoDraw(False)
             
             # *widget4_symbol1_2* updates
-            if widget4_symbol1_2.status == NOT_STARTED and frameN >= 0.0:
+            if widget4_symbol1_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
                 # keep track of start time/frame for later
                 widget4_symbol1_2.frameNStart = frameN  # exact frame index
                 widget4_symbol1_2.tStart = t  # local t and not account for scr refresh
@@ -1599,7 +1639,8 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'widget4_symbol1_2.started')
                 widget4_symbol1_2.setAutoDraw(True)
             if widget4_symbol1_2.status == STARTED:
-                if frameN >= (widget4_symbol1_2.frameNStart + trialDurationFrames):
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > widget4_symbol1_2.tStartRefresh + iti_duration-frameTolerance:
                     # keep track of stop time/frame for later
                     widget4_symbol1_2.tStop = t  # not accounting for scr refresh
                     widget4_symbol1_2.frameNStop = frameN  # exact frame index
@@ -1608,7 +1649,7 @@ for thisBlock in blocks:
                     widget4_symbol1_2.setAutoDraw(False)
             
             # *widget5_symbol1_2* updates
-            if widget5_symbol1_2.status == NOT_STARTED and frameN >= 0.0:
+            if widget5_symbol1_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
                 # keep track of start time/frame for later
                 widget5_symbol1_2.frameNStart = frameN  # exact frame index
                 widget5_symbol1_2.tStart = t  # local t and not account for scr refresh
@@ -1618,7 +1659,8 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'widget5_symbol1_2.started')
                 widget5_symbol1_2.setAutoDraw(True)
             if widget5_symbol1_2.status == STARTED:
-                if frameN >= (widget5_symbol1_2.frameNStart + trialDurationFrames):
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > widget5_symbol1_2.tStartRefresh + iti_duration-frameTolerance:
                     # keep track of stop time/frame for later
                     widget5_symbol1_2.tStop = t  # not accounting for scr refresh
                     widget5_symbol1_2.frameNStop = frameN  # exact frame index
@@ -1627,7 +1669,7 @@ for thisBlock in blocks:
                     widget5_symbol1_2.setAutoDraw(False)
             
             # *widget5_symbol2_2* updates
-            if widget5_symbol2_2.status == NOT_STARTED and frameN >= 0.0:
+            if widget5_symbol2_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
                 # keep track of start time/frame for later
                 widget5_symbol2_2.frameNStart = frameN  # exact frame index
                 widget5_symbol2_2.tStart = t  # local t and not account for scr refresh
@@ -1637,7 +1679,8 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'widget5_symbol2_2.started')
                 widget5_symbol2_2.setAutoDraw(True)
             if widget5_symbol2_2.status == STARTED:
-                if frameN >= (widget5_symbol2_2.frameNStart + trialDurationFrames):
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > widget5_symbol2_2.tStartRefresh + iti_duration-frameTolerance:
                     # keep track of stop time/frame for later
                     widget5_symbol2_2.tStop = t  # not accounting for scr refresh
                     widget5_symbol2_2.frameNStop = frameN  # exact frame index
@@ -1646,7 +1689,7 @@ for thisBlock in blocks:
                     widget5_symbol2_2.setAutoDraw(False)
             
             # *widget5_symbol3_2* updates
-            if widget5_symbol3_2.status == NOT_STARTED and frameN >= 0.0:
+            if widget5_symbol3_2.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
                 # keep track of start time/frame for later
                 widget5_symbol3_2.frameNStart = frameN  # exact frame index
                 widget5_symbol3_2.tStart = t  # local t and not account for scr refresh
@@ -1656,7 +1699,8 @@ for thisBlock in blocks:
                 thisExp.timestampOnFlip(win, 'widget5_symbol3_2.started')
                 widget5_symbol3_2.setAutoDraw(True)
             if widget5_symbol3_2.status == STARTED:
-                if frameN >= (widget5_symbol3_2.frameNStart + trialDurationFrames):
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > widget5_symbol3_2.tStartRefresh + iti_duration-frameTolerance:
                     # keep track of stop time/frame for later
                     widget5_symbol3_2.tStop = t  # not accounting for scr refresh
                     widget5_symbol3_2.frameNStop = frameN  # exact frame index
@@ -1840,31 +1884,31 @@ for thisBlock in blocks:
         fixation_cross.setText('+')
         fixation_cross.setFont(current_font)
         fixation_cross.setHeight(stim_size * xheight_to_size)
-        widget1_symbol1.setPos([correctPositionSmall(all_widgets[0]["image_components"]["duration"]["size_pixel"], all_widgets[0]["image_components"]["engine"]["position_pixel"])])
+        widget1_symbol1.setPos([correctPositionSmall(all_widgets[0]["image_components"]["engine"]["size_pixel"], all_widgets[0]["image_components"]["engine"]["position_pixel"])])
         widget1_symbol1.setSize([all_widgets[0]["image_components"]["engine"]["size_pixel"]])
         widget1_symbol1.setImage(all_widgets[0]["image_components"]["engine"]["file"])
-        widget1_symbol2.setPos([correctPositionSmall(all_widgets[0]["image_components"]["fuel"]["size_pixel"], all_widgets[0]["image_components"]["oil"]["position_pixel"])])
+        widget1_symbol2.setPos([correctPositionSmall(all_widgets[0]["image_components"]["oil"]["size_pixel"], all_widgets[0]["image_components"]["oil"]["position_pixel"])])
         widget1_symbol2.setSize([all_widgets[0]["image_components"]["oil"]["size_pixel"]])
         widget1_symbol2.setImage(all_widgets[0]["image_components"]["oil"]["file"])
-        widget1_symbol3.setPos([correctPositionSmall(all_widgets[0]["image_components"]["distance"]["size_pixel"], all_widgets[0]["image_components"]["tirepressure"]["position_pixel"])])
+        widget1_symbol3.setPos([correctPositionSmall(all_widgets[0]["image_components"]["tirepressure"]["size_pixel"], all_widgets[0]["image_components"]["tirepressure"]["position_pixel"])])
         widget1_symbol3.setSize([all_widgets[0]["image_components"]["tirepressure"]["size_pixel"]])
         widget1_symbol3.setImage(all_widgets[0]["image_components"]["tirepressure"]["file"])
-        widget2_symbol1.setPos([correctPositionSmall(all_widgets[2]["image_components"]["garage"]["size_pixel"], all_widgets[2]["image_components"]["cardoor"]["position_pixel"])])
+        widget2_symbol1.setPos([correctPositionSmall(all_widgets[2]["image_components"]["cardoor"]["size_pixel"], all_widgets[2]["image_components"]["cardoor"]["position_pixel"])])
         widget2_symbol1.setSize([all_widgets[2]["image_components"]["cardoor"]["size_pixel"]])
         widget2_symbol1.setImage(all_widgets[2]["image_components"]["cardoor"]["file"])
-        widget3_symbol1.setPos([correctPositionSmall(all_widgets[3]["image_components"]["temperature"]["size_pixel"], all_widgets[3]["image_components"]["carheat"]["position_pixel"])])
+        widget3_symbol1.setPos([correctPositionSmall(all_widgets[3]["image_components"]["carheat"]["size_pixel"], all_widgets[3]["image_components"]["carheat"]["position_pixel"])])
         widget3_symbol1.setSize([all_widgets[3]["image_components"]["carheat"]["size_pixel"]])
         widget3_symbol1.setImage(all_widgets[3]["image_components"]["carheat"]["file"])
-        widget4_symbol1.setPos([correctPositionSmall(all_widgets[4]["image_components"]["battery"]["size_pixel"], all_widgets[4]["image_components"]["media"]["position_pixel"])])
+        widget4_symbol1.setPos([correctPositionSmall(all_widgets[4]["image_components"]["media"]["size_pixel"], all_widgets[4]["image_components"]["media"]["position_pixel"])])
         widget4_symbol1.setSize([all_widgets[4]["image_components"]["media"]["size_pixel"]])
         widget4_symbol1.setImage(all_widgets[4]["image_components"]["media"]["file"])
-        widget5_symbol1.setPos([correctPositionSmall(all_widgets[1]["image_components"]["calendar"]["size_pixel"], all_widgets[1]["image_components"]["fuel"]["position_pixel"])])
+        widget5_symbol1.setPos([correctPositionSmall(all_widgets[1]["image_components"]["fuel"]["size_pixel"], all_widgets[1]["image_components"]["fuel"]["position_pixel"])])
         widget5_symbol1.setSize([all_widgets[1]["image_components"]["fuel"]["size_pixel"]])
         widget5_symbol1.setImage(all_widgets[1]["image_components"]["fuel"]["file"])
-        widget5_symbol2.setPos([correctPositionSmall(all_widgets[1]["image_components"]["calendar"]["size_pixel"], all_widgets[1]["image_components"]["ecosport"]["position_pixel"])])
+        widget5_symbol2.setPos([correctPositionSmall(all_widgets[1]["image_components"]["ecosport"]["size_pixel"], all_widgets[1]["image_components"]["ecosport"]["position_pixel"])])
         widget5_symbol2.setSize([all_widgets[1]["image_components"]["ecosport"]["size_pixel"]])
         widget5_symbol2.setImage(all_widgets[1]["image_components"]["ecosport"]["file"])
-        widget5_symbol3.setPos([correctPositionSmall(all_widgets[1]["image_components"]["calendar"]["size_pixel"], all_widgets[1]["image_components"]["farlight"]["position_pixel"])])
+        widget5_symbol3.setPos([correctPositionSmall(all_widgets[1]["image_components"]["farlight"]["size_pixel"], all_widgets[1]["image_components"]["farlight"]["position_pixel"])])
         widget5_symbol3.setSize([all_widgets[1]["image_components"]["farlight"]["size_pixel"]])
         widget5_symbol3.setImage(all_widgets[1]["image_components"]["farlight"]["file"])
         lexical_response.keys = []
@@ -2442,7 +2486,7 @@ for thisBlock in blocks:
                     if task_name == "full_task_training":    
                         print('clutter reverted training')
                         revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices_practice[change_iteration])
-                    elif blocks.thisN > practiceTrialN:
+                    elif blocks.thisN > practiceBlockN:
                         print('clutter reverted test')
                         revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices[change_iteration])
                     change_iteration = change_iteration + 1

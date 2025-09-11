@@ -95,7 +95,7 @@ def getRandomChangingIconIndex(clutter_change_v, number_of_changes):
 def changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):
     cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]
     all_widgets[clutter_index[0]]["image_components"][cur_key]["file"] = getImageWithKeyword("./stimuli/clutter", cur_key + "_2")
-    thisExp.addData('clutter_changed_icon', cur_key);
+    thisExp.addData('clutter_changed_icon', cur_key)
 
 
 def revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):

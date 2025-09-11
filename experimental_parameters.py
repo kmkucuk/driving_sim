@@ -6,9 +6,11 @@ import os
 import pandas as pd
 from pathlib import Path
 import random
-
 TEXT_WIDGETS_ENABLED = False
 IMAGE_WIDGETS_ENABLED = True
+SMALL_ICON_SIZE_RATIO = [0.5, 0.5]
+LARGE_ICON_SIZE_RATIO = [0.5, 0.5]
+
 
 if 'win' not in locals():
     from panel_generation_function import Panel
@@ -31,6 +33,8 @@ if target_panel in large_region_indices:
 elif target_panel in small_region_indices:
     small_region_indices.remove(target_panel)
  
+
+
 all_widgets = [
                 {"name": "maintenance_widget",
                 "possible_regions": large_region_indices, 
@@ -38,14 +42,14 @@ all_widgets = [
                 "text_components": {},
                  "image_components": 
                  {"engine": {"file":  getImageWithKeyword("./stimuli/clutter", "engine_1"), 
-                               "position_percentage": [50, 10], "position_pixel": [],
-                               "size_ratio": [0.7, 0.7], "size_pixel": []}, 
+                               "position_percentage": [50, 25], "position_pixel": [],
+                               "size_ratio": SMALL_ICON_SIZE_RATIO, "size_pixel": []}, 
                   "oil": {"file":  getImageWithKeyword("./stimuli/clutter", "oil_1"), 
-                           "position_percentage": [50, 40], "position_pixel": [],
-                               "size_ratio": [0.7, 0.7], "size_pixel": []},
+                           "position_percentage": [50, 50], "position_pixel": [],
+                               "size_ratio": SMALL_ICON_SIZE_RATIO, "size_pixel": []},
                   "tirepressure": {"file":  getImageWithKeyword("./stimuli/clutter", "tirepressure_1"), 
-                           "position_percentage": [50, 70], "position_pixel": [],
-                               "size_ratio": [0.7, 0.7], "size_pixel": []}
+                           "position_percentage": [50, 75], "position_pixel": [],
+                               "size_ratio": SMALL_ICON_SIZE_RATIO, "size_pixel": []}
                   },
                 },
                 
@@ -55,14 +59,14 @@ all_widgets = [
                  "text_components": {},
                  "image_components": 
                  {"fuel": {"file":  getImageWithKeyword("./stimuli/clutter", "fuel_1"), 
-                               "position_percentage": [50 , 10], "position_pixel": [],
-                               "size_ratio": [0.7, 0.7], "size_pixel": []},
+                               "position_percentage": [50 , 25], "position_pixel": [],
+                               "size_ratio": SMALL_ICON_SIZE_RATIO, "size_pixel": []},
                     "ecosport": {"file":  getImageWithKeyword("./stimuli/clutter", "ecosport_1"), 
-                                    "position_percentage": [50 , 40], "position_pixel": [],
-                                    "size_ratio": [0.7, 0.7], "size_pixel": []},
+                                    "position_percentage": [50 , 50], "position_pixel": [],
+                                    "size_ratio": SMALL_ICON_SIZE_RATIO, "size_pixel": []},
                     "farlight": {"file":  getImageWithKeyword("./stimuli/clutter", "farlight_1"), 
-                                    "position_percentage": [50 , 70], "position_pixel": [],
-                                    "size_ratio": [0.7, 0.7], "size_pixel": []}
+                                    "position_percentage": [50 , 75], "position_pixel": [],
+                                    "size_ratio": SMALL_ICON_SIZE_RATIO, "size_pixel": []}
                   },
                 },
                 
@@ -72,8 +76,8 @@ all_widgets = [
                  "text_components": {},
                  "image_components": 
                  {"cardoor": {"file":  getImageWithKeyword("./stimuli/clutter", "cardoor_1"), 
-                             "position_percentage": [20, 50], "position_pixel": [],
-                               "size_ratio": [0.35, 0.35], "size_pixel": []}
+                             "position_percentage": [50, 50], "position_pixel": [],
+                               "size_ratio": LARGE_ICON_SIZE_RATIO, "size_pixel": []}
                   },
                 },
 
@@ -84,7 +88,7 @@ all_widgets = [
                  "image_components": 
                  {"carheat": {"file":  getImageWithKeyword("./stimuli/clutter", "carheat_1"), 
                                   "position_percentage": [50, 50], "position_pixel": [],
-                               "size_ratio": [0.8, 0.8], "size_pixel": []}
+                               "size_ratio": LARGE_ICON_SIZE_RATIO, "size_pixel": []}
                   },
                 },
 
@@ -95,7 +99,7 @@ all_widgets = [
                  "image_components": 
                  {"media": {"file":  getImageWithKeyword("./stimuli/clutter", "media_1"), 
                                   "position_percentage": [50, 50], "position_pixel": [],
-                               "size_ratio": [0.8, 0.8], "size_pixel": []}
+                               "size_ratio": LARGE_ICON_SIZE_RATIO, "size_pixel": []}
                   },
                 }
         ] 
@@ -138,8 +142,6 @@ textFont = "./stimuli/font/robotoflex.ttf"
 
 text_size = widget_regions[1]["width"]/12
 header_wrap_width = 500
-
-
 
 exp_version = "WITH_clutter"
 
