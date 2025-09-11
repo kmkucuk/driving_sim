@@ -13,7 +13,7 @@ from pathlib import Path
 import os
 from PIL import Image
 
-def get_icon_info(folder_path):
+def getIconInfo(folder_path):
 
     if not folder_path:
         print("No folder selected.")
@@ -39,10 +39,6 @@ def get_icon_info(folder_path):
             files_info[name] = file_data
     
     return files_info
-
-a=0
-
-
 
 def getClutterOrderCounterbalanceGroup(order_file = "clutter_change_order_cb.xlsx", cb_group = "1", practice_change_count = 10):
     if not isinstance(cb_group, str):
@@ -110,18 +106,18 @@ def revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):
 def getFrames(component_duration, secPerFrame):
     return round(component_duration / secPerFrame)
 
-def trial_sampling(vector, n):
+def trialSampling(vector, n):
     if n > len(vector):
         raise ValueError("n cannot be greater than the length of the vector.")
     
     return random.sample(vector, n)
 
-def join_and_shuffle(vector1, vector2):
+def joinAndShuffle(vector1, vector2):
     combined = vector1 + vector2
     random.shuffle(combined)
     return combined
 
-def remove_elements(source_vector, elements_to_remove):
+def removeElements(source_vector, elements_to_remove):
     result = [x for x in source_vector if x not in elements_to_remove]
     return result
 
@@ -161,12 +157,14 @@ def correctTextPosition(text_stim, text_position):
         return text_position
 
 def correctPosition(icon_size, icon_position):    
+    """deprecated after update on positioning and sizes"""
     return icon_position
 #    return [icon_position[0] - icon_size[0]/2,
 #    icon_position[1] - icon_size[1]/2] # math.copysign(icon_size[0], icon_position[0])/2, math.copysign(icon_size[1], icon_position[1])/2]
 #    
     
 def correctPositionSmall(icon_size, icon_position):    
+    """deprecated after update on positioning and sizes"""
     return icon_position
 #    return [icon_position[0] + icon_size[0]/2, icon_position[1]]
 

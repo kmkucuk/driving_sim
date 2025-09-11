@@ -138,3 +138,43 @@ textFont = "./stimuli/font/robotoflex.ttf"
 
 text_size = widget_regions[1]["width"]/12
 header_wrap_width = 500
+
+
+
+exp_version = "WITH_clutter"
+
+# randomization
+first_block = [1,2,3]
+second_block = [5,6,7]
+random.shuffle(first_block)
+random.shuffle(second_block)
+block_rows = [0] + first_block + [4] + second_block
+
+if expInfo['monitor_cb'] == '1':
+    pixPerCm = 36.974
+elif expInfo['monitor_cb'] == '2':
+    pixPerCm = 100
+else:
+    raise ValueError('Wrong MONITOR counterbalance group, it should be 1 or 2 (CHECK initalization > exp_init > line 281)')
+
+stim_cm = 0.4349
+stim_size = stim_cm * pixPerCm 
+
+mask_imgs = getFilesInDir("./stimuli/masks")
+
+frameRate = win.getActualFrameRate();
+# convert to py float
+frameRate = frameRate.item()
+if frameRate == None:
+    frameRate = 60    
+secPerFrame = 1 / frameRate
+
+scoreScreen = {}
+
+scoreScreen["lexical_only"] = {"accuracy": [], "reaction_time": []}
+scoreScreen["driving_lexical"] = {"accuracy": [], "reaction_time": []}
+
+if expInfo["clutter_test"] == "yes":
+    blocks_file = "blocks_final_express.xlsx"
+else:
+    blocks_file = "blocks_final.xlsx"
