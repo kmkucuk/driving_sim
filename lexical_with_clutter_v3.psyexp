@@ -67,7 +67,7 @@
       <CodeComponent name="function_definitions">
         <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="from pprint import pprint&amp;#10;import calendar&amp;#10;import json&amp;#10;import math&amp;#10;import random&amp;#10;from datetime import date&amp;#10;from datetime import datetime&amp;#10;import os&amp;#10;from staircasing import staircaseFunction&amp;#10;from masking import getFilesInDir, selectRandomMask&amp;#10;import pandas as pd&amp;#10;from pathlib import Path&amp;#10;&amp;#10;def getClutterOrderCounterbalanceGroup(order_file = &quot;clutter_change_order_cb.xlsx&quot;, cb_group = &quot;1&quot;, practice_change_count = 10):&amp;#10;    if not isinstance(cb_group, str):&amp;#10;        raise ValueError(f&quot;Counterbalance group is not entered as string {cb_group}, its type is instead {type(cb_group)}&quot;)&amp;#10;&amp;#10;    xlsx_path = Path(order_file)&amp;#10;&amp;#10;    df = pd.read_excel(xlsx_path)&amp;#10;&amp;#10;    df.columns = [str(c).strip().lower() for c in df.columns]&amp;#10;&amp;#10;    df.head(), df.columns.tolist()&amp;#10;    required = {&quot;blocks&quot;, &quot;block_trial_#&quot;, &quot;gr1&quot;, &quot;gr2&quot;, &quot;gr3&quot;, &quot;gr4&quot;}&amp;#10;    missing = required - set(df.columns)&amp;#10;    if missing:&amp;#10;        raise ValueError(f&quot;Missing columns: {missing}&quot;)&amp;#10;&amp;#10;    def block_num(s):&amp;#10;        try:&amp;#10;            return int(str(s).split()[-1])&amp;#10;        except Exception:&amp;#10;            return str(s)&amp;#10;&amp;#10;    grouped = sorted(df.groupby(&quot;blocks&quot;), key=lambda kv: block_num(kv[0]))&amp;#10;&amp;#10;    gr_lists = {&quot;gr1&quot;: [], &quot;gr2&quot;: [], &quot;gr3&quot;: [], &quot;gr4&quot;: []}&amp;#10;    block_labels = []&amp;#10;&amp;#10;    for block_label, g in grouped:&amp;#10;        block_labels.append(block_label)&amp;#10;        for gr in gr_lists.keys():&amp;#10;            idx = g.loc[g[gr].astype(int) == 1, &quot;block_trial_#&quot;].astype(int).tolist()&amp;#10;            gr_lists[gr].append(idx)&amp;#10;&amp;#10;    random_practice_indices = random.sample(range(0, 40), practice_change_count)&amp;#10;    random_practice_indices.sort()&amp;#10;    gr_lists[&quot;gr&quot; + cb_group].insert(0, random_practice_indices)&amp;#10;    selected_list = gr_lists[&quot;gr&quot; + cb_group]&amp;#10;    print(f&quot;Selected clutter change order group {cb_group} indices are: {selected_list}&quot;)&amp;#10;    return selected_list&amp;#10;    &amp;#10;&amp;#10;&amp;#10;def getRandomChangingIconIndex(clutter_change_v, number_of_changes):&amp;#10;    clutterIconChangeIndex = []&amp;#10;    while True:     &amp;#10;        for i in range(0, number_of_changes):&amp;#10;            clutterIconChangeIndex.extend(random.sample(clutter_change_v, &amp;#10;                                        min(len(clutter_change_v), &amp;#10;                                            number_of_changes - len(clutterIconChangeIndex))))&amp;#10;            if len(clutterIconChangeIndex) == number_of_changes:&amp;#10;                return clutterIconChangeIndex&amp;#10;&amp;#10;def changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):&amp;#10;    cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]&amp;#10;    all_widgets[clutter_index[0]][&quot;image_components&quot;][cur_key][&quot;file&quot;] = getImageWithKeyword(&quot;./stimuli/clutter&quot;, cur_key + &quot;_2&quot;)&amp;#10;    thisExp.addData('clutter_changed_icon', cur_key);&amp;#10;&amp;#10;&amp;#10;def revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):&amp;#10;    cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]&amp;#10;    all_widgets[clutter_index[0]][&quot;image_components&quot;][cur_key][&quot;file&quot;] = getImageWithKeyword(&quot;./stimuli/clutter&quot;, cur_key + &quot;_1&quot;)&amp;#10;&amp;#10;&amp;#10;def getFrames(duration, secPerFrame):&amp;#10;    return round(duration / secPerFrame)&amp;#10;&amp;#10;def trial_sampling(vector, n):&amp;#10;    if n &gt; len(vector):&amp;#10;        raise ValueError(&quot;n cannot be greater than the length of the vector.&quot;)&amp;#10;    &amp;#10;    return random.sample(vector, n)&amp;#10;&amp;#10;def join_and_shuffle(vector1, vector2):&amp;#10;    combined = vector1 + vector2&amp;#10;    random.shuffle(combined)&amp;#10;    return combined&amp;#10;&amp;#10;def remove_elements(source_vector, elements_to_remove):&amp;#10;    result = [x for x in source_vector if x not in elements_to_remove]&amp;#10;    return result&amp;#10;&amp;#10;&amp;#10;def getDateTimeText():&amp;#10;    # get current day for text display on calemdar widget&amp;#10;    my_date = date.today()&amp;#10;    today = datetime.now()&amp;#10;    month_index = datetime.now().month&amp;#10;    month = calendar.month_name[month_index]&amp;#10;    numeric_day = today.day # this is a integer&amp;#10;    str_num_day = str(numeric_day)&amp;#10;    if str_num_day[-1] == '1':&amp;#10;        day_suffix = 'st'&amp;#10;    elif str_num_day[-1] == '2':&amp;#10;        day_suffix = 'nd'&amp;#10;    elif str_num_day[-1] == '3':&amp;#10;        day_suffix = 'rd'&amp;#10;    elif int(str_num_day[-1]) &gt;= 4:&amp;#10;        day_suffix = 'th'                &amp;#10;    &amp;#10;    return str_num_day + day_suffix + &quot; &quot; + month +&quot;\n&quot; + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber   &amp;#10;&amp;#10;&amp;#10;def getImageWithKeyword(directory, keyword):&amp;#10;    image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp'}&amp;#10;&amp;#10;    for root, _, files in os.walk(directory):&amp;#10;        for file in files:&amp;#10;            if any(file.lower().endswith(ext) for ext in image_extensions) and keyword.lower() in file.lower():&amp;#10;                return &quot;/&quot;.join([root, file])&amp;#10;                &amp;#10;def correctTextPosition(text_stim, text_position):&amp;#10;    if hasattr(text_stim, 'boundingBox'):&amp;#10;        return [text_position[0] + text_stim.boundingBox[0]/2, text_position[1]]&amp;#10;    else:&amp;#10;        return text_position&amp;#10;&amp;#10;def correctPosition(icon_size, icon_position):    &amp;#10;    return icon_position&amp;#10;#    return [icon_position[0] - icon_size[0]/2,&amp;#10;#    icon_position[1] - icon_size[1]/2] # math.copysign(icon_size[0], icon_position[0])/2, math.copysign(icon_size[1], icon_position[1])/2]&amp;#10;#    &amp;#10;    &amp;#10;def correctPositionSmall(icon_size, icon_position):    &amp;#10;    return icon_position&amp;#10;#    return [icon_position[0] + icon_size[0]/2, icon_position[1]]" valType="extendedCode" updates="constant" name="Begin Experiment"/>
+        <Param val="from pprint import pprint&amp;#10;import calendar&amp;#10;import json&amp;#10;import math&amp;#10;import random&amp;#10;from datetime import date&amp;#10;from datetime import datetime&amp;#10;import os&amp;#10;from staircasing import staircaseFunction&amp;#10;from masking import getFilesInDir, selectRandomMask&amp;#10;import pandas as pd&amp;#10;from pathlib import Path&amp;#10;&amp;#10;def getClutterOrderCounterbalanceGroup(order_file = &quot;clutter_change_order_cb.xlsx&quot;, cb_group = &quot;1&quot;, practice_change_count = 10):&amp;#10;    if not isinstance(cb_group, str):&amp;#10;        raise ValueError(f&quot;Counterbalance group is not entered as string {cb_group}, its type is instead {type(cb_group)}&quot;)&amp;#10;&amp;#10;    xlsx_path = Path(order_file)&amp;#10;&amp;#10;    df = pd.read_excel(xlsx_path)&amp;#10;&amp;#10;    df.columns = [str(c).strip().lower() for c in df.columns]&amp;#10;&amp;#10;    df.head(), df.columns.tolist()&amp;#10;    required = {&quot;blocks&quot;, &quot;block_trial_#&quot;, &quot;gr1&quot;, &quot;gr2&quot;, &quot;gr3&quot;, &quot;gr4&quot;}&amp;#10;    missing = required - set(df.columns)&amp;#10;    if missing:&amp;#10;        raise ValueError(f&quot;Missing columns: {missing}&quot;)&amp;#10;&amp;#10;    def block_num(s):&amp;#10;        try:&amp;#10;            return int(str(s).split()[-1])&amp;#10;        except Exception:&amp;#10;            return str(s)&amp;#10;&amp;#10;    grouped = sorted(df.groupby(&quot;blocks&quot;), key=lambda kv: block_num(kv[0]))&amp;#10;&amp;#10;    gr_lists = {&quot;gr1&quot;: [], &quot;gr2&quot;: [], &quot;gr3&quot;: [], &quot;gr4&quot;: []}&amp;#10;    block_labels = []&amp;#10;&amp;#10;    for block_label, g in grouped:&amp;#10;        block_labels.append(block_label)&amp;#10;        for gr in gr_lists.keys():&amp;#10;            idx = g.loc[g[gr].astype(int) == 1, &quot;block_trial_#&quot;].astype(int).tolist()&amp;#10;            gr_lists[gr].append(idx)&amp;#10;&amp;#10;    random_practice_indices = random.sample(range(0, 40), practice_change_count)&amp;#10;    random_practice_indices.sort()&amp;#10;    gr_lists[&quot;gr&quot; + cb_group].insert(0, random_practice_indices)&amp;#10;    selected_list = gr_lists[&quot;gr&quot; + cb_group]&amp;#10;    print(f&quot;Selected clutter change order group {cb_group} indices are: {selected_list}&quot;)&amp;#10;    return selected_list&amp;#10;    &amp;#10;&amp;#10;&amp;#10;def getRandomChangingIconIndex(clutter_change_v, number_of_changes):&amp;#10;    clutterIconChangeIndex = []&amp;#10;    while True:     &amp;#10;        for i in range(0, number_of_changes):&amp;#10;            clutterIconChangeIndex.extend(random.sample(clutter_change_v, &amp;#10;                                        min(len(clutter_change_v), &amp;#10;                                            number_of_changes - len(clutterIconChangeIndex))))&amp;#10;            if len(clutterIconChangeIndex) == number_of_changes:&amp;#10;                return clutterIconChangeIndex&amp;#10;&amp;#10;def changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):&amp;#10;    cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]&amp;#10;    all_widgets[clutter_index[0]][&quot;image_components&quot;][cur_key][&quot;file&quot;] = getImageWithKeyword(&quot;./stimuli/clutter&quot;, cur_key + &quot;_2&quot;)&amp;#10;    thisExp.addData('clutter_changed_icon', cur_key);&amp;#10;&amp;#10;&amp;#10;def revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):&amp;#10;    cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]&amp;#10;    all_widgets[clutter_index[0]][&quot;image_components&quot;][cur_key][&quot;file&quot;] = getImageWithKeyword(&quot;./stimuli/clutter&quot;, cur_key + &quot;_1&quot;)&amp;#10;&amp;#10;&amp;#10;def getFrames(component_duration, secPerFrame):&amp;#10;    return round(component_duration / secPerFrame)&amp;#10;&amp;#10;def trial_sampling(vector, n):&amp;#10;    if n &gt; len(vector):&amp;#10;        raise ValueError(&quot;n cannot be greater than the length of the vector.&quot;)&amp;#10;    &amp;#10;    return random.sample(vector, n)&amp;#10;&amp;#10;def join_and_shuffle(vector1, vector2):&amp;#10;    combined = vector1 + vector2&amp;#10;    random.shuffle(combined)&amp;#10;    return combined&amp;#10;&amp;#10;def remove_elements(source_vector, elements_to_remove):&amp;#10;    result = [x for x in source_vector if x not in elements_to_remove]&amp;#10;    return result&amp;#10;&amp;#10;&amp;#10;def getDateTimeText():&amp;#10;    # get current day for text display on calemdar widget&amp;#10;    my_date = date.today()&amp;#10;    today = datetime.now()&amp;#10;    month_index = datetime.now().month&amp;#10;    month = calendar.month_name[month_index]&amp;#10;    numeric_day = today.day # this is a integer&amp;#10;    str_num_day = str(numeric_day)&amp;#10;    if str_num_day[-1] == '1':&amp;#10;        day_suffix = 'st'&amp;#10;    elif str_num_day[-1] == '2':&amp;#10;        day_suffix = 'nd'&amp;#10;    elif str_num_day[-1] == '3':&amp;#10;        day_suffix = 'rd'&amp;#10;    elif int(str_num_day[-1]) &gt;= 4:&amp;#10;        day_suffix = 'th'                &amp;#10;    &amp;#10;    return str_num_day + day_suffix + &quot; &quot; + month +&quot;\n&quot; + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber   &amp;#10;&amp;#10;&amp;#10;def getImageWithKeyword(directory, keyword):&amp;#10;    image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp'}&amp;#10;&amp;#10;    for root, _, files in os.walk(directory):&amp;#10;        for file in files:&amp;#10;            if any(file.lower().endswith(ext) for ext in image_extensions) and keyword.lower() in file.lower():&amp;#10;                return &quot;/&quot;.join([root, file])&amp;#10;                &amp;#10;def correctTextPosition(text_stim, text_position):&amp;#10;    if hasattr(text_stim, 'boundingBox'):&amp;#10;        return [text_position[0] + text_stim.boundingBox[0]/2, text_position[1]]&amp;#10;    else:&amp;#10;        return text_position&amp;#10;&amp;#10;def correctPosition(icon_size, icon_position):    &amp;#10;    return icon_position&amp;#10;#    return [icon_position[0] - icon_size[0]/2,&amp;#10;#    icon_position[1] - icon_size[1]/2] # math.copysign(icon_size[0], icon_position[0])/2, math.copysign(icon_size[1], icon_position[1])/2]&amp;#10;#    &amp;#10;    &amp;#10;def correctPositionSmall(icon_size, icon_position):    &amp;#10;    return icon_position&amp;#10;#    return [icon_position[0] + icon_size[0]/2, icon_position[1]]&amp;#10;&amp;#10;&amp;#10;&amp;#10;def getChangeIndex(dyn_values, chang_indx):&amp;#10;    change_order = []&amp;#10;    # chang_indx represents the len(keys) in dynamic_clutter_values&amp;#10;    while True:&amp;#10;        rand_indx = random.randint(0, len(chang_indx) - 1)&amp;#10;        if chang_indx[rand_indx] != 0:&amp;#10;            cur_clut = dyn_values[rand_indx]&amp;#10;            keys = list(cur_clut.keys())&amp;#10;            selectAgain = False&amp;#10;            while True:&amp;#10;                rand_keyi = random.randint(0, len(keys) - 1)&amp;#10;                selected_key = keys[rand_keyi]                    &amp;#10;                for ki in range(0, len(change_order)):&amp;#10;                    lookup_key = change_order[ki][1]&amp;#10;                    if selected_key == lookup_key:&amp;#10;                        selectAgain = True&amp;#10;                if selectAgain:&amp;#10;                    break&amp;#10;                else:&amp;#10;                    change_order.append([rand_indx, selected_key])&amp;#10;                    chang_indx[rand_indx] = chang_indx[rand_indx] - 1&amp;#10;                    break&amp;#10;        elif sum(chang_indx) == 0:&amp;#10;            break&amp;#10;    return change_order&amp;#10;&amp;#10;def generateChangeSequence():&amp;#10;    return random.sample(range(1, 12), 8)&amp;#10;&amp;#10;def getGarageText(boolean):&amp;#10;    if boolean == 0:&amp;#10;        return &quot;Garage Door\nClosed&quot;&amp;#10;    elif boolean == 1:&amp;#10;        return &quot;Garage Door\nOpen&quot;&amp;#10;    else:&amp;#10;        ValueError(&quot;Garage door clutter value is not valid.&quot;)&amp;#10;&amp;#10;def getDateTimeText(value):&amp;#10;    &quot;&quot;&quot;&amp;#10;    param day_shift: used for changing the day display on the panel for changing clutter&amp;#10;    condition. adding or subtracting int value from day of the month (13 +- day_shift ) &amp;#10;    &quot;&quot;&quot;&amp;#10;    &amp;#10;    # get current day for text display on calemdar widget&amp;#10;    my_date = date.today()&amp;#10;    today = datetime.now()&amp;#10;    month_index = datetime.now().month&amp;#10;    month = calendar.month_name[month_index]&amp;#10;    numeric_day = today.day # this is a integer&amp;#10;    if numeric_day + value &lt;= 0 or numeric_day + value &gt; 31:&amp;#10;        ValueError(&quot;Unacceptable day of the month after subtracting the clutter change value.&quot;)&amp;#10;    else:&amp;#10;        str_num_day = str(numeric_day + value)&amp;#10;        if str_num_day[-1] == '1':&amp;#10;            day_suffix = 'st'&amp;#10;        elif str_num_day[-1] == '2':&amp;#10;            day_suffix = 'nd'&amp;#10;        elif str_num_day[-1] == '3':&amp;#10;            day_suffix = 'rd'&amp;#10;        elif int(str_num_day[-1]) &gt;= 4:&amp;#10;            day_suffix = 'th'    &amp;#10;&amp;#10;        return str_num_day + &quot; &quot; + month +&quot;\n&quot; + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber   &amp;#10;&amp;#10;def updateText(value, key):&amp;#10;&amp;#10;    if key == &quot;duration&quot;:&amp;#10;        return ('').join([&quot;1 hr &quot;, str(value), &quot; min&quot;])&amp;#10;    elif key == &quot;fuel&quot;:&amp;#10;        return ('').join([str(value) , &quot; mpg&quot;])&amp;#10;    elif key == &quot;distance&quot;:&amp;#10;        return ('').join([str(value) , &quot; mi&quot;])&amp;#10;    elif key == &quot;date&quot;:&amp;#10;        return getDateTimeText(value)&amp;#10;    elif key == &quot;garage_door&quot;:&amp;#10;        return getGarageText(value)&amp;#10;    elif key == &quot;battery&quot;:&amp;#10;        return ('').join([&quot;%&quot;, str(value)])&amp;#10;    elif key == &quot;miles&quot;:&amp;#10;        return ('').join([str(value), &quot;mi&quot;])&amp;#10;    elif key == &quot;temperature&quot;:&amp;#10;        return ('').join([str(value), &quot;F&quot;])&amp;#10;    else:&amp;#10;        KeyError('Widget was not found [', key,']')&amp;#10;&amp;#10;&amp;#10;def getImageWithKeyword(directory, keyword):&amp;#10;    image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp'}&amp;#10;&amp;#10;    for root, _, files in os.walk(directory):&amp;#10;        for file in files:&amp;#10;            if any(file.lower().endswith(ext) for ext in image_extensions) and keyword.lower() in file.lower():&amp;#10;                return &quot;/&quot;.join([root, file])&amp;#10;&amp;#10;&amp;#10;&amp;#10;def getPositions(widget_regions, position_percentage):&amp;#10;    &quot;&quot;&quot; This function is used for obtaining axis coordinates for clutter placement&amp;#10;&amp;#10;    :param clutter_region: (dict) enter the clutter's region dictionary obtained by clutter_separator (e.g. clutter[0] or clutter[target_clutter])&amp;#10;&amp;#10;    :param position_percentages: (int) List of 2 integers indicating the placement in percentage of the clutter region size:&amp;#10;             [25, 50] =&gt; [width * 25/100, height * 50/100]&amp;#10;    :return: point in coordinate system (x, y)&amp;#10;    &quot;&quot;&quot;&amp;#10;&amp;#10;    y_origin = widget_regions['y'] + (widget_regions['height']/2)&amp;#10;    x_origin = widget_regions['x'] - (widget_regions['width']/2)&amp;#10;&amp;#10;    return [round(x_origin + widget_regions['width']*(position_percentage[0]/100)), &amp;#10;            round(y_origin - widget_regions['height']*(position_percentage[1]/100))]&amp;#10;&amp;#10;&amp;#10;def getIconSize(widget_regions, size_ratio):&amp;#10;    &quot;&quot;&quot; This function is used for obtaining axis coordinates for clutter placement&amp;#10;&amp;#10;    :param widget_regions: (dict) enter the clutter's region dictionary obtained by clutter_separator (e.g. clutter[0] or clutter[target_clutter])&amp;#10;&amp;#10;    :param size_ratio: (int) List of 2 integers indicating the ratio of icon size relative to the widget region's width&amp;#10;    :return: size in pixels (w, h)&amp;#10;    &quot;&quot;&quot;&amp;#10;    return [round(widget_regions['width']*(size_ratio[0])), &amp;#10;            round(widget_regions['width']*(size_ratio[1]))]&amp;#10;            &amp;#10;            " valType="extendedCode" updates="constant" name="Begin Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin Routine"/>
@@ -101,7 +101,7 @@
       <CodeComponent name="exp_init">
         <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="def getChangeIndex(dyn_values, chang_indx):&amp;#10;    change_order = []&amp;#10;    # chang_indx represents the len(keys) in dynamic_clutter_values&amp;#10;    while True:&amp;#10;        rand_indx = random.randint(0, len(chang_indx) - 1)&amp;#10;        if chang_indx[rand_indx] != 0:&amp;#10;            cur_clut = dyn_values[rand_indx]&amp;#10;            keys = list(cur_clut.keys())&amp;#10;            selectAgain = False&amp;#10;            while True:&amp;#10;                rand_keyi = random.randint(0, len(keys) - 1)&amp;#10;                selected_key = keys[rand_keyi]                    &amp;#10;                for ki in range(0, len(change_order)):&amp;#10;                    lookup_key = change_order[ki][1]&amp;#10;                    if selected_key == lookup_key:&amp;#10;                        selectAgain = True&amp;#10;                if selectAgain:&amp;#10;                    break&amp;#10;                else:&amp;#10;                    change_order.append([rand_indx, selected_key])&amp;#10;                    chang_indx[rand_indx] = chang_indx[rand_indx] - 1&amp;#10;                    break&amp;#10;        elif sum(chang_indx) == 0:&amp;#10;            break&amp;#10;    return change_order&amp;#10;&amp;#10;def generateChangeSequence():&amp;#10;    return random.sample(range(1, 12), 8)&amp;#10;&amp;#10;def getGarageText(boolean):&amp;#10;    if boolean == 0:&amp;#10;        return &quot;Garage Door\nClosed&quot;&amp;#10;    elif boolean == 1:&amp;#10;        return &quot;Garage Door\nOpen&quot;&amp;#10;    else:&amp;#10;        ValueError(&quot;Garage door clutter value is not valid.&quot;)&amp;#10;&amp;#10;def getDateTimeText(value):&amp;#10;    &quot;&quot;&quot;&amp;#10;    param day_shift: used for changing the day display on the panel for changing clutter&amp;#10;    condition. adding or subtracting int value from day of the month (13 +- day_shift ) &amp;#10;    &quot;&quot;&quot;&amp;#10;    &amp;#10;    # get current day for text display on calemdar widget&amp;#10;    my_date = date.today()&amp;#10;    today = datetime.now()&amp;#10;    month_index = datetime.now().month&amp;#10;    month = calendar.month_name[month_index]&amp;#10;    numeric_day = today.day # this is a integer&amp;#10;    if numeric_day + value &lt;= 0 or numeric_day + value &gt; 31:&amp;#10;        ValueError(&quot;Unacceptable day of the month after subtracting the clutter change value.&quot;)&amp;#10;    else:&amp;#10;        str_num_day = str(numeric_day + value)&amp;#10;        if str_num_day[-1] == '1':&amp;#10;            day_suffix = 'st'&amp;#10;        elif str_num_day[-1] == '2':&amp;#10;            day_suffix = 'nd'&amp;#10;        elif str_num_day[-1] == '3':&amp;#10;            day_suffix = 'rd'&amp;#10;        elif int(str_num_day[-1]) &gt;= 4:&amp;#10;            day_suffix = 'th'    &amp;#10;&amp;#10;        return str_num_day + &quot; &quot; + month +&quot;\n&quot; + calendar.day_name[my_date.weekday()] # e.g. 'Wednesday'\nNumber   &amp;#10;&amp;#10;def updateText(value, key):&amp;#10;&amp;#10;    if key == &quot;duration&quot;:&amp;#10;        return ('').join([&quot;1 hr &quot;, str(value), &quot; min&quot;])&amp;#10;    elif key == &quot;fuel&quot;:&amp;#10;        return ('').join([str(value) , &quot; mpg&quot;])&amp;#10;    elif key == &quot;distance&quot;:&amp;#10;        return ('').join([str(value) , &quot; mi&quot;])&amp;#10;    elif key == &quot;date&quot;:&amp;#10;        return getDateTimeText(value)&amp;#10;    elif key == &quot;garage_door&quot;:&amp;#10;        return getGarageText(value)&amp;#10;    elif key == &quot;battery&quot;:&amp;#10;        return ('').join([&quot;%&quot;, str(value)])&amp;#10;    elif key == &quot;miles&quot;:&amp;#10;        return ('').join([str(value), &quot;mi&quot;])&amp;#10;    elif key == &quot;temperature&quot;:&amp;#10;        return ('').join([str(value), &quot;F&quot;])&amp;#10;    else:&amp;#10;        KeyError('Widget was not found [', key,']')&amp;#10;&amp;#10;&amp;#10;def getImageWithKeyword(directory, keyword):&amp;#10;    image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp'}&amp;#10;&amp;#10;    for root, _, files in os.walk(directory):&amp;#10;        for file in files:&amp;#10;            if any(file.lower().endswith(ext) for ext in image_extensions) and keyword.lower() in file.lower():&amp;#10;                return &quot;/&quot;.join([root, file])&amp;#10;&amp;#10;&amp;#10;&amp;#10;def getPositions(widget_regions, position_percentage):&amp;#10;    &quot;&quot;&quot; This function is used for obtaining axis coordinates for clutter placement&amp;#10;&amp;#10;    :param clutter_region: (dict) enter the clutter's region dictionary obtained by clutter_separator (e.g. clutter[0] or clutter[target_clutter])&amp;#10;&amp;#10;    :param position_percentages: (int) List of 2 integers indicating the placement in percentage of the clutter region size:&amp;#10;             [25, 50] =&gt; [width * 25/100, height * 50/100]&amp;#10;    :return: point in coordinate system (x, y)&amp;#10;    &quot;&quot;&quot;&amp;#10;&amp;#10;    y_origin = widget_regions['y'] + (widget_regions['height']/2)&amp;#10;    x_origin = widget_regions['x'] - (widget_regions['width']/2)&amp;#10;&amp;#10;    return [round(x_origin + widget_regions['width']*(position_percentage[0]/100)), &amp;#10;            round(y_origin - widget_regions['height']*(position_percentage[1]/100))]&amp;#10;&amp;#10;&amp;#10;def getIconSize(widget_regions, size_ratio):&amp;#10;    &quot;&quot;&quot; This function is used for obtaining axis coordinates for clutter placement&amp;#10;&amp;#10;    :param widget_regions: (dict) enter the clutter's region dictionary obtained by clutter_separator (e.g. clutter[0] or clutter[target_clutter])&amp;#10;&amp;#10;    :param size_ratio: (int) List of 2 integers indicating the ratio of icon size relative to the widget region's width&amp;#10;    :return: size in pixels (w, h)&amp;#10;    &quot;&quot;&quot;&amp;#10;    return [round(widget_regions['width']*(size_ratio[0])), &amp;#10;            round(widget_regions['width']*(size_ratio[1]))]&amp;#10;    &amp;#10;if 'win' not in locals():&amp;#10;    from panel_generation_function import Panel&amp;#10;    class win:&amp;#10;        def __init__(self):&amp;#10;            self.size = [1920, 1080]&amp;#10;    window = win()&amp;#10;    panel_layout = Panel(window.size[0], window.size[1])&amp;#10;&amp;#10;else:&amp;#10;    panel_layout = Panel(win.size[0], win.size[1])&amp;#10;&amp;#10;widget_regions = panel_layout.generate_panel_layout([1, 0, 0, 1]) &amp;#10;&amp;#10;target_panel = 2&amp;#10;large_region_indices = [0, 5]&amp;#10;small_region_indices = [1, 2, 3, 4]&amp;#10;if target_panel in large_region_indices:&amp;#10;    large_region_indices.remove(target_panel)&amp;#10;elif target_panel in small_region_indices:&amp;#10;    small_region_indices.remove(target_panel)&amp;#10; &amp;#10;all_widgets = [&amp;#10;                {&quot;name&quot;: &quot;trip_widget&quot;,&amp;#10;                &quot;possible_regions&quot;: large_region_indices, &amp;#10;                &quot;region_index&quot;: 0,&amp;#10;                &quot;text_components&quot;: &amp;#10;                    {&quot;trip_header&quot;: {&quot;text&quot;: &quot;Current Trip&quot;, &quot;position_percentage&quot;: [15, 10], &quot;position_pixel&quot;: []},&amp;#10;                    &quot;duration&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [35, 25], &quot;position_pixel&quot;: []},  &amp;#10;                    &quot;fuel&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [35, 50], &quot;position_pixel&quot;: []}, &amp;#10;                    &quot;distance&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [35, 75], &quot;position_pixel&quot;: []}&amp;#10;                    },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;duration&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;duration&quot;), &amp;#10;                               &quot;position_percentage&quot;: [20, 25], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.3125, 0.3125], &quot;size_pixel&quot;: []}, &amp;#10;                  &quot;fuel&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;fuel&quot;), &amp;#10;                           &quot;position_percentage&quot;: [20, 50], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.3125, 0.3125], &quot;size_pixel&quot;: []}, &amp;#10;                  &quot;distance&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;distance&quot;), &amp;#10;                               &quot;position_percentage&quot;: [20, 75], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.3125, 0.3125], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                },&amp;#10;&amp;#10;                {&quot;name&quot;: &quot;calendar_widget&quot;,&amp;#10;                 &quot;possible_regions&quot;: large_region_indices,&amp;#10;                 &quot;region_index&quot;: 5,&amp;#10;                 &quot;text_components&quot;: &amp;#10;                    {&quot;date&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [20, 15], &quot;position_pixel&quot;: []}&amp;#10;                     },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;calendar&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;calendar&quot;), &amp;#10;                               &quot;position_percentage&quot;: [50 , 70], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.8, 0.8], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                },&amp;#10;                &amp;#10;                {&quot;name&quot;: &quot;garage_widget&quot;,&amp;#10;                 &quot;possible_regions&quot;: small_region_indices, &amp;#10;                 &quot;region_index&quot;: 1, &amp;#10;                 &quot;text_components&quot;: &amp;#10;                    {&quot;garage_header&quot;: {&quot;text&quot;: &quot;My Home&quot;, &quot;position_percentage&quot;: [15, 20], &quot;position_pixel&quot;: []},&amp;#10;                     &quot;garage_door&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [35, 50], &quot;position_pixel&quot;: []}&amp;#10;                     },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;garage&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;garage&quot;), &amp;#10;                             &quot;position_percentage&quot;: [20, 50], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.35, 0.35], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                },&amp;#10;&amp;#10;                {&quot;name&quot;: &quot;temperature_widget&quot;,&amp;#10;                &quot;possible_regions&quot;: small_region_indices, &amp;#10;                 &quot;region_index&quot;: 3, &amp;#10;                 &quot;text_components&quot;: &amp;#10;                    {&quot;temperature&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [30, 40], &quot;position_pixel&quot;: []}                   &amp;#10;                     },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;temperature&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;temperature&quot;), &amp;#10;                                  &quot;position_percentage&quot;: [50, 50], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.8, 0.8], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                },&amp;#10;&amp;#10;                {&quot;name&quot;: &quot;battery_widget&quot;,&amp;#10;                 &quot;possible_regions&quot;: small_region_indices, &amp;#10;                 &quot;region_index&quot;: 4, &amp;#10;                 &quot;text_components&quot;: &amp;#10;                    {&quot;battery&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [21, 45], &quot;position_pixel&quot;: []},&amp;#10;                     &quot;miles&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [55, 63], &quot;position_pixel&quot;: []}&amp;#10;                     },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;battery&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;battery&quot;), &amp;#10;                                  &quot;position_percentage&quot;: [50, 50], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.8, 0.8], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                }&amp;#10;        ] &amp;#10;&amp;#10;dynamic_clutter_values = [{&quot;duration&quot;: 28, &quot;fuel&quot;: 34, &quot;distance&quot;: 78}, &amp;#10;                          {&quot;date&quot;: 0}, &amp;#10;                          {&quot;garage_door&quot;: 0},&amp;#10;                          {&quot;temperature&quot;: 96},&amp;#10;                          {&quot;battery&quot;: 24, &quot;miles&quot;: 76}]&amp;#10;# 12 trials, 8 total widgets, how many clutter change?&amp;#10;# 8?&amp;#10;&amp;#10;# select 1 index, che&amp;#10;&amp;#10;&amp;#10;# TODO: function to change order of elements in each data strct. to do what?&amp;#10;all_data_structures = [all_widgets, dynamic_clutter_values]&amp;#10;&amp;#10;for index in range(0, len(all_widgets)):&amp;#10;    curr_dyn_clutter = dynamic_clutter_values[index]&amp;#10;    for key, val in curr_dyn_clutter.items():&amp;#10;        all_widgets[index][&quot;text_components&quot;][key][&quot;text&quot;] = updateText(val, key)&amp;#10;&amp;#10;for index in range(0, len(all_widgets)):&amp;#10;    curr_text_comps = all_widgets[index][&quot;text_components&quot;]&amp;#10;    widget_index = all_widgets[index][&quot;region_index&quot;]&amp;#10;    for key, val in curr_text_comps.items():&amp;#10;        all_widgets[index][&quot;text_components&quot;][key][&quot;position_pixel&quot;] = getPositions(widget_regions[widget_index], val[&quot;position_percentage&quot;])&amp;#10;&amp;#10;    curr_img_comps = all_widgets[index][&quot;image_components&quot;]&amp;#10;    for key, val in curr_img_comps.items():&amp;#10;        all_widgets[index][&quot;image_components&quot;][key][&quot;position_pixel&quot;] = getPositions(widget_regions[widget_index], val[&quot;position_percentage&quot;])&amp;#10;        all_widgets[index][&quot;image_components&quot;][key][&quot;size_pixel&quot;] = getIconSize(widget_regions[widget_index], val[&quot;size_ratio&quot;])&amp;#10;&amp;#10;&amp;#10;# letter size is dependent on the large panel's height&amp;#10;letter_size = widget_regions[1][&quot;height&quot;] * 0.2&amp;#10;day_size = widget_regions[1][&quot;width&quot;] * 0.125&amp;#10;header_size = widget_regions[1][&quot;width&quot;]  * 0.1&amp;#10;temperature_size = widget_regions[1][&quot;width&quot;]  * 0.14&amp;#10;battery_size = widget_regions[1][&quot;width&quot;] * 0.085&amp;#10;&amp;#10;textFont = &quot;./stimuli/font/robotoflex.ttf&quot;&amp;#10;&amp;#10;text_size = widget_regions[1][&quot;width&quot;]/12&amp;#10;header_wrap_width = 500&amp;#10;&amp;#10;exp_version = &quot;WITH_clutter&quot;&amp;#10;&amp;#10;# randomization&amp;#10;first_block = [1,2,3]&amp;#10;second_block = [5,6,7]&amp;#10;random.shuffle(first_block)&amp;#10;random.shuffle(second_block)&amp;#10;block_rows = [0] + first_block + [4] + second_block&amp;#10;&amp;#10;if expInfo['monitor_cb'] == '1':&amp;#10;    pixPerCm = 36.974&amp;#10;elif expInfo['monitor_cb'] == '2':&amp;#10;    pixPerCm = 100&amp;#10;else:&amp;#10;    raise ValueError('Wrong MONITOR counterbalance group, it should be 1 or 2 (CHECK initalization &gt; exp_init &gt; line 281)')&amp;#10;&amp;#10;# &amp;#10;#if expInfo['cb_group'] == '1':&amp;#10;#    block_rows = [0, 1, 2, 3, 4, 5]&amp;#10;#elif expInfo['cb_group'] == '2':&amp;#10;#    block_rows = [0, 2, 1, 3, 4, 5]&amp;#10;#elif expInfo['cb_group'] == '3':&amp;#10;#    block_rows = [0, 1, 2, 3, 5, 4]&amp;#10;#elif expInfo['cb_group'] == '4':&amp;#10;#    block_rows = [0, 2, 1, 3, 5, 4]&amp;#10;#else:&amp;#10;#    raise ValueError('Wrong counterbalance group, it should be 1, 2, 3, or 4')&amp;#10;#    &amp;#10;#if expInfo['system'] == &quot;mert&quot;:&amp;#10;#    pixPerCm = 32.381&amp;#10;#elif expInfo['system'] == &quot;lab&quot;:&amp;#10;#    pixPerCm = 36.974&amp;#10;#else:&amp;#10;#    raise ValueError(&quot;Incorrect system was entered, it can either be mert or lab.&quot;)&amp;#10;    &amp;#10;stim_cm = 0.4349&amp;#10;stim_size = stim_cm * pixPerCm &amp;#10;&amp;#10;mask_imgs = getFilesInDir(&quot;./stimuli/masks&quot;)&amp;#10;&amp;#10;frameRate = win.getActualFrameRate();&amp;#10;# convert to py float&amp;#10;frameRate = frameRate.item()&amp;#10;if frameRate == None:&amp;#10;    frameRate = 60    &amp;#10;secPerFrame = 1 / frameRate&amp;#10;&amp;#10;scoreScreen = {}&amp;#10;&amp;#10;scoreScreen[&quot;lexical_only&quot;] = {&quot;accuracy&quot;: [], &quot;reaction_time&quot;: []}&amp;#10;scoreScreen[&quot;driving_lexical&quot;] = {&quot;accuracy&quot;: [], &quot;reaction_time&quot;: []}&amp;#10;&amp;#10;if expInfo[&quot;clutter_test&quot;] == &quot;yes&quot;:&amp;#10;    blocks_file = &quot;blocks_final_express.xlsx&quot;&amp;#10;else:&amp;#10;    blocks_file = &quot;blocks_final.xlsx&quot;" valType="extendedCode" updates="constant" name="Begin Experiment"/>
+        <Param val="if 'win' not in locals():&amp;#10;    from panel_generation_function import Panel&amp;#10;    class win:&amp;#10;        def __init__(self):&amp;#10;            self.size = [1920, 1080]&amp;#10;    window = win()&amp;#10;    panel_layout = Panel(window.size[0], window.size[1])&amp;#10;&amp;#10;else:&amp;#10;    panel_layout = Panel(win.size[0], win.size[1])&amp;#10;&amp;#10;widget_regions = panel_layout.generate_panel_layout([1, 0, 0, 1]) &amp;#10;&amp;#10;target_panel = 2&amp;#10;large_region_indices = [0, 5]&amp;#10;small_region_indices = [1, 2, 3, 4]&amp;#10;if target_panel in large_region_indices:&amp;#10;    large_region_indices.remove(target_panel)&amp;#10;elif target_panel in small_region_indices:&amp;#10;    small_region_indices.remove(target_panel)&amp;#10; &amp;#10;all_widgets = [&amp;#10;                {&quot;name&quot;: &quot;trip_widget&quot;,&amp;#10;                &quot;possible_regions&quot;: large_region_indices, &amp;#10;                &quot;region_index&quot;: 0,&amp;#10;                &quot;text_components&quot;: &amp;#10;                    {&quot;trip_header&quot;: {&quot;text&quot;: &quot;Current Trip&quot;, &quot;position_percentage&quot;: [15, 10], &quot;position_pixel&quot;: []},&amp;#10;                    &quot;duration&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [35, 25], &quot;position_pixel&quot;: []},  &amp;#10;                    &quot;fuel&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [35, 50], &quot;position_pixel&quot;: []}, &amp;#10;                    &quot;distance&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [35, 75], &quot;position_pixel&quot;: []}&amp;#10;                    },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;duration&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;duration&quot;), &amp;#10;                               &quot;position_percentage&quot;: [20, 25], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.3125, 0.3125], &quot;size_pixel&quot;: []}, &amp;#10;                  &quot;fuel&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;fuel&quot;), &amp;#10;                           &quot;position_percentage&quot;: [20, 50], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.3125, 0.3125], &quot;size_pixel&quot;: []}, &amp;#10;                  &quot;distance&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;distance&quot;), &amp;#10;                               &quot;position_percentage&quot;: [20, 75], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.3125, 0.3125], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                },&amp;#10;&amp;#10;                {&quot;name&quot;: &quot;calendar_widget&quot;,&amp;#10;                 &quot;possible_regions&quot;: large_region_indices,&amp;#10;                 &quot;region_index&quot;: 5,&amp;#10;                 &quot;text_components&quot;: &amp;#10;                    {&quot;date&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [20, 15], &quot;position_pixel&quot;: []}&amp;#10;                     },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;calendar&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;calendar&quot;), &amp;#10;                               &quot;position_percentage&quot;: [50 , 70], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.8, 0.8], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                },&amp;#10;                &amp;#10;                {&quot;name&quot;: &quot;garage_widget&quot;,&amp;#10;                 &quot;possible_regions&quot;: small_region_indices, &amp;#10;                 &quot;region_index&quot;: 1, &amp;#10;                 &quot;text_components&quot;: &amp;#10;                    {&quot;garage_header&quot;: {&quot;text&quot;: &quot;My Home&quot;, &quot;position_percentage&quot;: [15, 20], &quot;position_pixel&quot;: []},&amp;#10;                     &quot;garage_door&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [35, 50], &quot;position_pixel&quot;: []}&amp;#10;                     },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;garage&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;garage&quot;), &amp;#10;                             &quot;position_percentage&quot;: [20, 50], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.35, 0.35], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                },&amp;#10;&amp;#10;                {&quot;name&quot;: &quot;temperature_widget&quot;,&amp;#10;                &quot;possible_regions&quot;: small_region_indices, &amp;#10;                 &quot;region_index&quot;: 3, &amp;#10;                 &quot;text_components&quot;: &amp;#10;                    {&quot;temperature&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [30, 40], &quot;position_pixel&quot;: []}                   &amp;#10;                     },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;temperature&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;temperature&quot;), &amp;#10;                                  &quot;position_percentage&quot;: [50, 50], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.8, 0.8], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                },&amp;#10;&amp;#10;                {&quot;name&quot;: &quot;battery_widget&quot;,&amp;#10;                 &quot;possible_regions&quot;: small_region_indices, &amp;#10;                 &quot;region_index&quot;: 4, &amp;#10;                 &quot;text_components&quot;: &amp;#10;                    {&quot;battery&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [21, 45], &quot;position_pixel&quot;: []},&amp;#10;                     &quot;miles&quot;: {&quot;text&quot;: &quot;&quot;, &quot;position_percentage&quot;: [55, 63], &quot;position_pixel&quot;: []}&amp;#10;                     },&amp;#10;                 &quot;image_components&quot;: &amp;#10;                 {&quot;battery&quot;: {&quot;file&quot;:  getImageWithKeyword(&quot;./stimuli/clutter&quot;, &quot;battery&quot;), &amp;#10;                                  &quot;position_percentage&quot;: [50, 50], &quot;position_pixel&quot;: [],&amp;#10;                               &quot;size_ratio&quot;: [0.8, 0.8], &quot;size_pixel&quot;: []}&amp;#10;                  },&amp;#10;                }&amp;#10;        ] &amp;#10;&amp;#10;dynamic_clutter_values = [{&quot;duration&quot;: 28, &quot;fuel&quot;: 34, &quot;distance&quot;: 78}, &amp;#10;                          {&quot;date&quot;: 0}, &amp;#10;                          {&quot;garage_door&quot;: 0},&amp;#10;                          {&quot;temperature&quot;: 96},&amp;#10;                          {&quot;battery&quot;: 24, &quot;miles&quot;: 76}]&amp;#10;# 12 trials, 8 total widgets, how many clutter change?&amp;#10;# 8?&amp;#10;&amp;#10;# select 1 index, che&amp;#10;&amp;#10;&amp;#10;# TODO: function to change order of elements in each data strct. to do what?&amp;#10;all_data_structures = [all_widgets, dynamic_clutter_values]&amp;#10;&amp;#10;for index in range(0, len(all_widgets)):&amp;#10;    curr_dyn_clutter = dynamic_clutter_values[index]&amp;#10;    for key, val in curr_dyn_clutter.items():&amp;#10;        all_widgets[index][&quot;text_components&quot;][key][&quot;text&quot;] = updateText(val, key)&amp;#10;&amp;#10;for index in range(0, len(all_widgets)):&amp;#10;    curr_text_comps = all_widgets[index][&quot;text_components&quot;]&amp;#10;    widget_index = all_widgets[index][&quot;region_index&quot;]&amp;#10;    for key, val in curr_text_comps.items():&amp;#10;        all_widgets[index][&quot;text_components&quot;][key][&quot;position_pixel&quot;] = getPositions(widget_regions[widget_index], val[&quot;position_percentage&quot;])&amp;#10;&amp;#10;    curr_img_comps = all_widgets[index][&quot;image_components&quot;]&amp;#10;    for key, val in curr_img_comps.items():&amp;#10;        all_widgets[index][&quot;image_components&quot;][key][&quot;position_pixel&quot;] = getPositions(widget_regions[widget_index], val[&quot;position_percentage&quot;])&amp;#10;        all_widgets[index][&quot;image_components&quot;][key][&quot;size_pixel&quot;] = getIconSize(widget_regions[widget_index], val[&quot;size_ratio&quot;])&amp;#10;&amp;#10;&amp;#10;# letter size is dependent on the large panel's height&amp;#10;letter_size = widget_regions[1][&quot;height&quot;] * 0.2&amp;#10;day_size = widget_regions[1][&quot;width&quot;] * 0.125&amp;#10;header_size = widget_regions[1][&quot;width&quot;]  * 0.1&amp;#10;temperature_size = widget_regions[1][&quot;width&quot;]  * 0.14&amp;#10;battery_size = widget_regions[1][&quot;width&quot;] * 0.085&amp;#10;&amp;#10;textFont = &quot;./stimuli/font/robotoflex.ttf&quot;&amp;#10;&amp;#10;text_size = widget_regions[1][&quot;width&quot;]/12&amp;#10;header_wrap_width = 500&amp;#10;&amp;#10;exp_version = &quot;WITH_clutter&quot;&amp;#10;&amp;#10;# randomization&amp;#10;first_block = [1,2,3]&amp;#10;second_block = [5,6,7]&amp;#10;random.shuffle(first_block)&amp;#10;random.shuffle(second_block)&amp;#10;block_rows = [0] + first_block + [4] + second_block&amp;#10;&amp;#10;if expInfo['monitor_cb'] == '1':&amp;#10;    pixPerCm = 36.974&amp;#10;elif expInfo['monitor_cb'] == '2':&amp;#10;    pixPerCm = 100&amp;#10;else:&amp;#10;    raise ValueError('Wrong MONITOR counterbalance group, it should be 1 or 2 (CHECK initalization &gt; exp_init &gt; line 281)')&amp;#10;&amp;#10;# &amp;#10;#if expInfo['cb_group'] == '1':&amp;#10;#    block_rows = [0, 1, 2, 3, 4, 5]&amp;#10;#elif expInfo['cb_group'] == '2':&amp;#10;#    block_rows = [0, 2, 1, 3, 4, 5]&amp;#10;#elif expInfo['cb_group'] == '3':&amp;#10;#    block_rows = [0, 1, 2, 3, 5, 4]&amp;#10;#elif expInfo['cb_group'] == '4':&amp;#10;#    block_rows = [0, 2, 1, 3, 5, 4]&amp;#10;#else:&amp;#10;#    raise ValueError('Wrong counterbalance group, it should be 1, 2, 3, or 4')&amp;#10;#    &amp;#10;#if expInfo['system'] == &quot;mert&quot;:&amp;#10;#    pixPerCm = 32.381&amp;#10;#elif expInfo['system'] == &quot;lab&quot;:&amp;#10;#    pixPerCm = 36.974&amp;#10;#else:&amp;#10;#    raise ValueError(&quot;Incorrect system was entered, it can either be mert or lab.&quot;)&amp;#10;    &amp;#10;stim_cm = 0.4349&amp;#10;stim_size = stim_cm * pixPerCm &amp;#10;&amp;#10;mask_imgs = getFilesInDir(&quot;./stimuli/masks&quot;)&amp;#10;&amp;#10;frameRate = win.getActualFrameRate();&amp;#10;# convert to py float&amp;#10;frameRate = frameRate.item()&amp;#10;if frameRate == None:&amp;#10;    frameRate = 60    &amp;#10;secPerFrame = 1 / frameRate&amp;#10;&amp;#10;scoreScreen = {}&amp;#10;&amp;#10;scoreScreen[&quot;lexical_only&quot;] = {&quot;accuracy&quot;: [], &quot;reaction_time&quot;: []}&amp;#10;scoreScreen[&quot;driving_lexical&quot;] = {&quot;accuracy&quot;: [], &quot;reaction_time&quot;: []}&amp;#10;&amp;#10;if expInfo[&quot;clutter_test&quot;] == &quot;yes&quot;:&amp;#10;    blocks_file = &quot;blocks_final_express.xlsx&quot;&amp;#10;else:&amp;#10;    blocks_file = &quot;blocks_final.xlsx&quot;" valType="extendedCode" updates="constant" name="Begin Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin Routine"/>
@@ -140,7 +140,7 @@
         <Param val="exp_clock = core.Clock()&amp;#10;stim_duration = 0.5 &amp;#10;minimum_acceptable_rt = 0.100" valType="extendedCode" updates="constant" name="Begin Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="t_start_time = exp_clock.getTime()&amp;#10;t_frame_time = []&amp;#10;thisExp.addData('elapsed_time', exp_clock.getTime() - exp_start_time);&amp;#10;thisExp.addData('current_time', datetime.now().strftime(&quot;%H:%M:%S&quot;));&amp;#10;&amp;#10;if trials.thisN == 0:&amp;#10;    stim_duration = 0.1&amp;#10;    dummy_panel_size = [panel_layout.panel_x_size, panel_layout.panel_y_size]&amp;#10;else:&amp;#10;    stim_duration = 99&amp;#10;    dummy_panel_size = [1, 1]&amp;#10;&amp;#10;checkKey = True&amp;#10;checkTerminate = False&amp;#10;&amp;#10;# controlled descent for first two block, no descent for 3rd block&amp;#10;first_two_blocks = (blocks.thisN &lt; 2)&amp;#10;staircaseUpdateEnabled = (trials.thisN &gt; 8 and first_two_blocks) or (blocks.thisN == 2)&amp;#10;# first trial is blank, for clutter alignments&amp;#10;&amp;#10;&amp;#10;&amp;#10;# stimulus duration&amp;#10;if (trials.thisN &lt; 4) and first_two_blocks:&amp;#10;    stimulus_duration = 0.800&amp;#10;    stimulus_frames = getFrames(stimulus_duration, secPerFrame)&amp;#10;elif (trials.thisN &lt; 7) and first_two_blocks:&amp;#10;    stimulus_duration = 0.400&amp;#10;    stimulus_frames = getFrames(stimulus_duration, secPerFrame)&amp;#10;elif (trials.thisN &lt; 10) and first_two_blocks:&amp;#10;    stimulus_duration = 0.200&amp;#10;    stimulus_frames = getFrames(stimulus_duration, secPerFrame)&amp;#10;elif staircaseUpdateEnabled and staircaseEnabled:    &amp;#10;    stimulus_frames = staircase_dict[current_font].testLevel    &amp;#10;elif drivingLexicalTask or task_name == &quot;training_driving_lexical&quot;:&amp;#10;    stimulus_duration = 5&amp;#10;    stimulus_frames = getFrames(stimulus_duration, secPerFrame)&amp;#10;else: &amp;#10;    stimulus_duration = 0.500&amp;#10;    stimulus_frames = getFrames(stimulus_duration, secPerFrame)&amp;#10;&amp;#10;# mask/fixation size-durations-offsets&amp;#10;fixationDuration = 1&amp;#10;fixationFrames = getFrames(fixationDuration, secPerFrame) &amp;#10;currentMaskImage = selectRandomMask(mask_imgs)&amp;#10;preMaskOffsetFrames = fixationFrames&amp;#10;&amp;#10;if (maskEnabled == &quot;yes&quot;):&amp;#10;    maskDuration = 0.200&amp;#10;    maskFrames = getFrames(maskDuration, secPerFrame)            &amp;#10;    maskSize = [stim_size * xheight_to_size * 8, stim_size * xheight_to_size * 1.5]        &amp;#10;else:&amp;#10;    preMaskOffset = 0&amp;#10;    postMaskOffset = 0&amp;#10;    maskDuration = 0.01&amp;#10;    maskSize = [1, 1]&amp;#10;    maskFrames = 0 &amp;#10;&amp;#10;postMaskOffsetFrames = preMaskOffsetFrames + maskFrames + stimulus_frames    &amp;#10;stimOffsetFrames = preMaskOffsetFrames + maskFrames&amp;#10;&amp;#10;# sound config&amp;#10;if enableSound == 'yes':&amp;#10;    soundVolume = 1&amp;#10;    soundDuration = fixationDuration &amp;#10;    soundFrames = getFrames(soundDuration, secPerFrame)       &amp;#10;    if trials.thisN == 0:&amp;#10;        soundVolume = 0&amp;#10;        soundDuration = 0.01&amp;#10;        soundFrames = getFrames(soundDuration, secPerFrame)    &amp;#10;elif enableSound == 'no':&amp;#10;    soundVolume = 0&amp;#10;    soundDuration = 0.01&amp;#10;    stimOffset = 0&amp;#10;else:&amp;#10;    raise ValueError('Sound condition is not defined properly, type in yes or no in the blocks file')&amp;#10;&amp;#10;if trials.thisN == 0:&amp;#10;    trialDurationSeconds = 0.1&amp;#10;    maskFrames = 0    &amp;#10;    soundFrames = 0&amp;#10;    stimOffsetFrames = 0&amp;#10;    postMaskOffsetFrames = 0 &amp;#10;    preMaskOffsetFrames = 0&amp;#10;    fixationFrames = 0&amp;#10;    stimulus_frames = 0&amp;#10;else:&amp;#10;    trialDurationSeconds = 6&amp;#10;    &amp;#10;trialDurationFrames = getFrames(trialDurationSeconds, secPerFrame)" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="t_start_time = exp_clock.getTime()&amp;#10;t_frame_time = []&amp;#10;thisExp.addData('elapsed_time', exp_clock.getTime() - exp_start_time);&amp;#10;thisExp.addData('current_time', datetime.now().strftime(&quot;%H:%M:%S&quot;));&amp;#10;&amp;#10;if trials.thisN == 0:&amp;#10;    stim_duration = 0.1&amp;#10;    dummy_panel_size = [panel_layout.panel_x_size, panel_layout.panel_y_size]&amp;#10;else:&amp;#10;    stim_duration = 99&amp;#10;    dummy_panel_size = [1, 1]&amp;#10;&amp;#10;checkKey = True&amp;#10;checkTerminate = False&amp;#10;&amp;#10;# controlled descent for first two block, no descent for 3rd block&amp;#10;first_two_blocks = (blocks.thisN &lt; 2)&amp;#10;staircaseUpdateEnabled = (trials.thisN &gt; 8 and first_two_blocks) or (blocks.thisN == 2)&amp;#10;&amp;#10;# stimulus duration&amp;#10;if (trials.thisN &lt; 4) and first_two_blocks:&amp;#10;    stimulus_duration = 0.800&amp;#10;    stimulus_frames = getFrames(stimulus_duration, secPerFrame)&amp;#10;elif (trials.thisN &lt; 7) and first_two_blocks:&amp;#10;    stimulus_duration = 0.400&amp;#10;    stimulus_frames = getFrames(stimulus_duration, secPerFrame)&amp;#10;elif (trials.thisN &lt; 10) and first_two_blocks:&amp;#10;    stimulus_duration = 0.200&amp;#10;    stimulus_frames = getFrames(stimulus_duration, secPerFrame)&amp;#10;elif staircaseUpdateEnabled and staircaseEnabled:    &amp;#10;    stimulus_frames = staircase_dict[current_font].testLevel    &amp;#10;elif drivingLexicalTask or task_name == &quot;training_driving_lexical&quot;:&amp;#10;    stimulus_duration = 5&amp;#10;    stimulus_frames = getFrames(stimulus_duration, secPerFrame)&amp;#10;else: &amp;#10;    stimulus_duration = 0.500&amp;#10;    stimulus_frames = getFrames(stimulus_duration, secPerFrame)&amp;#10;&amp;#10;# mask/fixation size-durations-offsets&amp;#10;fixationDuration = 1&amp;#10;fixationFrames = getFrames(fixationDuration, secPerFrame) &amp;#10;currentMaskImage = selectRandomMask(mask_imgs)&amp;#10;preMaskOffsetFrames = fixationFrames&amp;#10;&amp;#10;if (maskEnabled == &quot;yes&quot;):&amp;#10;    maskDuration = 0.200&amp;#10;    maskFrames = getFrames(maskDuration, secPerFrame)            &amp;#10;    maskSize = [stim_size * xheight_to_size * 8, stim_size * xheight_to_size * 1.5]        &amp;#10;else:&amp;#10;    preMaskOffset = 0&amp;#10;    postMaskOffset = 0&amp;#10;    maskDuration = 0.01&amp;#10;    maskSize = [1, 1]&amp;#10;    maskFrames = 0 &amp;#10;&amp;#10;postMaskOffsetFrames = preMaskOffsetFrames + maskFrames + stimulus_frames    &amp;#10;stimOffsetFrames = preMaskOffsetFrames + maskFrames&amp;#10;&amp;#10;# sound config&amp;#10;if enableSound == 'yes':&amp;#10;    soundVolume = 1&amp;#10;    soundDuration = fixationDuration &amp;#10;    soundFrames = getFrames(soundDuration, secPerFrame)       &amp;#10;    if trials.thisN == 0:&amp;#10;        soundVolume = 0&amp;#10;        soundDuration = 0.01&amp;#10;        soundFrames = getFrames(soundDuration, secPerFrame)    &amp;#10;elif enableSound == 'no':&amp;#10;    soundVolume = 0&amp;#10;    soundDuration = 0.01&amp;#10;    stimOffset = 0&amp;#10;else:&amp;#10;    raise ValueError('Sound condition is not defined properly, type in yes or no in the blocks file')&amp;#10;&amp;#10;if trials.thisN == 0:&amp;#10;    trialDurationSeconds = 0.1&amp;#10;    maskFrames = 0    &amp;#10;    soundFrames = 0&amp;#10;    stimOffsetFrames = 0&amp;#10;    postMaskOffsetFrames = 0 &amp;#10;    preMaskOffsetFrames = 0&amp;#10;    fixationFrames = 0&amp;#10;    stimulus_frames = 0&amp;#10;else:&amp;#10;    trialDurationSeconds = 6&amp;#10;    &amp;#10;trialDurationFrames = getFrames(trialDurationSeconds, secPerFrame)" valType="extendedCode" updates="constant" name="Begin Routine"/>
         <Param val="Py" valType="str" updates="None" name="Code Type"/>
         <Param val="t_frame_time.append(round((exp_clock.getTime() - t_start_time)*1000,2))&amp;#10;t_start_time = exp_clock.getTime()&amp;#10;&amp;#10;if lexical_response.keys and checkKey:&amp;#10;    # comission&amp;#10;    if frameN &lt;= stimOffsetFrames:&amp;#10;        lexical_response.corr = 0&amp;#10;    elif lexical_response.keys[-1] == correct_ans:&amp;#10;       lexical_response.corr = 1&amp;#10;    else:&amp;#10;       lexical_response.corr = 0&amp;#10;    # adjust rt for stim offset&amp;#10;    reaction_time = lexical_response.rt - (stimOffsetFrames * secPerFrame)    &amp;#10;    lexical_response.keys = []&amp;#10;    checkKey = False&amp;#10;    checkTerminate = True&amp;#10;&amp;#10;if blocks.thisN &lt; 4:&amp;#10;    trialTerminateEnabled = frameN &gt;= (postMaskOffsetFrames + maskFrames) - 1&amp;#10;else:&amp;#10;    trialTerminateEnabled = frameN &gt;= fixationFrames &amp;#10;    &amp;#10;if checkTerminate and trialTerminateEnabled:&amp;#10;    continueRoutine = False&amp;#10;" valType="extendedCode" updates="constant" name="Each Frame"/>
         <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
@@ -453,15 +453,15 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;engine&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget1_symbol1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;engine&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;engine&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
@@ -480,15 +480,15 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;oil&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget1_symbol2" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;oil&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[0][&quot;image_components&quot;][&quot;oil&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
@@ -507,15 +507,15 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;tirepressure&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget1_symbol3" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;tirepressure&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[0][&quot;image_components&quot;][&quot;tirepressure&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
@@ -529,7 +529,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -554,7 +554,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -579,7 +579,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -604,7 +604,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -634,15 +634,15 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[2][&quot;image_components&quot;][&quot;cardoor&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget2_symbol1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;size_pixel&quot;], all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;size_pixel&quot;], all_widgets[2][&quot;image_components&quot;][&quot;cardoor&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[2][&quot;image_components&quot;][&quot;cardoor&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
@@ -656,7 +656,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -681,7 +681,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -711,15 +711,15 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[3][&quot;image_components&quot;][&quot;carheat&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget3_symbol1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;size_pixel&quot;], all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;size_pixel&quot;], all_widgets[3][&quot;image_components&quot;][&quot;carheat&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[3][&quot;image_components&quot;][&quot;carheat&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
@@ -733,7 +733,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -763,15 +763,15 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[4][&quot;image_components&quot;][&quot;media&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget4_symbol1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;size_pixel&quot;], all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;size_pixel&quot;], all_widgets[4][&quot;image_components&quot;][&quot;media&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[4][&quot;image_components&quot;][&quot;media&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
@@ -785,7 +785,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -810,7 +810,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -835,7 +835,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="set every repeat" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -865,15 +865,69 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[1][&quot;image_components&quot;][&quot;fuel&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget5_symbol1" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;size_pixel&quot;], all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;size_pixel&quot;], all_widgets[1][&quot;image_components&quot;][&quot;fuel&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[1][&quot;image_components&quot;][&quot;fuel&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="frame N" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (frames)" valType="str" updates="None" name="stopType"/>
+        <Param val="$trialDurationFrames" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="128" valType="num" updates="constant" name="texture resolution"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+      </ImageComponent>
+      <ImageComponent name="widget5_symbol2">
+        <Param val="center" valType="str" updates="constant" name="anchor"/>
+        <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
+        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
+        <Param val="$all_widgets[1][&quot;image_components&quot;][&quot;ecosport&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="" valType="str" updates="constant" name="mask"/>
+        <Param val="widget5_symbol2" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="correctPositionSmall(all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;size_pixel&quot;], all_widgets[1][&quot;image_components&quot;][&quot;ecosport&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="all_widgets[1][&quot;image_components&quot;][&quot;ecosport&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="frame N" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (frames)" valType="str" updates="None" name="stopType"/>
+        <Param val="$trialDurationFrames" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="128" valType="num" updates="constant" name="texture resolution"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+      </ImageComponent>
+      <ImageComponent name="widget5_symbol3">
+        <Param val="center" valType="str" updates="constant" name="anchor"/>
+        <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
+        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
+        <Param val="$all_widgets[1][&quot;image_components&quot;][&quot;farlight&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="" valType="str" updates="constant" name="mask"/>
+        <Param val="widget5_symbol3" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="correctPositionSmall(all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;size_pixel&quot;], all_widgets[1][&quot;image_components&quot;][&quot;farlight&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="all_widgets[1][&quot;image_components&quot;][&quot;farlight&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
         <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
@@ -915,7 +969,7 @@
         <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
         <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="align_text" valType="code" updates="None" name="name"/>
       </CodeComponent>
       <ImageComponent name="background_panel_3">
@@ -976,7 +1030,7 @@
         <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="thisExp.addData('trial_frame_durations', t_frame_time);&amp;#10;  &amp;#10;&amp;#10;print('will clutter change?')&amp;#10;if clutterProgressionEnabled and clutterChangeEnabled:     &amp;#10;    print('step 1') &amp;#10;    if trials.thisN == clutter_change_order_indices[blocks.thisN - 4][change_iteration]:&amp;#10;        print('step 2')         &amp;#10;        if task_name == &quot;full_task_training&quot;:    &amp;#10;            thisExp.addData('clutter_changed_trial', clutter_change_order_indices[blocks.thisN - 4][change_iteration]);    &amp;#10;            print('training change') &amp;#10;            changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices_practice[change_iteration])&amp;#10;        elif blocks.thisN &gt; 4:&amp;#10;            thisExp.addData('clutter_changed_trial', clutter_change_order_indices[blocks.thisN - 4][change_iteration]);    &amp;#10;            print('test change') &amp;#10;            changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices[change_iteration])            " valType="extendedCode" updates="constant" name="End Routine"/>
+        <Param val="thisExp.addData('trial_frame_durations', t_frame_time);&amp;#10;&amp;#10;if clutterProgressionEnabled and clutterChangeEnabled:     &amp;#10;    print('step 1') &amp;#10;    if trials.thisN == clutter_change_order_indices[blocks.thisN - 4][change_iteration]:&amp;#10;        print('step 2')         &amp;#10;        if task_name == &quot;full_task_training&quot;:    &amp;#10;            thisExp.addData('clutter_changed_trial', clutter_change_order_indices[blocks.thisN - 4][change_iteration]);    &amp;#10;            print('training change') &amp;#10;            changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices_practice[change_iteration])&amp;#10;        elif blocks.thisN &gt; 4:&amp;#10;            thisExp.addData('clutter_changed_trial', clutter_change_order_indices[blocks.thisN - 4][change_iteration]);    &amp;#10;            print('test change') &amp;#10;            changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices[change_iteration])            " valType="extendedCode" updates="constant" name="End Routine"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="estimate_frame_durations" valType="code" updates="None" name="name"/>
       </CodeComponent>
@@ -1178,20 +1232,20 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;engine&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget1_symbol1_2" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;engine&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;duration&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;engine&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="$iti_duration" valType="code" updates="constant" name="stopVal"/>
+        <Param val="duration (frames)" valType="str" updates="None" name="stopType"/>
+        <Param val="$trialDurationFrames" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="128" valType="num" updates="constant" name="texture resolution"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
@@ -1205,20 +1259,20 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;oil&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget1_symbol2_2" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;oil&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="all_widgets[0][&quot;image_components&quot;][&quot;fuel&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[0][&quot;image_components&quot;][&quot;oil&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="$iti_duration" valType="code" updates="constant" name="stopVal"/>
+        <Param val="duration (frames)" valType="str" updates="None" name="stopType"/>
+        <Param val="$trialDurationFrames" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="128" valType="num" updates="constant" name="texture resolution"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
@@ -1232,20 +1286,20 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[0][&quot;image_components&quot;][&quot;tirepressure&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget1_symbol3_2" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;size_pixel&quot;], all_widgets[0][&quot;image_components&quot;][&quot;tirepressure&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="all_widgets[0][&quot;image_components&quot;][&quot;distance&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[0][&quot;image_components&quot;][&quot;tirepressure&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="$iti_duration" valType="code" updates="constant" name="stopVal"/>
+        <Param val="duration (frames)" valType="str" updates="None" name="stopType"/>
+        <Param val="$trialDurationFrames" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="128" valType="num" updates="constant" name="texture resolution"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
@@ -1254,7 +1308,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -1279,7 +1333,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -1304,7 +1358,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -1329,7 +1383,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -1359,20 +1413,20 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[2][&quot;image_components&quot;][&quot;cardoor&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget2_symbol1_2" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;size_pixel&quot;], all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;size_pixel&quot;], all_widgets[2][&quot;image_components&quot;][&quot;cardoor&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="all_widgets[2][&quot;image_components&quot;][&quot;garage&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[2][&quot;image_components&quot;][&quot;cardoor&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="$iti_duration" valType="code" updates="constant" name="stopVal"/>
+        <Param val="duration (frames)" valType="str" updates="None" name="stopType"/>
+        <Param val="$trialDurationFrames" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="128" valType="num" updates="constant" name="texture resolution"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
@@ -1381,7 +1435,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -1406,7 +1460,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -1436,20 +1490,20 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[3][&quot;image_components&quot;][&quot;carheat&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget3_symbol1_2" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;size_pixel&quot;], all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;size_pixel&quot;], all_widgets[3][&quot;image_components&quot;][&quot;carheat&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="all_widgets[3][&quot;image_components&quot;][&quot;temperature&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[3][&quot;image_components&quot;][&quot;carheat&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="$iti_duration" valType="code" updates="constant" name="stopVal"/>
+        <Param val="duration (frames)" valType="str" updates="None" name="stopType"/>
+        <Param val="$trialDurationFrames" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="128" valType="num" updates="constant" name="texture resolution"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
@@ -1458,7 +1512,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -1488,20 +1542,20 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[4][&quot;image_components&quot;][&quot;media&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget4_symbol1_2" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;size_pixel&quot;], all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;size_pixel&quot;], all_widgets[4][&quot;image_components&quot;][&quot;media&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="all_widgets[4][&quot;image_components&quot;][&quot;battery&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[4][&quot;image_components&quot;][&quot;media&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="$iti_duration" valType="code" updates="constant" name="stopVal"/>
+        <Param val="duration (frames)" valType="str" updates="None" name="stopType"/>
+        <Param val="$trialDurationFrames" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="128" valType="num" updates="constant" name="texture resolution"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
@@ -1510,7 +1564,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -1535,7 +1589,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="constant" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -1560,7 +1614,7 @@
         <Param val="black" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="None" valType="str" updates="set every repeat" name="flip"/>
         <Param val="$textFont" valType="str" updates="set every repeat" name="font"/>
@@ -1590,20 +1644,74 @@
         <Param val="" valType="code" updates="None" name="durationEstim"/>
         <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
         <Param val="False" valType="bool" updates="constant" name="flipVert"/>
-        <Param val="$all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="$all_widgets[1][&quot;image_components&quot;][&quot;fuel&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
         <Param val="linear" valType="str" updates="constant" name="interpolate"/>
         <Param val="" valType="str" updates="constant" name="mask"/>
         <Param val="widget5_symbol1_2" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="correctPositionSmall(all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;size_pixel&quot;], all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="correctPositionSmall(all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;size_pixel&quot;], all_widgets[1][&quot;image_components&quot;][&quot;fuel&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="all_widgets[1][&quot;image_components&quot;][&quot;fuel&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
         <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="frame N" valType="str" updates="None" name="startType"/>
         <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="$iti_duration" valType="code" updates="constant" name="stopVal"/>
+        <Param val="duration (frames)" valType="str" updates="None" name="stopType"/>
+        <Param val="$trialDurationFrames" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="128" valType="num" updates="constant" name="texture resolution"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+      </ImageComponent>
+      <ImageComponent name="widget5_symbol2_2">
+        <Param val="center" valType="str" updates="constant" name="anchor"/>
+        <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
+        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
+        <Param val="$all_widgets[1][&quot;image_components&quot;][&quot;ecosport&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="" valType="str" updates="constant" name="mask"/>
+        <Param val="widget5_symbol2_2" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="correctPositionSmall(all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;size_pixel&quot;], all_widgets[1][&quot;image_components&quot;][&quot;ecosport&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="all_widgets[1][&quot;image_components&quot;][&quot;ecosport&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="frame N" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (frames)" valType="str" updates="None" name="stopType"/>
+        <Param val="$trialDurationFrames" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="128" valType="num" updates="constant" name="texture resolution"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+      </ImageComponent>
+      <ImageComponent name="widget5_symbol3_2">
+        <Param val="center" valType="str" updates="constant" name="anchor"/>
+        <Param val="$[1,1,1]" valType="color" updates="constant" name="color"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="False" valType="bool" updates="constant" name="flipHoriz"/>
+        <Param val="False" valType="bool" updates="constant" name="flipVert"/>
+        <Param val="$all_widgets[1][&quot;image_components&quot;][&quot;farlight&quot;][&quot;file&quot;]" valType="file" updates="set every repeat" name="image"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="" valType="str" updates="constant" name="mask"/>
+        <Param val="widget5_symbol3_2" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="correctPositionSmall(all_widgets[1][&quot;image_components&quot;][&quot;calendar&quot;][&quot;size_pixel&quot;], all_widgets[1][&quot;image_components&quot;][&quot;farlight&quot;][&quot;position_pixel&quot;])" valType="list" updates="set every repeat" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="all_widgets[1][&quot;image_components&quot;][&quot;farlight&quot;][&quot;size_pixel&quot;]" valType="list" updates="set every repeat" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="frame N" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (frames)" valType="str" updates="None" name="stopType"/>
+        <Param val="$trialDurationFrames" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="128" valType="num" updates="constant" name="texture resolution"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
@@ -1622,7 +1730,7 @@
         <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
         <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="align_text_2" valType="code" updates="None" name="name"/>
       </CodeComponent>
       <ImageComponent name="background_panel_4">
@@ -1666,7 +1774,7 @@
         <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
         <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="True" valType="bool" updates="None" name="disabled"/>
         <Param val="text_align" valType="code" updates="None" name="name"/>
       </CodeComponent>
     </Routine>

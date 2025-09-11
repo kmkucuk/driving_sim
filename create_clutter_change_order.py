@@ -41,7 +41,7 @@ def getClutterOrderCounterbalanceGroup(order_file = "clutter_change_order_cb.xls
     print(f"Selected clutter change order group {cb_group} indices are: {selected_list}")
     return selected_list
     
-
+  
 
 
     
