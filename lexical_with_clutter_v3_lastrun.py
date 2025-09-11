@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on September 11, 2025, at 13:57
+    on September 11, 2025, at 18:22
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -1039,7 +1039,7 @@ dynamic_clutter_icons = [["engine", "oil", "tirepressure"],
                           
 clutter_change_order_indices = getClutterOrderCounterbalanceGroup(cb_group = expInfo["clutter_cb"])
 clutter_changed_icon_indices = getRandomChangingIconIndex(clutter_icon_index_v, 9)
-clutter_changed_icon_indices_practice = getRandomChangingIconIndex(clutter_icon_index_v, 10)
+clutter_changed_icon_indices_practice = getRandomChangingIconIndex(clutter_icon_index_v, 5)
 
 
 
@@ -1126,7 +1126,7 @@ for thisBlock in blocks:
     current_trials = [0] + current_trials
     print('block print: ', current_font)
     
-    if blocks.thisN == 2 or blocks.thisN == 3 or blocks.thisN == 6 or blocks.thisN == 7:
+    if blocks.thisN == 2 or blocks.thisN == 3 or blocks.thisN == 7 or blocks.thisN == 8:
         continueRoutine = False
         instructionDuration = 0.01
     else:
@@ -1755,7 +1755,7 @@ for thisBlock in blocks:
         practiceBlockN = 4
         if clutterProgressionEnabled and clutterChangeEnabled:
             if trials.thisN == clutter_change_order_indices[blocks.thisN - practiceBlockN][change_iteration]:        
-                if task_name == "full_task_training":
+                if task_name == "full_task_training" or task_name == "full_task_wo_driving_training":
                     thisExp.addData('clutter_changed_trial', clutter_change_order_indices[blocks.thisN - practiceBlockN][change_iteration]);                
                     changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices_practice[change_iteration])
                 elif blocks.thisN > practiceBlockN:
@@ -2483,7 +2483,7 @@ for thisBlock in blocks:
         if clutterChangeEnabled:    
             if clutterProgressionEnabled:     
                 if trials.thisN == clutter_change_order_indices[blocks.thisN - practiceBlockN][change_iteration]:
-                    if task_name == "full_task_training":    
+                    if task_name == "full_task_training" or task_name == "full_task_wo_driving_training":    
                         print('clutter reverted training')
                         revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices_practice[change_iteration])
                     elif blocks.thisN > practiceBlockN:
