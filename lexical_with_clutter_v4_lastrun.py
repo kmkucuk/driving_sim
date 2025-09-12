@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on September 12, 2025, at 20:08
+    on September 12, 2025, at 20:41
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -1039,12 +1039,9 @@ dynamic_clutter_icons = [["engine", "oil", "tirepressure"],
                           ["carheat"],
                           ["media"]]
                           
-                          
 clutter_change_order_indices = getClutterOrderCounterbalanceGroup(cb_group = expInfo["clutter_cb"])
 clutter_changed_icon_indices = getRandomChangingIconIndex(clutter_icon_index_v, 9)
 clutter_changed_icon_indices_practice = getRandomChangingIconIndex(clutter_icon_index_v, 5)
-
-print('clutter change order ind: ', clutter_change_order_indices)
 
 
 # keep track of which components have finished
@@ -1761,13 +1758,16 @@ for thisBlock in blocks:
                 if task_name == "full_task_training" or task_name == "full_task_wo_driving_training":
                     thisExp.addData('clutter_changed_trial', clutter_change_order_indices[blocks.thisN - practiceBlockN][change_iteration]);                
                     changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices_practice[change_iteration])
+                    print('****training clutter changed****')
                     print("BLOCK: ", blocks.thisN)
-                    print("TRAINING CLUTTER CHANGE V: ", clutter_changed_icon_indices_practice)
+                    print("change iteration: ", change_iteration)
+                    
                 elif blocks.thisN > practiceBlockN:
                     thisExp.addData('clutter_changed_trial', clutter_change_order_indices[blocks.thisN - practiceBlockN][change_iteration]);                
                     changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices[change_iteration])         
+                    print('****test clutter changed****')
                     print("BLOCK: ", blocks.thisN)
-                    print("CLUTTER CHANGE V: ", clutter_changed_icon_indices)
+                    print("change iteration: ", change_iteration)
         # the Routine "inter_trial_interval" was not non-slip safe, so reset the non-slip timer
         routineTimer.reset()
         
@@ -2488,6 +2488,7 @@ for thisBlock in blocks:
             
         practiceBlockN = 4
         if clutterChangeEnabled:    
+            thisExp.addData('change_order_indices', clutter_change_order_indices[blocks.thisN - practiceBlockN]);   
             if clutterProgressionEnabled:     
                 if trials.thisN == clutter_change_order_indices[blocks.thisN - practiceBlockN][change_iteration]:
                     if task_name == "full_task_training" or task_name == "full_task_wo_driving_training":    
@@ -2500,8 +2501,6 @@ for thisBlock in blocks:
                     
             if (len(clutter_change_order_indices[blocks.thisN - practiceBlockN]) - 1) < change_iteration:
                 print('clutter progression disabled')
-                clutterProgressionEnabled = False
-            elif (len(clutter_changed_icon_indices_practice[blocks.thisN - practiceBlockN]) - 1) < change_iteration:
                 clutterProgressionEnabled = False
             else:
                 print('clutter progression enabled')
