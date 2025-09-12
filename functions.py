@@ -40,7 +40,7 @@ def getIconInfo(folder_path):
     
     return files_info
 
-def getClutterOrderCounterbalanceGroup(order_file = "clutter_change_order_cb.xlsx", cb_group = "1", practice_change_count = 10):
+def getClutterOrderCounterbalanceGroup(order_file = "clutter_change_order_cb.xlsx", cb_group = "1", practice_change_count = 5):
     if not isinstance(cb_group, str):
         raise ValueError(f"Counterbalance group is not entered as string {cb_group}, its type is instead {type(cb_group)}")
 
@@ -73,9 +73,14 @@ def getClutterOrderCounterbalanceGroup(order_file = "clutter_change_order_cb.xls
             idx = g.loc[g[gr].astype(int) == 1, "block_trial_#"].astype(int).tolist()
             gr_lists[gr].append(idx)
 
-    random_practice_indices = random.sample(range(0, 40), practice_change_count)
-    random_practice_indices.sort()
-    gr_lists["gr" + cb_group].insert(0, random_practice_indices)
+    # insert two randomly generated change index for the two clutter training parts
+    random_practice_indices1 = random.sample(range(0, 20), practice_change_count)
+    random_practice_indices2 = random.sample(range(0, 20), practice_change_count)
+    random_practice_indices1.sort()
+    random_practice_indices2.sort()
+    gr_lists["gr" + cb_group].insert(0, random_practice_indices2)
+    gr_lists["gr" + cb_group].insert(0, random_practice_indices1)
+    
     selected_list = gr_lists["gr" + cb_group]
     print(f"Selected clutter change order group {cb_group} indices are: {selected_list}")
     return selected_list
