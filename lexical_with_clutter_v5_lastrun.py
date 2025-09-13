@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on September 11, 2025, at 19:53
+    on September 13, 2025, at 23:24
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -40,7 +40,7 @@ expInfo = {
     'participant': f"{randint(0, 999999):06.0f}",
     'monitor_cb': '1',
     'clutter_cb': '1',
-    'clutter_test': 'yes',
+    'skip_training': 'no',
 }
 # --- Show participant info dialog --
 dlg = gui.DlgFromDict(dictionary=expInfo, sortKeys=False, title=expName)
@@ -56,7 +56,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
-    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\lexical_with_clutter_v3_lastrun.py',
+    originPath='E:\\Backups\\All Files\\Genel\\Is\\2022\\Upwork\\LabX\\studies\\materials\\drivingSimulator\\repo\\lexical_with_clutter_v5_lastrun.py',
     savePickle=True, saveWideText=True,
     dataFileName=filename)
 # save a log file for detail verbose info
@@ -141,7 +141,7 @@ def getIconInfo(folder_path):
     
     return files_info
 
-def getClutterOrderCounterbalanceGroup(order_file = "clutter_change_order_cb.xlsx", cb_group = "1", practice_change_count = 10):
+def getClutterOrderCounterbalanceGroup(order_file = "clutter_change_order_cb.xlsx", cb_group = "1", practice_change_count = 5):
     if not isinstance(cb_group, str):
         raise ValueError(f"Counterbalance group is not entered as string {cb_group}, its type is instead {type(cb_group)}")
 
@@ -174,9 +174,14 @@ def getClutterOrderCounterbalanceGroup(order_file = "clutter_change_order_cb.xls
             idx = g.loc[g[gr].astype(int) == 1, "block_trial_#"].astype(int).tolist()
             gr_lists[gr].append(idx)
 
-    random_practice_indices = random.sample(range(0, 40), practice_change_count)
-    random_practice_indices.sort()
-    gr_lists["gr" + cb_group].insert(0, random_practice_indices)
+    # insert two randomly generated change index for the two clutter training parts
+    random_practice_indices1 = random.sample(range(0, 20), practice_change_count)
+    random_practice_indices2 = random.sample(range(0, 20), practice_change_count)
+    random_practice_indices1.sort()
+    random_practice_indices2.sort()
+    gr_lists["gr" + cb_group].insert(0, random_practice_indices2)
+    gr_lists["gr" + cb_group].insert(0, random_practice_indices1)
+    
     selected_list = gr_lists["gr" + cb_group]
     print(f"Selected clutter change order group {cb_group} indices are: {selected_list}")
     return selected_list
@@ -196,7 +201,7 @@ def getRandomChangingIconIndex(clutter_change_v, number_of_changes):
 def changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):
     cur_key = dynamic_clutter_icons[clutter_index[0]][clutter_index[1]]
     all_widgets[clutter_index[0]]["image_components"][cur_key]["file"] = getImageWithKeyword("./stimuli/clutter", cur_key + "_2")
-    thisExp.addData('clutter_changed_icon', cur_key);
+    thisExp.addData('clutter_changed_icon', cur_key)
 
 
 def revertClutterIcon(all_widgets, dynamic_clutter_icons, clutter_index):
@@ -208,8 +213,6 @@ def getFrames(component_duration, secPerFrame):
     return round(component_duration / secPerFrame)
 
 def trialSampling(vector, n):
-    print(vector)
-    print(n)
     if n > len(vector):
         raise ValueError("n cannot be greater than the length of the vector.")
     
@@ -629,10 +632,14 @@ exp_version = "WITH_clutter"
 
 # randomization
 first_block = [1,2,3]
-second_block = [5,6,7]
+second_block = [6, 7, 8]
 random.shuffle(first_block)
 random.shuffle(second_block)
-block_rows = [0] + first_block + [4] + second_block
+
+if expInfo['skip_training'] == "yes":
+    block_rows = second_block
+else:
+    block_rows = [0] + first_block + [4, 5] + second_block
 
 if expInfo['monitor_cb'] == '1':
     pixPerCm = 36.974
@@ -657,7 +664,9 @@ scoreScreen = {}
 scoreScreen["lexical_only"] = {"accuracy": [], "reaction_time": []}
 scoreScreen["driving_lexical"] = {"accuracy": [], "reaction_time": []}
 
-if expInfo["clutter_test"] == "yes":
+
+clutter_test = "no"
+if clutter_test == "yes":
     blocks_file = "blocks_final_express.xlsx"
 else:
     blocks_file = "blocks_final.xlsx"
@@ -1036,12 +1045,9 @@ dynamic_clutter_icons = [["engine", "oil", "tirepressure"],
                           ["carheat"],
                           ["media"]]
                           
-                          
 clutter_change_order_indices = getClutterOrderCounterbalanceGroup(cb_group = expInfo["clutter_cb"])
 clutter_changed_icon_indices = getRandomChangingIconIndex(clutter_icon_index_v, 9)
 clutter_changed_icon_indices_practice = getRandomChangingIconIndex(clutter_icon_index_v, 5)
-
-
 
 
 # keep track of which components have finished
@@ -1146,8 +1152,6 @@ for thisBlock in blocks:
             trialsPerStaircase = 60    
         startFrames = getFrames(0.200, secPerFrame)
         staircase_dict[current_font] = staircaseFunction(trialsPerStaircase, trialsPerStaircase, startFrames, 1, 3, secPerFrame)
-            
-    
     
     # used for iterating over change-order-indices, ++ every time clutter changes.
     change_iteration = 0 
@@ -1758,9 +1762,16 @@ for thisBlock in blocks:
                 if task_name == "full_task_training" or task_name == "full_task_wo_driving_training":
                     thisExp.addData('clutter_changed_trial', clutter_change_order_indices[blocks.thisN - practiceBlockN][change_iteration]);                
                     changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices_practice[change_iteration])
+                    print('****training clutter changed****')
+                    print("BLOCK: ", blocks.thisN)
+                    print("change iteration: ", change_iteration)
+                    
                 elif blocks.thisN > practiceBlockN:
                     thisExp.addData('clutter_changed_trial', clutter_change_order_indices[blocks.thisN - practiceBlockN][change_iteration]);                
-                    changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices[change_iteration])            
+                    changeClutterIcon(all_widgets, dynamic_clutter_icons, clutter_changed_icon_indices[change_iteration])         
+                    print('****test clutter changed****')
+                    print("BLOCK: ", blocks.thisN)
+                    print("change iteration: ", change_iteration)
         # the Routine "inter_trial_interval" was not non-slip safe, so reset the non-slip timer
         routineTimer.reset()
         
@@ -2481,6 +2492,7 @@ for thisBlock in blocks:
             
         practiceBlockN = 4
         if clutterChangeEnabled:    
+            thisExp.addData('change_order_indices', clutter_change_order_indices[blocks.thisN - practiceBlockN]);   
             if clutterProgressionEnabled:     
                 if trials.thisN == clutter_change_order_indices[blocks.thisN - practiceBlockN][change_iteration]:
                     if task_name == "full_task_training" or task_name == "full_task_wo_driving_training":    
