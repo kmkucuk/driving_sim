@@ -1,16 +1,10 @@
-import calendar
-import random
-from datetime import date
-from datetime import datetime
-import os
-import pandas as pd
-from pathlib import Path
-import random
 TEXT_WIDGETS_ENABLED = False
 IMAGE_WIDGETS_ENABLED = True
 SMALL_ICON_SIZE_RATIO = [0.5, 0.5]
 LARGE_ICON_SIZE_RATIO = [0.5, 0.5]
 
+
+pixPerCm = 36.974 # pix per cm in lab's monitor
 
 if 'win' not in locals():
     from panel_generation_function import Panel
@@ -21,7 +15,20 @@ if 'win' not in locals():
     panel_layout = Panel(window.size[0], window.size[1])
 
 else:
-    panel_layout = Panel(win.size[0], win.size[1])
+    if expInfo['monitor_cb'] == '1':        
+        panel_layout = Panel(win.size[0], win.size[1])
+    elif expInfo['monitor_cb'] == '2':        
+        desired_vertical_height = 8.636 # cm
+        desired_vertical_pixel = desired_vertical_height * pixPerCm
+        desired_horizontal_pixel = (desired_vertical_pixel/9) * 16        
+        panel_layout = Panel(win.size[0], win.size[1], 
+                             scale_ratiosV = [desired_horizontal_pixel/win.size[0], 
+                                              desired_vertical_pixel/win.size[1]], scale_empty_partV = ["", "bottom"])
+    else:
+        raise ValueError('Wrong MONITOR counterbalance group, it should be 1 or 2 (CHECK initalization > exp_init > line 281)')
+
+    
+    
 
 widget_regions = panel_layout.generate_panel_layout([1, 0, 0, 1]) 
 
@@ -147,24 +154,22 @@ exp_version = "WITH_clutter"
 
 # randomization
 first_block = [1,2,3]
-second_block = [5,6,7]
+second_block = [6, 7, 8]
 random.shuffle(first_block)
 random.shuffle(second_block)
-block_rows = [0] + first_block + [4] + second_block
 
-if expInfo['monitor_cb'] == '1':
-    pixPerCm = 36.974
-elif expInfo['monitor_cb'] == '2':
-    pixPerCm = 100
+if expInfo['skip_training'] == "yes":
+    block_rows = second_block
 else:
-    raise ValueError('Wrong MONITOR counterbalance group, it should be 1 or 2 (CHECK initalization > exp_init > line 281)')
+    block_rows = [0] + first_block + [4, 5] + second_block
+
 
 stim_cm = 0.4349
 stim_size = stim_cm * pixPerCm 
 
 mask_imgs = getFilesInDir("./stimuli/masks")
 
-frameRate = win.getActualFrameRate();
+frameRate = win.getActualFrameRate()
 # convert to py float
 frameRate = frameRate.item()
 if frameRate == None:
@@ -172,11 +177,12 @@ if frameRate == None:
 secPerFrame = 1 / frameRate
 
 scoreScreen = {}
-
 scoreScreen["lexical_only"] = {"accuracy": [], "reaction_time": []}
 scoreScreen["driving_lexical"] = {"accuracy": [], "reaction_time": []}
 
-if expInfo["clutter_test"] == "yes":
+
+clutter_test = "no"
+if clutter_test == "yes":
     blocks_file = "blocks_final_express.xlsx"
 else:
     blocks_file = "blocks_final.xlsx"
