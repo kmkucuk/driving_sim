@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on July 09, 2026, at 21:12
+    on September 02, 2026, at 13:17
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -701,7 +701,7 @@ scoreScreen["lexical_only"] = {"accuracy": [], "reaction_time": []}
 scoreScreen["driving_lexical"] = {"accuracy": [], "reaction_time": []}
 
 
-clutter_test = "no"
+clutter_test = "yes"
 if clutter_test == "yes":
     blocks_file = "blocks_final_express.xlsx"
 else:
@@ -731,6 +731,18 @@ instruction_image = visual.ImageStim(
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
     texRes=128.0, interpolate=True, depth=-3.0)
+
+# --- Initialize components for Routine "blank_300ms" ---
+# Run 'Begin Experiment' code from code
+white_space_duration = 0.300
+background_panel_7 = visual.ImageStim(
+    win=win,
+    name='background_panel_7', 
+    image='stimuli/panels/background_panel.png', mask=None, anchor='center',
+    ori=0.0, pos=[0,0], size=1.0,
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-1.0)
 
 # --- Initialize components for Routine "inter_trial_interval" ---
 background_panel_2 = visual.ImageStim(
@@ -1318,6 +1330,86 @@ for thisBlock in blocks:
     if blocks.thisN == 0:
         exp_start_time = exp_clock.getTime()
     # the Routine "get_trials" was not non-slip safe, so reset the non-slip timer
+    routineTimer.reset()
+    
+    # --- Prepare to start Routine "blank_300ms" ---
+    continueRoutine = True
+    routineForceEnded = False
+    # update component parameters for each repeat
+    # Run 'Begin Routine' code from code
+    if blocks.thisN > 0:
+        white_space_duration = 0.01
+        continueRoutine = False
+    else:
+        white_space_duration = 0.300
+    background_panel_7.setPos([panel_layout.panel_position])
+    background_panel_7.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
+    # keep track of which components have finished
+    blank_300msComponents = [background_panel_7]
+    for thisComponent in blank_300msComponents:
+        thisComponent.tStart = None
+        thisComponent.tStop = None
+        thisComponent.tStartRefresh = None
+        thisComponent.tStopRefresh = None
+        if hasattr(thisComponent, 'status'):
+            thisComponent.status = NOT_STARTED
+    # reset timers
+    t = 0
+    _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+    frameN = -1
+    
+    # --- Run Routine "blank_300ms" ---
+    while continueRoutine:
+        # get current time
+        t = routineTimer.getTime()
+        tThisFlip = win.getFutureFlipTime(clock=routineTimer)
+        tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+        frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+        # update/draw components on each frame
+        
+        # *background_panel_7* updates
+        if background_panel_7.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            # keep track of start time/frame for later
+            background_panel_7.frameNStart = frameN  # exact frame index
+            background_panel_7.tStart = t  # local t and not account for scr refresh
+            background_panel_7.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(background_panel_7, 'tStartRefresh')  # time at next scr refresh
+            # add timestamp to datafile
+            thisExp.timestampOnFlip(win, 'background_panel_7.started')
+            background_panel_7.setAutoDraw(True)
+        if background_panel_7.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > background_panel_7.tStartRefresh + white_space_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                background_panel_7.tStop = t  # not accounting for scr refresh
+                background_panel_7.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'background_panel_7.stopped')
+                background_panel_7.setAutoDraw(False)
+        
+        # check for quit (typically the Esc key)
+        if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
+            core.quit()
+        
+        # check if all components have finished
+        if not continueRoutine:  # a component has requested a forced-end of Routine
+            routineForceEnded = True
+            break
+        continueRoutine = False  # will revert to True if at least one component still running
+        for thisComponent in blank_300msComponents:
+            if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+                continueRoutine = True
+                break  # at least one component has not yet finished
+        
+        # refresh the screen
+        if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+            win.flip()
+    
+    # --- Ending Routine "blank_300ms" ---
+    for thisComponent in blank_300msComponents:
+        if hasattr(thisComponent, "setAutoDraw"):
+            thisComponent.setAutoDraw(False)
+    # the Routine "blank_300ms" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset()
     
     # set up handler to look after randomisation of conditions etc
