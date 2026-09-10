@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.3),
-    on September 02, 2026, at 13:17
+    on September 10, 2026, at 20:00
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -735,14 +735,31 @@ instruction_image = visual.ImageStim(
 # --- Initialize components for Routine "blank_300ms" ---
 # Run 'Begin Experiment' code from code
 white_space_duration = 0.300
-background_panel_7 = visual.ImageStim(
+black_space_duration = 0.300
+first_black_flash = visual.ImageStim(
     win=win,
-    name='background_panel_7', 
-    image='stimuli/panels/background_panel.png', mask=None, anchor='center',
+    name='first_black_flash', 
+    image='stimuli/panels/black_background_panel.png', mask=None, anchor='center',
     ori=0.0, pos=[0,0], size=1.0,
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
     texRes=128.0, interpolate=True, depth=-1.0)
+second_white_flash = visual.ImageStim(
+    win=win,
+    name='second_white_flash', 
+    image='stimuli/panels/background_panel.png', mask=None, anchor='center',
+    ori=0.0, pos=[0,0], size=1.0,
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-2.0)
+third_black_flash = visual.ImageStim(
+    win=win,
+    name='third_black_flash', 
+    image='stimuli/panels/black_background_panel.png', mask=None, anchor='center',
+    ori=0.0, pos=[0,0], size=1.0,
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-3.0)
 
 # --- Initialize components for Routine "inter_trial_interval" ---
 background_panel_2 = visual.ImageStim(
@@ -1337,15 +1354,21 @@ for thisBlock in blocks:
     routineForceEnded = False
     # update component parameters for each repeat
     # Run 'Begin Routine' code from code
-    if blocks.thisN > 0:
+    if blocks.thisN < 8:
         white_space_duration = 0.01
+        black_space_duration = 0.01
         continueRoutine = False
     else:
         white_space_duration = 0.300
-    background_panel_7.setPos([panel_layout.panel_position])
-    background_panel_7.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
+        black_space_duration = 0.300
+    first_black_flash.setPos([panel_layout.panel_position])
+    first_black_flash.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
+    second_white_flash.setPos([panel_layout.panel_position])
+    second_white_flash.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
+    third_black_flash.setPos([panel_layout.panel_position])
+    third_black_flash.setSize((panel_layout.panel_x_size, panel_layout.panel_y_size))
     # keep track of which components have finished
-    blank_300msComponents = [background_panel_7]
+    blank_300msComponents = [first_black_flash, second_white_flash, third_black_flash]
     for thisComponent in blank_300msComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
@@ -1367,25 +1390,65 @@ for thisBlock in blocks:
         frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
         # update/draw components on each frame
         
-        # *background_panel_7* updates
-        if background_panel_7.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # *first_black_flash* updates
+        if first_black_flash.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
             # keep track of start time/frame for later
-            background_panel_7.frameNStart = frameN  # exact frame index
-            background_panel_7.tStart = t  # local t and not account for scr refresh
-            background_panel_7.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(background_panel_7, 'tStartRefresh')  # time at next scr refresh
+            first_black_flash.frameNStart = frameN  # exact frame index
+            first_black_flash.tStart = t  # local t and not account for scr refresh
+            first_black_flash.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(first_black_flash, 'tStartRefresh')  # time at next scr refresh
             # add timestamp to datafile
-            thisExp.timestampOnFlip(win, 'background_panel_7.started')
-            background_panel_7.setAutoDraw(True)
-        if background_panel_7.status == STARTED:
+            thisExp.timestampOnFlip(win, 'first_black_flash.started')
+            first_black_flash.setAutoDraw(True)
+        if first_black_flash.status == STARTED:
             # is it time to stop? (based on global clock, using actual start)
-            if tThisFlipGlobal > background_panel_7.tStartRefresh + white_space_duration-frameTolerance:
+            if tThisFlipGlobal > first_black_flash.tStartRefresh + black_space_duration-frameTolerance:
                 # keep track of stop time/frame for later
-                background_panel_7.tStop = t  # not accounting for scr refresh
-                background_panel_7.frameNStop = frameN  # exact frame index
+                first_black_flash.tStop = t  # not accounting for scr refresh
+                first_black_flash.frameNStop = frameN  # exact frame index
                 # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'background_panel_7.stopped')
-                background_panel_7.setAutoDraw(False)
+                thisExp.timestampOnFlip(win, 'first_black_flash.stopped')
+                first_black_flash.setAutoDraw(False)
+        
+        # *second_white_flash* updates
+        if second_white_flash.status == NOT_STARTED and tThisFlip >= 0.299-frameTolerance:
+            # keep track of start time/frame for later
+            second_white_flash.frameNStart = frameN  # exact frame index
+            second_white_flash.tStart = t  # local t and not account for scr refresh
+            second_white_flash.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(second_white_flash, 'tStartRefresh')  # time at next scr refresh
+            # add timestamp to datafile
+            thisExp.timestampOnFlip(win, 'second_white_flash.started')
+            second_white_flash.setAutoDraw(True)
+        if second_white_flash.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > second_white_flash.tStartRefresh + white_space_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                second_white_flash.tStop = t  # not accounting for scr refresh
+                second_white_flash.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'second_white_flash.stopped')
+                second_white_flash.setAutoDraw(False)
+        
+        # *third_black_flash* updates
+        if third_black_flash.status == NOT_STARTED and tThisFlip >= 0.599-frameTolerance:
+            # keep track of start time/frame for later
+            third_black_flash.frameNStart = frameN  # exact frame index
+            third_black_flash.tStart = t  # local t and not account for scr refresh
+            third_black_flash.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(third_black_flash, 'tStartRefresh')  # time at next scr refresh
+            # add timestamp to datafile
+            thisExp.timestampOnFlip(win, 'third_black_flash.started')
+            third_black_flash.setAutoDraw(True)
+        if third_black_flash.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > third_black_flash.tStartRefresh + black_space_duration-frameTolerance:
+                # keep track of stop time/frame for later
+                third_black_flash.tStop = t  # not accounting for scr refresh
+                third_black_flash.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'third_black_flash.stopped')
+                third_black_flash.setAutoDraw(False)
         
         # check for quit (typically the Esc key)
         if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
